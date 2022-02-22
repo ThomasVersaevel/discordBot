@@ -9,6 +9,15 @@ const { token } = require('./config.json');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 client.commands = new Collection();
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	// Set a new item in the Collection
+	// With the key as the command name and the value as the exported module
+	client.commands.set(command.data.name, command);
+}
 //client.user.setStatus('online'); //added this
 
 // When the client is ready, run this code (only once)
@@ -21,13 +30,29 @@ client.once('ready', () => {
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
-	const { commandName } = interaction;
+	const command = client.commands.get(interaction.commandName);
 
-	if (commandName === 'fat_joke') {
-		await interaction.reply('Gragas is so fat, when alistar tried to headbut him he was put in a coma.');
-	} else if (commandName === 'test') {
-		await interaction.reply('test command succesfull.');
+	if (!command) { // TODO: fix
+		if (commandName === 'test') {
+			await interaction.reply('test command succesful.');
+    	}
+		return;
 	}
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+
+	// const { commandName } = interaction;
+
+	// if (commandName === 'fat_joke') {
+	// 	await interaction.reply('Gragas is so fat, when Alistar tried to headbut him he was put in a coma.');
+	// } else if (commandName === 'test') {
+	// 	await interaction.reply('test command succesful.');
+	// }
 });
 
 // Login to Discord with your client's token
