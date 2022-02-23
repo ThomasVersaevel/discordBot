@@ -4,6 +4,7 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
+// const { channel } = require('diagnostics_channel');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -19,6 +20,22 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+// on for bot command interaction
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+	
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+});
+
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 // events
 for (const file of eventFiles) {
@@ -30,39 +47,14 @@ for (const file of eventFiles) {
 	}
 }
 
-// When the client is ready, run this code (only once)
-client.once('ready', () => {
-	console.log('Ready!');
-});
+client.on('messageCreate', async message =>  {
+	if (message.author.bot) return;
 
-
-// on for bot command interaction
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
-	const command = client.commands.get(interaction.commandName);
-
-	if (!command) { // TODO: fix
-		if (commandName === 'test') {
-			await interaction.reply('test command succesful.');
-    	}
-		return;
+	if (message.content.toLowerCase() === 'tank meta'){ // als het iritant word: && message.channel.name.toLowerCase() == "general"
+		//await message.reply('Tank Meta is eng');
+			
+		console.log("tank meta");
 	}
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
-
-	// const { commandName } = interaction;
-
-	// if (commandName === 'fat_joke') {
-	// 	await interaction.reply('Gragas is so fat, when Alistar tried to headbut him he was put in a coma.');
-	// } else if (commandName === 'test') {
-	// 	await interaction.reply('test command succesful.');
-	// }
 });
 
 // Login to Discord with your client's token

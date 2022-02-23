@@ -5,7 +5,7 @@ module.exports = {
 		.setName('gragas')
 		.setDescription('Replies with a fat Gragas joke.'),
 	async execute(interaction) {
-		i = Math.random() * 19;
+		i = Math.random() * 20;
 		console.log(i);
 		switch (true) {
 			case i<1:
@@ -30,7 +30,7 @@ module.exports = {
 				await interaction.reply('Gragas is so fat, Blitzcrank knocked him up and got stuck.');
 				break;
 			case 7 <= i && i < 8:
-				await interaction.reply('Gragas is so fat, that Twisted Fate can\'t even see all of him when he ults.');
+				await interaction.reply('Gragas is so fat, Twisted Fate can\'t even see all of him when he ults.');
 				break;
 			case 8 <= i && i < 9:S
 				await interaction.reply('Gragas is so fat, when Swain ulted he ate all the ravens.');
@@ -63,12 +63,15 @@ module.exports = {
 				await interaction.reply('Gragas is so fat, on ARAM he ate all the porosnax.');
 				break;
 			case 17 <= i && i < 18:
-				await interaction.reply('Gragas is so fat, he takes inspiration runes just for the biscuits');
+				await interaction.reply('Gragas is so fat, he takes inspiration runes just for the biscuits.');
 				break;
 			case 18 <= i && i < 19:
-				await interaction.reply('Gragas is so fat, he takes inspiration runes just for the biscuits');
+				await interaction.reply('Gragas is so fat, when Sett ulted him he shattered the rift.');
 				break;
-		}		
+			case 19 <= i && i < 20:
+				await interaction.reply('Gragas is so fat, when Akshan killed him he resurected a whole buffet.');
+				break;
+		}	
 		//await interaction.reply('response');
 	},
 };
