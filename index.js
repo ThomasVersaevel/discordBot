@@ -4,6 +4,7 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
+const { MessageEmbed } = require('discord.js');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -35,24 +36,42 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
-// const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
-// // events
-// for (const file of eventFiles) {
-// 	const event = require(`./events/${file}`);
-// 	if (event.once) {
-// 		client.once(event.name, (...args) => event.execute(...args));
-// 	} else {
-// 		client.on(event.name, (...args) => event.execute(...args));
-// 	}
-// }
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+// events
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
 
+// client.messages = new Collection();
+
+// const messagefiles = fs.readdirSync('./messageResponses').filter(file => file.endsWith('.js'));
+// // commands
+// for (const file of messageFiles) {
+// 	const messa = require(`./messageResponses/${file}`);
+// 	client.messages.set(messa.data.name, messa);
+// }
+const tank_meta = ['tank', 'meta', 'eng', 'scary', 'joey', 'angst', 'maokai',
+        'tanky', 'ondoodbaar', 'unkillable', 'sejuani', 'sion', 'orn', 'corn'];
 client.on('messageCreate', async message =>  {
 	if (message.author.bot) return;
 
-	if (message.content.toLowerCase() === 'tank meta'){ // als het iritant word: && message.channel.name.toLowerCase() == "general"
-		//await message.reply('Tank Meta is eng');
-			
-		console.log("tank meta");
+
+	// Tank meta
+	if (tank_meta.some(word => message.content.toLowerCase().includes(word.toLowerCase()))) {
+		message.channel.send('Remember tank meta?');
+	} else if (message.content.toLowerCase().includes('annie')) {
+		message.channel.send('Ban ~~annie~~');
+	} 
+	if ( message.content.toLowerCase().includes('malzahar')) {
+		message.channel.send('Gadverdakke M*lz*h*r');
+	}
+	else if ( message.content.toLowerCase().includes('malzahar')) {
+		message.channel.send('Gadverdakke M*lz*h*r');
 	}
 });
 
