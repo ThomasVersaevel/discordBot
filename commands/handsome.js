@@ -10,6 +10,8 @@ module.exports = {
 		.setDescription('Replies with a picture of a handsome Pokémon'),
 	async execute(interaction) {
 
+        await interaction.reply('Handsome');
+
         i = Math.floor( Math.random() * pokeArray.length );
         const imgString = pokeArray[i];
         console.log('Handsome'+imgString+'.png');
