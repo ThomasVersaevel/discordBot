@@ -61,6 +61,9 @@ const tank_meta = ['tank', 'meta', 'eng', 'scary', 'joey', 'angst', 'maokai', 'd
 const pokeArray = ['Shroomish', 'Bidoof', 'Chansey', 'Chimecho', 'Lickitounge', 
     'Ludicolo', 'Metapod', 'Pickachu', 'Psyduck', 'Smoochum', 'Snorelax', 'Wooper'];
 
+const lamaArray = ['laat maar', 'laatmaar', 'lamaar', 'lamar', 'lama'];	
+
+
 client.on('messageCreate', async message =>  {
 	if (message.author.bot) return;
 
@@ -156,10 +159,12 @@ client.on('messageCreate', async message =>  {
 			name:'sluipschutter.png'}] });
 	}
 	// ### sluipschutters ###
-	if (message.content.toLowerCase().includes('!urf')) {
+		o = Math.floor( Math.random() * lamaArray.length );
+        const imgString = lamaArray[o];
+	if (message.content.toLowerCase().includes(imgString)) {
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#E50000')
-		.setImage('attachment://sluipschutter.png'); //takes attachment from send method below
+		.setImage('attachment://lamazitte.png'); //takes attachment from send method below
 
 		message.channel.send({ embeds: [exampleEmbed], 
 			files: [{ attachment:'assets/SluipSchutters/boeie.png',
@@ -180,8 +185,8 @@ client.on('messageCreate', async message =>  {
 		}
 	  };
 
-
-	if ((message.author.id === '183976222215110656' || message.content.toLowerCase().includes('joeytrigger')) && increasedRandom.getRandom()) { // big joey meme
+ //&& increasedRandom.getRandom()
+	if ((message.author.id === '183976222215110656' || message.content.toLowerCase().includes('joeytrigger'))) { // big joey meme
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#E1C699')
 		.setTitle('Grote neus!')
