@@ -5,13 +5,13 @@ module.exports = {
 		.setName('gragas')
 		.setDescription('Replies with a fat Gragas joke.'),
 	async execute(interaction) {
-		i = Math.random() * 19;
+		i = Math.random() * 21;
 		console.log(i);
 		switch (true) {
-			case i<1:
+			case i < 1:
 				await interaction.reply('Gragas is so fat, when Alistar tried to headbut him he was put in a coma.');
 				break;
-			case 1<=i && i < 2:
+			case 1 <= i && i < 2:
 				await interaction.reply('Gragas is so fat, Bas is er niks bij.');
 				break;
 			case 2 <= i && i < 3:
@@ -30,9 +30,9 @@ module.exports = {
 				await interaction.reply('Gragas is so fat, Blitzcrank knocked him up and got stuck.');
 				break;
 			case 7 <= i && i < 8:
-				await interaction.reply('Gragas is so fat, that Twisted Fate can\'t even see all of him when he ults.');
+				await interaction.reply('Gragas is so fat, Twisted Fate can\'t even see all of him when he ults.');
 				break;
-			case 8 <= i && i < 9:S
+			case 8 <= i && i < 9:
 				await interaction.reply('Gragas is so fat, when Swain ulted he ate all the ravens.');
 				break;
 			case 9 <= i && i < 10:
@@ -40,9 +40,6 @@ module.exports = {
 				break;	
 			case 10 <= i && i < 11:
 				await interaction.reply('Gragas is so fat, UFO Corki tried to claim him as a new planet.');
-				break;	
-			case 10 <= i && i < 11:
-				await interaction.reply('Gragas is so fat, when Lulu ulted him it crashed EUW.');
 				break;	
 			case 11 <= i && i < 12:
 				await interaction.reply('Gragas is so fat, when he went into the river it flooded the entire rift.');
@@ -63,12 +60,18 @@ module.exports = {
 				await interaction.reply('Gragas is so fat, on ARAM he ate all the porosnax.');
 				break;
 			case 17 <= i && i < 18:
-				await interaction.reply('Gragas is so fat, he takes inspiration runes just for the biscuits');
+				await interaction.reply('Gragas is so fat, he takes inspiration runes just for the biscuits.');
 				break;
 			case 18 <= i && i < 19:
-				await interaction.reply('Gragas is so fat, he takes inspiration runes just for the biscuits');
+				await interaction.reply('Gragas is so fat, when Sett ulted him he shattered the rift.');
 				break;
-		}		
+			case 19 <= i && i < 20:
+				await interaction.reply('Gragas is so fat, when Akshan killed him he resurected a whole buffet.');
+				break;
+			case 20 <= i && i < 21:
+				await interaction.reply('Gragas is so fat, when Lulu ulted him it crashed EUW.');
+				break;	
+		}	
 		//await interaction.reply('response');
 	},
 };
