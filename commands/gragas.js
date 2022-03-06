@@ -8,10 +8,10 @@ module.exports = {
 		i = Math.random() * 21;
 		console.log(i);
 		switch (true) {
-			case i<1:
+			case i < 1:
 				await interaction.reply('Gragas is so fat, when Alistar tried to headbut him he was put in a coma.');
 				break;
-			case 1<=i && i < 2:
+			case 1 <= i && i < 2:
 				await interaction.reply('Gragas is so fat, Bas is er niks bij.');
 				break;
 			case 2 <= i && i < 3:

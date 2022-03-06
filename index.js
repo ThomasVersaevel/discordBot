@@ -186,7 +186,7 @@ client.on('messageCreate', async message =>  {
 	  };
 
  //&& increasedRandom.getRandom()
-	if ((message.author.id === '183976222215110656' || message.content.toLowerCase().includes('joeytrigger'))) { // big joey meme
+	if ((message.author.id === '183976222215110656' && false || message.content.toLowerCase().includes('joeytrigger'))) { // big joey meme
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#E1C699')
 		.setTitle('Grote neus!')
@@ -201,8 +201,8 @@ client.on('messageCreate', async message =>  {
 		message.channel.send({ embeds: [exampleEmbed], 
 			files: [{ attachment:'assets/neus/neus3.png',
 			name:'neus.png'}] });
-	} // kevin 263730771917930518 nico 444814987966283777 Thomas 276755182694563850 ThomasDisco 848986609910939668
-	if (message.author.id === '848986609910939668' || message.content.toLowerCase().includes('nico stil nu')) { // big joey meme
+	} // kevin 263730771917930518 nico 444814987966283777 Thomas 276755182694563850 ThomasDisco 848986609910939668 Kevin 263730771917930518
+	if (message.author.id === '444814987966283777' || message.content.toLowerCase().includes('nico stil nu')) { // big joey meme
 		//let nico = member.guild.channels.cache.get('848986609910939668');
 		if (message.author.moderatable) {
 			message.author.timeout(60*1000, 'sssst'); 
@@ -211,76 +211,6 @@ client.on('messageCreate', async message =>  {
 			console.log('cant moderate member: '+message.author.id);
 		}
 	}
-	if (message.content.toLowerCase().includes('!gragas')) {
-	i = Math.random() * 21;
-		console.log(i);
-		switch (true) {
-			case i<1:
-				await message.channel.send('Gragas is so fat, when Alistar tried to headbut him he was put in a coma.');
-				break;
-			case 1<=i && i < 2:
-				await message.channel.send('Gragas is so fat, Bas is er niks bij.');
-				break;
-			case 2 <= i && i < 3:
-				await message.channel.send('Gragas is so fat, when he recalled there was an earthquake on spawn.');
-				break;
-			case 3 <= i && i < 4:
-				await message.channel.send('Gragas is so fat, he starts the game already fed.');
-				break;
-			case 4 <= i && i < 5:
-				await message.channel.send('Gragas is so fat, he had to recal twice to return to the fountain.');
-				break;
-			case 5 <= i && i < 6:
-				await message.channel.send('Gragas is so fat, when Vladimir used transfusion he got diabetes.');
-				break;
-			case 6 <= i && i < 7:
-				await message.channel.send('Gragas is so fat, Blitzcrank knocked him up and got stuck.');
-				break;
-			case 7 <= i && i < 8:
-				await message.channel.send('Gragas is so fat, Twisted Fate can\'t even see all of him when he ults.');
-				break;
-			case 8 <= i && i < 9:
-				await message.channel.send('Gragas is so fat, when Swain ulted he ate all the ravens.');
-				break;
-			case 9 <= i && i < 10:
-				await message.channel.send('Gragas is so fat, he can\'t even fit into a Giant\'s Belt.');
-				break;	
-			case 10 <= i && i < 11:
-				await message.channel.send('Gragas is so fat, UFO Corki tried to claim him as a new planet.');
-				break;	
-			case 11 <= i && i < 12:
-				await message.channel.send('Gragas is so fat, when he went into the river it flooded the entire rift.');
-				break;	
-			case 12 <= i && i < 13:
-				await message.channel.send('Gragas is so fat, Orianna\'s ball orbits him.');
-				break;	
-			case 13 <= i && i < 14:
-				await message.channel.send('Gragas is so fat, when Cho\'Gath ulted him he got 6 stacks.');
-				break;	
-			case 14 <= i && i < 15:
-				await message.channel.send('Gragas is so fat, Caitlyn had to stop putting cupcakes in her traps.');
-				break;	
-			case 15 <= i && i < 16:
-				await message.channel.send('Gragas is so fat, Brand\'s ultimate bounces between his buttcheeks.');
-				break;	
-			case 16 <= i && i < 17:
-				await message.channel.send('Gragas is so fat, on ARAM he ate all the porosnax.');
-				break;
-			case 17 <= i && i < 18:
-				await message.channel.send('Gragas is so fat, he takes inspiration runes just for the biscuits.');
-				break;
-			case 18 <= i && i < 19:
-				await message.channel.send('Gragas is so fat, when Sett ulted him he shattered the rift.');
-				break;
-			case 19 <= i && i < 20:
-				await message.channel.send('Gragas is so fat, when Akshan killed him he resurected a whole buffet.');
-				break;
-			case 20 <= i && i < 21:
-				await message.channel.send('Gragas is so fat, when Lulu ulted him it crashed EUW.');
-				break;	
-		}	
-	}
-
 });
 
 // Login to Discord with your client's token
