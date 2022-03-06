@@ -61,7 +61,7 @@ const tank_meta = ['tank', 'meta', 'eng', 'scary', 'joey', 'angst', 'maokai', 'd
 const pokeArray = ['Shroomish', 'Bidoof', 'Chansey', 'Chimecho', 'Lickitounge', 
     'Ludicolo', 'Metapod', 'Pickachu', 'Psyduck', 'Smoochum', 'Snorelax', 'Wooper'];
 
-const lamaArray = ['laat maar', 'laatmaar', 'lamaar', 'lamar', 'lama'];	
+const lamaArray = ['laat maar', 'laatmaar', 'lamaar', 'lamar', 'lama', 'llama'];	
 
 
 client.on('messageCreate', async message =>  {
@@ -158,10 +158,10 @@ client.on('messageCreate', async message =>  {
 			files: [{ attachment:'assets/SluipSchutters/groteblij.png',
 			name:'sluipschutter.png'}] });
 	}
-	// ### sluipschutters ###
-		o = Math.floor( Math.random() * lamaArray.length );
-        const imgString = lamaArray[o];
-	if (message.content.toLowerCase().includes(imgString)) {
+	// ### lama ###
+		i = Math.floor( Math.random() * lamaArray.length );
+        const imgString2 = lamaArray[i];
+	if (message.content.toLowerCase().includes(imgString2)) {
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#E50000')
 		.setImage('attachment://lamazitte.png'); //takes attachment from send method below
