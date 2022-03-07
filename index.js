@@ -159,16 +159,14 @@ client.on('messageCreate', async message =>  {
 			name:'sluipschutter.png'}] });
 	}
 	// ### lama ###
-		i = Math.floor( Math.random() * lamaArray.length );
-        const imgString2 = lamaArray[i];
-	if (message.content.toLowerCase().includes(imgString2)) {
+	if ( lamaArray.some(word => message.content.toLowerCase().includes(word.toLowerCase())) ) {
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#E50000')
 		.setImage('attachment://lamazitte.png'); //takes attachment from send method below
 
 		message.channel.send({ embeds: [exampleEmbed], 
-			files: [{ attachment:'assets/SluipSchutters/boeie.png',
-			name:'sluipschutter.png'}] });
+			files: [{ attachment:'assets/lamazitte.png',
+			name:'lamazitte.png'}] });
 	} //joeys neus
 
 	const increasedRandom = { //Returns true if chance is met >0.9 and increases every time it fails.
@@ -186,7 +184,7 @@ client.on('messageCreate', async message =>  {
 	  };
 
  //&& increasedRandom.getRandom()
-	if ((message.author.id === '183976222215110656' && false || message.content.toLowerCase().includes('joeytrigger'))) { // big joey meme
+	if ((message.author.id === '183976222215110656' && false|| message.content.toLowerCase().includes('joeytrigger'))) { // big joey meme
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#E1C699')
 		.setTitle('Grote neus!')

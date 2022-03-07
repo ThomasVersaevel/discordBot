@@ -3,9 +3,18 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('gragas')
-		.setDescription('Replies with a fat Gragas joke.'),
+		.setDescription('Replies with a fat Gragas joke.')
+		.addIntegerOption(option =>
+			option.setName('nr')
+				.setDescription('Choose the joke by numer 0 to 20.')
+				.setRequired(false)),
 	async execute(interaction) {
-		i = Math.random() * 21;
+		
+		if (interaction.options.get('nr')) {
+			i = interaction.options.get('nr').value;
+		} else {
+			i = Math.random() * 21;
+		}
 		console.log(i);
 		switch (true) {
 			case i < 1:
@@ -71,6 +80,9 @@ module.exports = {
 			case 20 <= i && i < 21:
 				await interaction.reply('Gragas is so fat, when Lulu ulted him it crashed EUW.');
 				break;	
+			case 22 <= i:	
+				await interaction.reply('Gragas is so fat, maar jij nog dikker.');
+				break;
 		}	
 		//await interaction.reply('response');
 	},

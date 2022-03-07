@@ -26,7 +26,7 @@
     "debug": "^4.3.3",
     "deep-is": "^0.1.4",
     "delayed-stream": "^1.0.0",
-    "discord-api-types": "^0.27.2",
+    "discord-api-types": "^0.27.3",
     "discord.js": "^13.6.0",
     "doctrine": "^3.0.0",
     "escape-string-regexp": "^4.0.0",
@@ -102,7 +102,7 @@
     "zod": "^3.11.6"
   },
   "devDependencies": {
-    "eslint": "^8.9.0"
+    "eslint": "^8.10.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
