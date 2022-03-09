@@ -3,11 +3,36 @@
 
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json');
+const { token, apiKey } = require('./config.json');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
+const { Kayn, REGIONS } = require('kayn')
+const kayn = Kayn(apiKey)({
+    region: REGIONS.EUROPE_WEST,
+    apiURLPrefix: 'https://%s.api.riotgames.com',
+    locale: 'en_US',
+    debugOptions: {
+        isEnabled: true,
+        showKey: false,
+    },
+    requestOptions: {
+        shouldRetry: true,
+        numberOfRetriesBeforeAbort: 3,
+        delayBeforeRetry: 1000,
+        burst: false,
+        shouldExitOn403: false,
+    },
+    cacheOptions: {
+        cache: null,
+        timeToLives: {
+            useDefault: false,
+            byGroup: {},
+            byMethod: {},
+        },
+    },
+})
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS] });
 
 client.commands = new Collection();
 
@@ -93,7 +118,49 @@ client.on('messageCreate', async message =>  {
 			files: [{ attachment:'assets/HandsomePokemon/Handsome'+imgString+'.png',
 			name:'poke.png'}] });
 	}
-	if (message.content.toLowerCase().includes('aram')) {
+	if (message.content.toLowerCase().includes('!aram')) {
+		
+		const efficiently = async kayn => {
+			console.time('efficiently')
+			const { accountId } = await kayn.Summoner.by.name('Jeongsik Oh')
+			const { matches } = await kayn.Matchlist.by
+				.accountID(accountId)
+				.query({ queue: 420 })
+			const gameIds = matches.slice(0, 10).map(({ gameId }) => gameId)
+			const requests = gameIds.map(kayn.Match.get)
+			const results = await Promise.all(requests)
+			console.log(results[0], results.length)
+			console.timeEnd('efficiently')
+		}
+		
+		// 1694.430 ms on `spread` and 500 reqs/s
+		// 1649.070 ms on `burst` on 500 reqs/s
+		const slowly = async kayn => {
+			console.time('slowly')
+			const { accountId } = await kayn.Summoner.by.name('Jeongsik Oh')
+			const { matches } = await kayn.Matchlist.by
+				.accountID(accountId)
+				.query({ queue: 420 })
+			const gameIds = matches.slice(0, 10).map(({ gameId }) => gameId)
+			const results = []
+			for (let i = 0; i < gameIds.length; ++i) {
+				results.push(await kayn.Match.get(gameIds[i]))
+			}
+			console.log(results[0], results.length)
+			console.timeEnd('slowly')
+		}
+		
+		const main = async kayn => {
+			await efficiently(kayn)
+			await slowly(kayn)
+		}
+
+
+
+
+	}
+
+	else if (message.content.toLowerCase().includes('aram')) {
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#05AA47')
 		.setImage('attachment://aram.png'); //takes attachment from send method below
