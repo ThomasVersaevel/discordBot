@@ -37,7 +37,7 @@ const kayn = Kayn(apiKey)({
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS] });
 
 client.commands = new Collection();
-console.log(apiKey);
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 // commands
 for (const file of commandFiles) {
@@ -119,12 +119,6 @@ client.on('messageCreate', async message =>  {
         message.channel.send({ embeds: [exampleEmbed], 
 			files: [{ attachment:'assets/HandsomePokemon/Handsome'+imgString+'.png',
 			name:'poke.png'}] });
-	}
-	if (message.content.toLowerCase().includes('!test')) {
-		const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/stemas?api_key=${apiKey}`
-		const response = await fetch(link);
-		let data = await response.json();
-		console.log(data);
 	}
 	if (message.content.toLowerCase().includes('!aram')) {
 		kayn.Summoner.by
@@ -250,7 +244,7 @@ client.on('messageCreate', async message =>  {
 		message.channel.send({ embeds: [exampleEmbed], 
 			files: [{ attachment:'assets/neus/neus3.png',
 			name:'neus.png'}] });
-	} // kevin 263730771917930518 nico 444814987966283777 Thomas 276755182694563850 ThomasDisco 848986609910939668 Kevin 263730771917930518
+	} // kevin 263730771917930518 nico 444814987966283777 Thomas 276755182694563850 ThomasDisco 848986609910939668 
 	if (message.author.id === '444814987966283777' || message.content.toLowerCase().includes('nico stil nu')) { // big joey meme
 		//let nico = member.guild.channels.cache.get('848986609910939668');
 		if (message.author.moderatable) {
