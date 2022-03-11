@@ -1,104 +1,81 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const rp = require('request-promise');
 const fs = require("fs");
-const puppeteer = require('puppeteer');
-const $ = require('cheerio');
-//const package = require("./package.json");
-var url = 'http://na.op.gg/summoner/userName=';
+const { apiKey } = require('../config.json');
+const { Kayn, REGIONS } = require('kayn')
+
 
 module.exports = {
     data: new SlashCommandBuilder()
 		.setName('aram')
-		.setDescription('Shows your aram stats!')
+		.setDescription('Shows your aram stats')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')
 				.setRequired(true)),
     async execute(interaction) {
+        const kayn = Kayn(apiKey)({
+            region: REGIONS.EUROPE_WEST,
+            apiURLPrefix: 'https://%s.api.riotgames.com',
+            locale: 'en_US',
+            debugOptions: {
+                isEnabled: true,
+                showKey: false,
+            },
+            requestOptions: {
+                shouldRetry: true,
+                numberOfRetriesBeforeAbort: 3,
+                delayBeforeRetry: 1000,
+                burst: false,
+                shouldExitOn403: false,
+            },
+            cacheOptions: {
+                cache: null,
+                timeToLives: {
+                    useDefault: false,
+                    byGroup: {},
+                    byMethod: {},
+                },
+            },
+        })
+        console.log('starting kayn api request');
         
-        /*
-        What I could do is print out the rank and stats in that box (in a emmbed message),
-        then take a photo of the top 3 or so champions that user has played and display below. 
-        */
-        //const args = interaction.content.slice(package.prefix.length).trim().split(/ +/g);
-
-        const args  = interaction.options.getString('lolname')
-
-        let urlAdd = ""+args;
-       
-        urlWithName = url + urlAdd;
-        console.log(urlWithName);
-
-        const puppeteer = require('puppeteer');
-
-        async function run() {
-            // let browser = await puppeteer.launch();//({ headless: false });
-            const browser = await puppeteer.launch({
-                ignoreHTTPSErrors: true,
-                args: ['--disable-setuid-sandbox', '--no-sandbox']
-            })
-            let page = await browser.newPage();
-            await page.setViewport({ width: 1920, height: 1080 });
-            await page.goto(urlWithName);
-            await page.screenshot({ path: './image.png', clip: { x: 460, y: 600, width: 300, height: 1033 } });
-            await interaction.reply(urlAdd + " Stats", { files: ["image.png"] });
-            console.log("here");
-            browser.close();
-        }
-
-        // async function deleteFile() {
-        //     console.log("here2");
-        //     const file = 'image.png';
-
-        //     await fs.access(file, fs.constants.F_OK, (err) => {
-        //         `${file} ${err ? ImgExists = false : ImgExists = true}`;
-        //     });
-        //     if (ImgExists) {
-        //         fs.unlink('image.png', (err) => {
-        //             if (err) throw err;
-        //             console.log('image.png was deleted');
-        //         });
-        //     }
-        // }
-
-        run();
-       // deleteFile()
-
-        puppeteer
-        .launch()
-        .then(function (browser) {
-            return browser.newPage();
+        kayn.Summoner.by
+        .name(interaction.options.getString('lolname'))
+        .region(REGIONS.EUROPE_WEST) 
+        .callback(function(unhandledError, summoner) {
+            kayn.Matchlist.by
+                .accountID(summoner.accountId)
+                /* Note that region falls back to default if unused. */
+                .query({
+                    season: 12,
+                    queue: [220, 240],
+                })
+                .then(function(matchlist) {
+                    console.log('actual matches:', matchlist.matches)
+                    console.log('total number of games:', matchlist.totalGames)
+                })
+                .catch(console.error)
         })
-        .then(function (page) {
-            return page.goto(url).then(function () {
-                return page.content();
-            });
-        })
-        .then(function (html) {
-            $('.wins', html).each(function () {
-                console.log($(this).text());
-                interaction.reply($(this).text());
-            });
-            $('.losses', html).each(function () {
-                console.log($(this).text());
-            });
-            $('.winratio', html).each(function () {
-                console.log($(this).text());
-            });
-            $('.LeagueName', html).each(function () {
-                console.log($(this).text());
-            });
-            $('.tierRank', html).each(function () {
-                console.log($(this).text());
-            });
-            $('.ChampionName', html).each(function () {
-                console.log($(this).text());
-            });
 
-            // console.log($('.wins', html).text());
-        })
-        .catch(function (err) {
-            //handle error
-        });
+
+        const efficiently = async () => {
+			console.time('efficiently')
+			const { accountId } = await kayn.Summoner.by.name(interaction.options.getString('lolname'))
+			const { matches } = await kayn.Matchlist.by
+				.accountID(accountId)
+				.query({ queue: 420 })
+			const gameIds = matches.slice(0, 10).map(({ gameId }) => gameId)
+			const requests = gameIds.map(kayn.Match.get)
+			const results = await Promise.all(requests)
+			console.log(results[0], results.length)
+			console.timeEnd('efficiently')
+		}
+		//efficiently();
+		// const main = async () => {
+		// 	await efficiently(kayn)
+		//  }
+        //module.exports = main
+       // await interaction.reply();
     }
 }
