@@ -28,14 +28,21 @@ module.exports = {
         const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`
 		const response = await fetch(link);
 		let data = await response.json();
-        console.log(data);
+        //console.log(data);
         patchNr = '12.5.1';
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${data.profileIconId}.png`
 
-        const exampleEmbed = new MessageEmbed()
+        var exampleEmbed = new MessageEmbed()
             .setColor('blue')
-            .setAuthor(data.name+' is level '+data.summonerLevel, 'attachment://icon.png');
+            .setTitle(data.name)
+            .addField('Level:' , ''+data.summonerLevel, true)
+
+            .setThumbnail('attachment://icon.png');
         
+            if (data.summonerLevel > 400) {
+                exampleEmbed.setFooter('(nolife lol)');
+            }
+
         await interaction.reply({ embeds: [exampleEmbed], 
 			files: [{ attachment: icon,
 			name:'icon.png'}] });

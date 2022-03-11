@@ -7,31 +7,6 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 const { apiKey } = require('./config.json');
-const { Kayn, REGIONS } = require('kayn')
-const kayn = Kayn(apiKey)({
-	region: REGIONS.EUROPE_WEST,
-	apiURLPrefix: 'https://%s.api.riotgames.com',
-	locale: 'en_US',
-	debugOptions: {
-		isEnabled: true,
-		showKey: false,
-	},
-	requestOptions: {
-		shouldRetry: true,
-		numberOfRetriesBeforeAbort: 3,
-		delayBeforeRetry: 1000,
-		burst: false,
-		shouldExitOn403: false,
-	},
-	cacheOptions: {
-		cache: null,
-		timeToLives: {
-			useDefault: false,
-			byGroup: {},
-			byMethod: {},
-		},
-	},
-})
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS] });

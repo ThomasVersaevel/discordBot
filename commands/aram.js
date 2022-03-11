@@ -31,32 +31,55 @@ module.exports = {
         const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}`
 		const matchIdResponse = await fetch(matchLink);
 		let matchIdData = await matchIdResponse.json();
-        //console.log(matchIdData);
+        console.log(matchIdResponse);
 
 
         // ## From here its the reply ##
-        patchNr = '12.5.1';
+        patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
-        await interaction.reply("got some stuff");
+        await interaction.reply("Gathering data, please wait.");
 
-        let exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
-            .setColor('blue')
-            .setTitle('Match history of '+sumData.name)
+        var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
+            .setColor('#ffffff')
+            .setTitle(sumData.name)
+            .addField('Aram history', '\u200b', false)
             .setThumbnail('attachment://icon.png');
-
+   
+        var idNr = 1;
         // ## obtain match info from 20 IDs ##
         for (var id = 0; id < matchIdData.length; id++) { //for in uses id as an iterator thus ddo data[id]
+            
             let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
 		    const matchResponse = await fetch(tempLink);
 		    let matchData = await matchResponse.json();
-           
-           // console.log(matchData);
-            exampleEmbed
-                .addField('Match '+id, 'victory', true);
-        }
+            // ## check only for ARAM ##
+            if (matchData.info.gameMode === 'ARAM') {
+                //console.log('found aram match');
+                
 
-        await interaction.reply({ embeds: [exampleEmbed], 
-			files: [{ attachment: icon,
-			name:'icon.png'}] });
+                var index = 0;
+                for (var i = 0; i < 10; i++) {
+                    if (matchData.info.participants[i].puuid === puuid) {
+                        index = i;
+                    }
+                }
+                const partData = matchData.info.participants[index];
+
+                if( matchData.info.participants[index].win ) {
+                    outcome = ':green_circle:';
+                } else {
+                    outcome = ':red_circle:';
+                }
+                // console.log(matchData);
+                exampleEmbed
+                    .addField(outcome+' Match '+ parseInt(idNr++), 
+                    partData.championName + " " + partData.kills+"/"+partData.deaths+"/"+partData.assists, true);
+            }
+        }
+        await interaction.followUp({ embeds: [exampleEmbed], 
+            files: [{ attachment: icon,
+            name:'icon.png'}] });
+
+        
     }
 }
