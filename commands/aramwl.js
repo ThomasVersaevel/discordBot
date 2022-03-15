@@ -8,8 +8,8 @@ const { LolApi, Constants } = require('twisted');
 
 module.exports = {
     data: new SlashCommandBuilder()
-		.setName('aram')
-		.setDescription('Shows your aram stats')
+		.setName('aramwl')
+		.setDescription('Shows your aram wins and loses')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')
@@ -45,13 +45,17 @@ module.exports = {
        
 
         var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
-            .setColor('#ffffff')
+            .setColor('#4e79a7')
             .setTitle(sumData.name)
-            .addField('Aram history', '\u200b', false)
+            .addField('Aram win loss', '\u200b', false)
             .setThumbnail('attachment://icon.png');
    
         var idNr = 1;
         var startIndex = 0;
+
+        var wins = 0;
+        var losses = 0;
+
         // ## obtain match info from 20 IDs ##
         for (var id = 0; id < matchIdData.length; id++) { //for in uses id as an iterator thus ddo data[id]
             
@@ -72,21 +76,10 @@ module.exports = {
                 }
                 const partData = matchData.info.participants[partIndex];
 
-                outcome = matchData.info.participants[partIndex].win ? ':green_circle:' : ':red_circle:';
-
-                let timestampMin = matchData.info.gameDuration / .6;
-                let timestamp = timestampMin.toString();
-                if (timestamp.length < 4) {
-                    timestamp = 0+timestamp; 
-                }
-                let seconds = parseInt(timestamp.substring(2,4))/100 * 60;
-                let secondsString = seconds.toString().replace('.', '0');
-                let stamp = timestamp.substring(0,2)+":"+ secondsString.substring(0,2);
-                let kda = partData.kills+"/"+partData.deaths+"/"+partData.assists;
+                matchData.info.participants[partIndex].win ? wins++ : losses++;
 
                 exampleEmbed
-                    .addField(outcome+" " + " " + kda, 
-                    partData.championName+"  "+stamp, true);
+                    .setImage('attachment://chart.png');
             }
             if (idNr < 22 && id == 19) { //method to keep looking for 20 aram games
                 startIndex += 20;
@@ -101,19 +94,51 @@ module.exports = {
             }
         }
 
-        if ((idNr-1) % 3 == 1) {
-            exampleEmbed
-                .addField('\u200b', '\u200b', true);
-        } else if ((idNr-1) % 3 == 2) {
-            exampleEmbed
-                .addField('\u200b', '\u200b', true)
-                .addField('\u200b', '\u200b', true);
-        }
+        // chart.js code
+        var winloss = [wins, losses];
+        var labels = ['wins', 'losses'];
 
+        var winsArray = [winloss[0]];
+        var lossesArray = [winloss[1]];
+
+        var chart = {
+            type: 'bar',
+            data: {
+                labels: labels,
+                // font: {
+                //     size: 20
+                // },
+                datasets: [{
+                    
+                    data: winloss,
+                    backgroundColor: [
+                        "rgba(75, 192, 192, 0.5)",
+                        "rgba(255, 99, 132, 0.5)"
+                        ],
+                    borderColor: [
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(255, 99, 132, 1)"
+                    ],
+                    borderWidth: 1    
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        };
+        const encodedChart = encodeURIComponent(JSON.stringify(chart));
+        const chartUrl = `https://quickchart.io/chart?c=${encodedChart}`;
+
+        try {
         await interaction.followUp({ embeds: [exampleEmbed], 
-            files: [{ attachment: icon,
-            name:'icon.png'}] });
-
+            files: [ { attachment: icon, name:'icon.png'}, 
+                { attachment: chartUrl, name:'chart.png'} 
+                ] } );
+        } catch (error) {
+            console.error(error);
+        }
         
     }
 }
