@@ -6,6 +6,7 @@ const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const Canvas = require('canvas');
 const { Chart } = require('chart.js');
+const { Util } = require('util');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -42,14 +43,15 @@ module.exports = {
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
-        await interaction.reply("Gathering data, please wait.");
+        await interaction.reply("ARAM wins and losses for "+username);
        
 
-        var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
-            .setColor('#4e79a7')
-            .setTitle(sumData.name)
-            .addField('Aram wins and losses', '\u200b', false)
-            .setThumbnail('attachment://icon.png');
+        // var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
+        //     .setColor('#4e79a7')
+        //     .setTitle(sumData.name)
+        //     .addField('Aram wins and losses', '\u200b', false)
+        //     .setThumbnail('attachment://icon.png')
+        //     .setImage('attachment://canvas.png');
    
         var idNr = 1;
         var startIndex = 0;
@@ -119,7 +121,7 @@ module.exports = {
                         "rgba(75, 192, 192, 1)",
                         "rgba(255, 99, 132, 1)"
                     ],
-                    borderWidth: 1    
+                    borderWidth: 5    
                 }]
             },
             options: {
@@ -127,39 +129,47 @@ module.exports = {
                     legend: {
                         display: false
                     },
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: true,
+                            drawBorder: true,
+                            drawOnChartArea: true,
+                            drawTicks: true,
+                        },
+                        ticks: {
+                            color: '#ffffff'
+                        }
+                    },
+                    y: {
+                      grid: {
+                        drawBorder: false,
+                        color: function(context) {
+                                if (context.tick.value > 0) {
+                                return '#ffffff';
+                            } else if (context.tick.value < 0) {
+                                return '#ffffff';
+                            } 
+              
+                            return '#ffffff';
+                            },
+                        },
+                      ticks: {
+                        color: '#ffffff'
+                        }
+                    }
                 }
-                // scales: {
-                //     yAxes: [{
-                //         ticks: {
-                //             fontSize: 15
-                //         }
-                //     }],
-                //     xAxes: [{
-                //         ticks: {
-                //             fontSize: 15
-                //         }
-                //     }]
-                // }
             }
         });  
 
-        const background = await Canvas.loadImage('./assets/howlingAbyss2.png');
+        const background = await Canvas.loadImage('./assets/howlingAbyss.png');
         const chartImg = await Canvas.loadImage(chart.toBase64Image()); //this works better than JSON.stringify
         context.drawImage(background, 0, 0, canvas.width, canvas.height);
 	    // Move the image downwards vertically and constrain its height to 200, so that it's square
 	    context.drawImage(chartImg, 0, 0, canvas.width, canvas.height);  
         const attachment = new MessageAttachment(canvas.toBuffer()); 
   
-        exampleEmbed.setImage('attachment://canvas.png');
-
-        //interaction.followUp({ files: [attachment] });
-
-        await interaction.followUp({ embeds: [exampleEmbed], 
-            files: [ { attachment: icon, name:'icon.png'}, 
-                { attachment: attachment, name:'canvas.png'} 
-                ] } );
-      
-
-        
+        await interaction.followUp({ files: [attachment] });
     }
 }

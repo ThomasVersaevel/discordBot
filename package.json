@@ -99,6 +99,7 @@
     "type-check": "^0.4.0",
     "type-fest": "^0.20.2",
     "uri-js": "^4.4.1",
+    "util": "^0.12.4",
     "v8-compile-cache": "^2.3.0",
     "webidl-conversions": "^3.0.1",
     "whatwg-url": "^5.0.0",
