@@ -1,7 +1,6 @@
 {
   "name": "discordbot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
@@ -18,8 +17,10 @@
     "balanced-match": "^1.0.2",
     "brace-expansion": "^1.1.11",
     "callsites": "^3.1.0",
+    "canvas": "^2.9.0",
     "chalk": "^4.1.2",
     "chart.js": "^3.7.1",
+    "chartjs-node-canvas": "^4.1.6",
     "cheerio": "^1.0.0-rc.10",
     "color-convert": "^2.0.1",
     "color-name": "^1.1.4",
@@ -123,5 +124,6 @@
   "bugs": {
     "url": "https://github.com/ThomasVersaevel/discordBot/issues"
   },
-  "homepage": "https://github.com/ThomasVersaevel/discordBot#readme"
+  "homepage": "https://github.com/ThomasVersaevel/discordBot#readme",
+  "description": ""
 }

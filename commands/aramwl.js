@@ -4,7 +4,8 @@ const fs = require("fs");
 const { apiKey } = require('../config.json');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
-const { LolApi, Constants } = require('twisted');
+const Canvas = require('canvas');
+const { Chart } = require('chart.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -47,7 +48,7 @@ module.exports = {
         var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
             .setColor('#4e79a7')
             .setTitle(sumData.name)
-            .addField('Aram win loss', '\u200b', false)
+            .addField('Aram wins and losses', '\u200b', false)
             .setThumbnail('attachment://icon.png');
    
         var idNr = 1;
@@ -78,10 +79,10 @@ module.exports = {
 
                 matchData.info.participants[partIndex].win ? wins++ : losses++;
 
-                exampleEmbed
-                    .setImage('attachment://chart.png');
+                
+                idNr++;
             }
-            if (idNr < 22 && id == 19) { //method to keep looking for 20 aram games
+            if (idNr < 22 && id == 19 && false) { //method to keep looking for 20 aram games
                 startIndex += 20;
                 if (startIndex < 21) {
                     id = 0;
@@ -98,16 +99,15 @@ module.exports = {
         var winloss = [wins, losses];
         var labels = ['wins', 'losses'];
 
-        var winsArray = [winloss[0]];
-        var lossesArray = [winloss[1]];
+        const canvas = Canvas.createCanvas(1000, 750);
+		const context = canvas.getContext('2d');
 
-        var chart = {
+        Chart.defaults.font.size = 36;
+
+        var chart = new Chart(context, {
             type: 'bar',
             data: {
                 labels: labels,
-                // font: {
-                //     size: 20
-                // },
                 datasets: [{
                     
                     data: winloss,
@@ -123,22 +123,43 @@ module.exports = {
                 }]
             },
             options: {
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false
+                    },
                 }
+                // scales: {
+                //     yAxes: [{
+                //         ticks: {
+                //             fontSize: 15
+                //         }
+                //     }],
+                //     xAxes: [{
+                //         ticks: {
+                //             fontSize: 15
+                //         }
+                //     }]
+                // }
             }
-        };
-        const encodedChart = encodeURIComponent(JSON.stringify(chart));
-        const chartUrl = `https://quickchart.io/chart?c=${encodedChart}`;
+        });  
 
-        try {
+        const background = await Canvas.loadImage('./assets/howlingAbyss2.png');
+        const chartImg = await Canvas.loadImage(chart.toBase64Image()); //this works better than JSON.stringify
+        context.drawImage(background, 0, 0, canvas.width, canvas.height);
+	    // Move the image downwards vertically and constrain its height to 200, so that it's square
+	    context.drawImage(chartImg, 0, 0, canvas.width, canvas.height);  
+        const attachment = new MessageAttachment(canvas.toBuffer()); 
+  
+        exampleEmbed.setImage('attachment://canvas.png');
+
+        //interaction.followUp({ files: [attachment] });
+
         await interaction.followUp({ embeds: [exampleEmbed], 
             files: [ { attachment: icon, name:'icon.png'}, 
-                { attachment: chartUrl, name:'chart.png'} 
+                { attachment: attachment, name:'canvas.png'} 
                 ] } );
-        } catch (error) {
-            console.error(error);
-        }
+      
+
         
     }
 }
