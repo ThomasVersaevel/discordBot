@@ -26,6 +26,7 @@ module.exports = {
             const id = interaction.member.id;
             username = shortcuts[id];
         }
+        username = username[0].toUpperCase() + username.substring(1);
         // ## obtain summoner info ##
         const sumLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`
 		const sumResponse = await fetch(sumLink);
@@ -37,7 +38,7 @@ module.exports = {
 		let matchIdData = await matchIdResponse.json();
         //console.log(matchIdData);
 
-
+        
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
@@ -59,8 +60,8 @@ module.exports = {
         var exampleEmbed = new MessageEmbed()
             .setColor('#3FFFFF')
             .setTitle(username)
-            .addField('Played '+partData.championName, 'Dodged '+partData.challenges.skillshotsDodged+' skillshots last game' , true)
-            .addField('\u200b', 'Hit '+partData.challenges.skillshotsHit+' skillshots last game' , false)
+            .addField('Played '+partData.championName, 'Dodged '+partData.challenges.skillshotsDodged+' skillshots last game\n'
+                + 'Hit '+partData.challenges.skillshotsHit+' skillshots last game', true)
             .setThumbnail('attachment://icon.png');
         await interaction.reply({ embeds: [exampleEmbed], 
             files: [{ attachment: icon,

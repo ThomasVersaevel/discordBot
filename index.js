@@ -2,7 +2,7 @@
 // ## use " node . " to run the bot and deploy-commands.js to activate commands##
 
 const fs = require('fs');
-const fetch = require('node-fetch');
+//const fetch = require('node-fetch');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const { MessageAttachment, MessageEmbed } = require('discord.js');

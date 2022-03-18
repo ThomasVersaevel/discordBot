@@ -14,16 +14,18 @@ module.exports = {
 				.setRequired(true)),
     async execute(interaction) {
 
-
-
+        // dit moet naar een global method
         let username = interaction.options.getString('lolname');
         if (username === 'reign') { //kevin simpelmaker
             username = 'reıgn';
+        } else if (username === 'kokoala') {
+            username = 'kôkoala';
         } else if (username === 'me') {
            const id = interaction.member.id;
            username = shortcuts[id];
            //console.log(username);
         }
+        username = username[0].toUpperCase() + username.substring(1);
 
         const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`
 		const response = await fetch(link);

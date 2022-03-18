@@ -28,6 +28,8 @@ module.exports = {
             const id = interaction.member.id;
             username = shortcuts[id];
         }
+        username = username[0].toUpperCase() + username.substring(1);
+
         // ## obtain summoner info ##
         const sumLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`
 		const sumResponse = await fetch(sumLink);
@@ -38,7 +40,7 @@ module.exports = {
         const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450`
 		const matchIdResponse = await fetch(matchLink);
 		let matchIdData = await matchIdResponse.json();
-        console.log(matchIdData);
+        //console.log(matchIdData);
 
 
         // ## From here its the reply ##
@@ -157,7 +159,8 @@ module.exports = {
 	    // Move the image downwards vertically and constrain its height to 200, so that it's square
 	    context.drawImage(chartImg, 0, 0, canvas.width, canvas.height);  
         const attachment = new MessageAttachment(canvas.toBuffer()); 
-  
+
         await interaction.followUp({ files: [attachment] });
+        interaction.deleteReply();
     }
 }

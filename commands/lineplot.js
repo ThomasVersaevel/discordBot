@@ -28,6 +28,7 @@ module.exports = {
             const id = interaction.member.id;
             username = shortcuts[id];
         }
+        username = username[0].toUpperCase() + username.substring(1);
         // ## obtain summoner info ##
         const sumLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`
 		const sumResponse = await fetch(sumLink);
@@ -44,7 +45,7 @@ module.exports = {
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
         await interaction.reply("ARAM wins and losses for "+username);
-       
+        //interaction.deferReply();
 
         // var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
         //     .setColor('#4e79a7')
