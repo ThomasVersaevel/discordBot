@@ -10,7 +10,7 @@ const { Util } = require('util');
 
 module.exports = {
     data: new SlashCommandBuilder()
-		.setName('aramwl')
+		.setName('barplotaram')
 		.setDescription('Shows your aram wins and loses')
         .addStringOption(option =>
 			option.setName('lolname')

@@ -34,7 +34,7 @@ module.exports = {
         let sumData = await sumResponse.json();
         const puuid = sumData.puuid; // id of user
         // ## obtain 20 match IDs (default) ##
-        const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}`
+        const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&start=0&count=1`
 		const matchIdResponse = await fetch(matchLink);
 		let matchIdData = await matchIdResponse.json();
         //console.log(matchIdData);
@@ -59,47 +59,30 @@ module.exports = {
         var wins = 0;
         var losses = 0;
 
-        // ## obtain match info from 20 IDs ##
-        for (var id = 0; id < matchIdData.length; id++) { 
-            
-            let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
+        // ## obtain match info ##
+            let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}/timeline?api_key=${apiKey}`
 		    const matchResponse = await fetch(tempLink);
 		    let matchData = await matchResponse.json();
             //console.log(matchData.info);
-            // ## check only for ARAM ##
-            if (matchData.info.gameMode === 'ARAM' && idNr < 22) { //ensure no more than 22 matched displayed
-                //console.log('found aram match');
                 
-                // participant index for finding you in each game
-                var partIndex = 0;
-                for (var i = 0; i < 10; i++) {
-                    if (matchData.info.participants[i].puuid === puuid) {
-                        partIndex = i;
-                    }
-                }
-                const partData = matchData.info.participants[partIndex];
+            // participant index for finding you in each game
+            var partIndex = 0;
+            for (var i = 0; i < 10; i++) {
+                if (matchData.info.participants[i].puuid === puuid) {
+                    partIndex = i;
+                }                
+            }
+            const partData = matchData.info.participants[partIndex];
 
-                matchData.info.participants[partIndex].win ? wins++ : losses++;
+            matchData.info.participants[partIndex].win ? wins++ : losses++;
 
                 
-                idNr++;
-            }
-            if (idNr < 22 && id == 19 && false) { //method to keep looking for 20 aram games
-                startIndex += 20;
-                if (startIndex < 21) {
-                    id = 0;
-                    // ## obtain 20 more match IDs ##
-                    const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${startIndex}&api_key=${apiKey}`
-                    const matchIdResponse = await fetch(matchLink);
-                    matchIdData = await matchIdResponse.json();
-                    console.log('restarting at '+startIndex);
-                }            
-            }
-        }
+            
+        
 
         // chart.js code
-        var winloss = [wins, losses];
-        var labels = ['wins', 'losses'];
+        var gold = [wins, losses];
+        var time = ['wins', 'losses'];
 
         const canvas = Canvas.createCanvas(1000, 750);
 		const context = canvas.getContext('2d');
@@ -109,10 +92,10 @@ module.exports = {
         var chart = new Chart(context, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: time,
                 datasets: [{
                     
-                    data: winloss,
+                    data: gold,
                     backgroundColor: [
                         "rgba(75, 192, 192, 0.5)",
                         "rgba(255, 99, 132, 0.5)"

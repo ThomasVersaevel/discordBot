@@ -54,7 +54,7 @@ module.exports = {
                 partIndex = i;
             }
         }
-        console.log(matchData.info.teams[0]);
+        //console.log(matchData.info.teams[0]);
         const partData = matchData.info.participants[partIndex];
         var exampleEmbed = new MessageEmbed()
             .setColor('#3FFFFF')
