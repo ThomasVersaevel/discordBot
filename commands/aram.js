@@ -32,7 +32,7 @@ module.exports = {
         let sumData = await sumResponse.json();
         const puuid = sumData.puuid; // id of user
         // ## obtain 20 match IDs (default) ##
-        const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}`
+        const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450&start=0&count=21`
 		const matchIdResponse = await fetch(matchLink);
 		let matchIdData = await matchIdResponse.json();
         //console.log(matchIdData);
@@ -53,16 +53,13 @@ module.exports = {
         var idNr = 1;
         var startIndex = 0;
         // ## obtain match info from 20 IDs ##
-        for (var id = 0; id < matchIdData.length; id++) { //for in uses id as an iterator thus ddo data[id]
+        for (var id = 0; id < matchIdData.length; id++) { //for in uses id as an iterator thus do data[id]
             
             let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
 		    const matchResponse = await fetch(tempLink);
 		    let matchData = await matchResponse.json();
             //console.log(matchData.info);
-            // ## check only for ARAM ##
-            if (matchData.info.gameMode === 'ARAM' && idNr < 22) { //ensure no more than 22 matched displayed
-                //console.log('found aram match');
-                
+       
                 // participant index for finding you in each game
                 var partIndex = 0;
                 for (var i = 0; i < 10; i++) {
@@ -87,18 +84,6 @@ module.exports = {
                 exampleEmbed
                     .addField(outcome+" " + " " + kda, 
                     partData.championName+"  "+stamp, true);
-            }
-            if (idNr < 22 && id == 19) { //method to keep looking for 20 aram games
-                startIndex += 20;
-                if (startIndex < 21) {
-                    id = 0;
-                    // ## obtain 20 more match IDs ##
-                    const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${startIndex}&api_key=${apiKey}`
-                    const matchIdResponse = await fetch(matchLink);
-                    matchIdData = await matchIdResponse.json();
-                    console.log('restarting at '+startIndex);
-                }            
-            }
         }
 
         if ((idNr-1) % 3 == 1) {

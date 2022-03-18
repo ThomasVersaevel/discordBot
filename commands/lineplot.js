@@ -65,7 +65,7 @@ module.exports = {
             let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
 		    const matchResponse = await fetch(tempLink);
 		    let matchData = await matchResponse.json();
-            console.log(matchData.info);
+            //console.log(matchData.info);
             // ## check only for ARAM ##
             if (matchData.info.gameMode === 'ARAM' && idNr < 22) { //ensure no more than 22 matched displayed
                 //console.log('found aram match');

@@ -95,25 +95,7 @@ client.on('messageCreate', async message =>  {
 			files: [{ attachment:'assets/HandsomePokemon/Handsome'+imgString+'.png',
 			name:'poke.png'}] });
 	}
-	if (message.content.toLowerCase().includes('!aram')) {
-		kayn.Summoner.by
-        .name(message.content.toLowerCase().split(' ')[1])
-        .region(REGIONS.EUROPE_WEST) 
-        .callback(function(unhandledError, summoner) {
-            kayn.Matchlist.by
-                .accountID(summoner.accountId)
-                /* Note that region falls back to default if unused. */
-                .query({
-                    season: 11,
-                    queue: [420, 440],
-                })
-                .then(function(matchlist) {
-                    console.log('actual matches:', matchlist.matches)
-                    console.log('total number of games:', matchlist.totalGames)
-                })
-                .catch(console.error)
-        })
-	} else if (message.content.toLowerCase().includes('aram')) {
+    if (message.content.toLowerCase().includes('aram') && (message.content.toLowerCase().includes('tijd') || message.content.toLowerCase().length < 11)) {
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#05AA47')
 		.setImage('attachment://aram.png'); //takes attachment from send method below
@@ -226,7 +208,7 @@ client.on('messageCreate', async message =>  {
 			message.author.timeout(60*1000, 'sssst'); 
 			message.channel.send('nico is nu even 1 minuut stil');
 		} else {
-			console.log('cant moderate member: '+message.author.id);
+			//console.log('cant moderate member: '+message.author.id);
 		}
 	}
 });

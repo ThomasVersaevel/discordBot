@@ -33,11 +33,12 @@ module.exports = {
 		const sumResponse = await fetch(sumLink);
         let sumData = await sumResponse.json();
         const puuid = sumData.puuid; // id of user
-        // ## obtain 20 match IDs (default) ##
-        const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}`
+        //console.log(puuid);
+        // ## obtain 20 match IDs (default) for only aram queue 450##
+        const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450`
 		const matchIdResponse = await fetch(matchLink);
 		let matchIdData = await matchIdResponse.json();
-        //console.log(matchIdData);
+        console.log(matchIdData);
 
 
         // ## From here its the reply ##
@@ -67,7 +68,6 @@ module.exports = {
 		    let matchData = await matchResponse.json();
             //console.log(matchData.info);
             // ## check only for ARAM ##
-            if (matchData.info.gameMode === 'ARAM' && idNr < 22) { //ensure no more than 22 matched displayed
                 //console.log('found aram match');
                 
                 // participant index for finding you in each game
@@ -83,18 +83,6 @@ module.exports = {
 
                 
                 idNr++;
-            }
-            if (idNr < 22 && id == 19 && false) { //method to keep looking for 20 aram games
-                startIndex += 20;
-                if (startIndex < 21) {
-                    id = 0;
-                    // ## obtain 20 more match IDs ##
-                    const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${startIndex}&api_key=${apiKey}`
-                    const matchIdResponse = await fetch(matchLink);
-                    matchIdData = await matchIdResponse.json();
-                    console.log('restarting at '+startIndex);
-                }            
-            }
         }
 
         // chart.js code
