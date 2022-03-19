@@ -51,51 +51,94 @@ module.exports = {
 		let matchData = await matchResponse.json();
         //console.log(matchData.info);
 
-        var names = [];
-        var dodges = [];
-        var partIndex = 0;
+
+        var namesB = [];   
+        var dodgesB = [];     
+        var namesR = [];   
+        var dodgesR = [];
+        
         for (var i = 0; i < 10; i++) {
-            names.push(matchData.info.participants[i].summonerName);
-            dodges.push(matchData.info.participants[i].challenges.skillshotsDodged);
+            if (i < 5) {
+                namesB.push(matchData.info.participants[i].summonerName); 
+                dodgesB.push(matchData.info.participants[i].challenges.skillshotsDodged);
+            } else {
+                namesR.push(matchData.info.participants[i].summonerName); 
+                dodgesR.push(matchData.info.participants[i].challenges.skillshotsDodged);
+            }
         }
-        console.log(names);
+        arrayOfObjB = namesB.map(function(d, i) {
+            return {
+              label: d,
+              data: dodgesB[i] || 0
+            };
+          });
+        arrayOfObjR = namesR.map(function(d, i) {
+            return {
+              label: d,
+              data: dodgesR[i] || 0
+            };
+        });
+          
+        sortedArrayOfObjB = arrayOfObjB.sort(function(a, b) {
+            return b.data - a.data;
+        });
+        sortedArrayOfObjR = arrayOfObjR.sort(function(a, b) {
+            return b.data - a.data;
+        });
+
+        newArrayLabel = [];
+        newArrayData = [];
+        sortedArrayOfObjB.forEach(function(d){
+            newArrayLabel.push(d.label);
+            newArrayData.push(d.data);
+        });
+        sortedArrayOfObjR.forEach(function(d){
+            newArrayLabel.push(d.label);
+            newArrayData.push(d.data);
+        });
+
+        // for (var key in dodges) {
+        //      console.log(dodges[key]);
+        // }
+
+        //console.log(names);
 
          // chart.js code 
          const canvas = Canvas.createCanvas(1000, 750);
          const context = canvas.getContext('2d');
  
          Chart.defaults.font.size = 36;
- 
+        
          var chart = new Chart(context, {
              type: 'bar',
              data: {
-                 labels: names,
+                 labels: newArrayLabel,
                  datasets: [{
                      
-                     data: dodges,
+                     data: newArrayData,
                      backgroundColor: [
                          "#64B1E4",
                          "#64B1E4",
                          "#64B1E4",
                          "#64B1E4",
                          "#64B1E4",
-                         "#E89D99",
-                         "#E89D99",
-                         "#E89D99",
-                         "#E89D99",
-                         "#E89D99"
+                         "#ea7872",
+                         "#ea7872",
+                         "#ea7872",
+                         "#ea7872",
+                         "#ea7872"
                          ],
                      borderColor: [
-                         "009DFF",
-                         "009dff",
-                         "009dff",
-                         "009dff",
-                         "009dff",
-                         "ff0c00",
-                         "ff0c00",
-                         "ff0c00",
-                         "ff0c00",
-                         "ff0c00"
+                         "#009DFF",
+                         "#009dff",
+                         "#009dff",
+                         "#009dff",
+                         "#009dff",
+                         "#f74d47",
+                         "#f74d47",
+                         "#f74d47",
+                         "#f74d47",
+                         "#f74d47"
                      ],
                      borderWidth: 5    
                  }]
@@ -147,6 +190,6 @@ module.exports = {
          const attachment = new MessageAttachment(canvas.toBuffer()); 
  
          await interaction.followUp({ files: [attachment] });
-         interaction.deleteReply();       
+         //interaction.deleteReply();       
     },
 };
