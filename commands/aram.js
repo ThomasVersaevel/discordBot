@@ -1,10 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
-const fs = require("fs");
 const { apiKey } = require('../config.json');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
-const { LolApi, Constants } = require('twisted');
 
 module.exports = {
     data: new SlashCommandBuilder()

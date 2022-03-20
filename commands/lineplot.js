@@ -77,10 +77,7 @@ module.exports = {
 
             matchData.info.participants[partIndex].win ? wins++ : losses++;
 
-                
-            
         
-
         // chart.js code
         var gold = [wins, losses];
         var time = ['wins', 'losses'];
