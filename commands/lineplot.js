@@ -6,7 +6,6 @@ const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const Canvas = require('canvas');
 const { Chart } = require('chart.js');
-const { Util } = require('util');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -44,7 +43,7 @@ module.exports = {
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
-        await interaction.reply("ARAM wins and losses for "+username);
+        await interaction.reply("Gold over time for "+username+"'s last game");
         //interaction.deferReply();
 
         // var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
@@ -61,27 +60,32 @@ module.exports = {
         var losses = 0;
 
         // ## obtain match info ##
-            let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}/timeline?api_key=${apiKey}`
-		    const matchResponse = await fetch(tempLink);
-		    let matchData = await matchResponse.json();
-            //console.log(matchData.info);
-                
-            // participant index for finding you in each game
-            var partIndex = 0;
-            for (var i = 0; i < 10; i++) {
-                if (matchData.info.participants[i].puuid === puuid) {
-                    partIndex = i;
-                }                
+        let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}/timeline?api_key=${apiKey}`
+		const matchResponse = await fetch(tempLink);
+		let matchData = await matchResponse.json();
+        console.log(matchData.info.frames[0].participantFrames['1'].totalGold); // here you get frames wich is an array by timestamps
+               
+
+        var blueTeamGold = [];
+        var redTeamGold = [];
+        var time = [];
+
+        for (var i = 0; i < matchData.info.frames.length; i++) {
+            var bGold = 0;
+            var rGold = 0;
+            for (var j = 1; j < 11; j++) { // loop through all players
+                if (j < 6) {
+                    bGold += matchData.info.frames[i].participantFrames[j.toString()].totalGold;
+                } else {
+                    bGold -= matchData.info.frames[i].participantFrames[j.toString()].totalGold;
+                }
             }
-            const partData = matchData.info.participants[partIndex];
+            blueTeamGold.push(bGold); 
+            redTeamGold.push(rGold);
+            time.push(Math.round(matchData.info.frames[i].timestamp/60000));
+        }
 
-            matchData.info.participants[partIndex].win ? wins++ : losses++;
-
-        
         // chart.js code
-        var gold = [wins, losses];
-        var time = ['wins', 'losses'];
-
         const canvas = Canvas.createCanvas(1000, 750);
 		const context = canvas.getContext('2d');
 
@@ -92,15 +96,24 @@ module.exports = {
             data: {
                 labels: time,
                 datasets: [{
-                    
-                    data: gold,
+                    data: blueTeamGold,
+                    fill: true,
                     backgroundColor: [
-                        "rgba(75, 192, 192, 0.5)",
-                        "rgba(255, 99, 132, 0.5)"
+                        "rgba(39, 148, 245, 0.55)"
                         ],
                     borderColor: [
-                        "rgba(75, 192, 192, 1)",
-                        "rgba(255, 99, 132, 1)"
+                        "rgba(15, 83, 255, 1)"
+                    ],
+                    borderWidth: 5    
+                },
+                {
+                    data: redTeamGold,
+                    fill: true,
+                    backgroundColor: [
+                        "rgba(221, 27, 27, 0.55)"
+                        ],
+                    borderColor: [
+                        "rgba(221, 27, 27, 1)"
                     ],
                     borderWidth: 5    
                 }]
@@ -112,32 +125,29 @@ module.exports = {
                     },
                 },
                 scales: {
-                    x: {
+
+                    x:  {
+                        display: false,
                         grid: {
                             display: true,
                             drawBorder: true,
                             drawOnChartArea: true,
                             drawTicks: true,
+
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            autoSkip: true,
+                           // maxTicksLimit: 2
+                        }
+                    },
+                    y:  {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
                         },
                         ticks: {
                             color: '#ffffff'
-                        }
-                    },
-                    y: {
-                      grid: {
-                        drawBorder: false,
-                        color: function(context) {
-                                if (context.tick.value > 0) {
-                                return '#ffffff';
-                            } else if (context.tick.value < 0) {
-                                return '#ffffff';
-                            } 
-              
-                            return '#ffffff';
-                            },
-                        },
-                      ticks: {
-                        color: '#ffffff'
                         }
                     }
                 }
