@@ -10,7 +10,7 @@ const {Util} = require('util');
 
 module.exports = {
     data: new SlashCommandBuilder()
-		.setName('lineplot')
+		.setName('goldplot')
 		.setDescription('Shows your aram wins and loses')
         .addStringOption(option =>
 			option.setName('lolname')
@@ -64,7 +64,7 @@ module.exports = {
         let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}/timeline?api_key=${apiKey}`
 		const matchResponse = await fetch(tempLink);
 		let matchData = await matchResponse.json();
-        //console.log(matchData.info.frames[0].participantFrames['1'].totalGold); // here you get frames wich is an array by timestamps
+        console.log(matchData.info.frames[0].participantFrames['1'].totalGold); // here you get frames wich is an array by timestamps
                
 
         var blueTeamGold = [];
@@ -84,13 +84,11 @@ module.exports = {
                 }
                
             }
-            bGold = goldThisFrame;
-
-            // if (goldThisFrame >= 0) {
-            //     bGold = goldThisFrame;
-            // } else {
-            //     rGold = goldThisFrame;
-            // }
+            if (goldThisFrame >= 0) {
+                bGold = goldThisFrame;
+            } else {
+                rGold = goldThisFrame;
+            }
             blueTeamGold.push(bGold); 
             redTeamGold.push(rGold);
             time.push(Math.round(matchData.info.frames[i].timestamp/60000));
@@ -134,7 +132,7 @@ module.exports = {
         NegativeColor.defaults = LineController.defaults;
         NegativeColor.id = 'negativeColor';
         Chart.register(NegativeColor);
-        //console.log(Chart.controllers);
+        console.log(Chart.controllers);
 
         Chart.defaults.font.size = 36;
 
@@ -145,10 +143,12 @@ module.exports = {
                 datasets: [{
                     data: blueTeamGold,
                     fill: true,
-                    
+                    backgroundColor: [
+                        "rgba(39, 148, 245, 0.55)"
+                        ],
                     borderColor: [
                         "rgba(49, 102, 236, 1)"
-                        ],
+                    ],
                     borderWidth: 5    
                 },
                 {
@@ -199,18 +199,6 @@ module.exports = {
                 }
             }
         });  
-
-        console.log(chart.data.datasets[0].data[2]);
-        for(var i = 0; i < chart.data.datasets[0].data.length; i ++) {
-            if (chart.data.datasets[0].data[i] > 0) { 
-                chart.data.datasets.backgroundColor = ["rgba(39, 148, 245, .55)"];
-            } else {
-                chart.data.datasets.backgroundColor = ["rgba(221, 27, 27, .55)"];
-            }
-            chart.update();
-        }
-        
-
 
         const background = await Canvas.loadImage('./assets/howlingAbyss.png');
         const chartImg = await Canvas.loadImage(chart.toBase64Image()); //this works better than JSON.stringify
