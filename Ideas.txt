@@ -3,6 +3,7 @@ puuid = v42dIyJ2QHXZQL5-qIhsfZx43qMKXKVLTDHGvd_7gst-wdzjnyNUKmRrYtIhGmN6j4wLq9KK
 
 https://discord.com/api/oauth2/authorize?client_id=945663842044764224&permissions=285632224320&scope=bot%20applications.commands
 
+
 Annie = strikethrough annie
 Malzahar moet verbannen worden
 Sluipschutters memes

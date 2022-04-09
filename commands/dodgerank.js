@@ -40,11 +40,10 @@ module.exports = {
         //console.log(matchIdData);
         await interaction.reply("Dodges for each player in last game");
 
-        
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
-       // await interaction.reply("Gathering data, please wait.");
+        // await interaction.reply("Gathering data, please wait.");
                    
         let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}?api_key=${apiKey}`
 		const matchResponse = await fetch(tempLink);
