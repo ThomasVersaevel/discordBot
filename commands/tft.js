@@ -2,12 +2,12 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
-const { apiKey } = require('../config.json');
+const { tftKey } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('tft')
-		.setDescription('Shows your league of legends level')
+        .setName('tftrank')
+		.setDescription('Shows your tft rank')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')
@@ -27,15 +27,15 @@ module.exports = {
         }
         username = username[0].toUpperCase() + username.substring(1);
 
-        const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`
+        const link = `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-name/${username}?api_key=${tftKey}`
 		const response = await fetch(link);
 		let data = await response.json();
         const puuid = data.puuid
         //console.log(data);
-        patchNr = '12.5.1';
+        patchNr = '12.7.1'; //required for data dragon
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${data.profileIconId}.png`
 
-        let tftlink = `https://euw1.api.riotgames.com//tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${apiKey}`
+        let tftlink = `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${tftKey}`
         const tftResponse = await fetch(tftlink);
         let tftData = await tftResponse.json();
         console.log(tftData.name);
