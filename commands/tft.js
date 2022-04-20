@@ -41,24 +41,38 @@ module.exports = {
         let tftRankedLink = `https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/${tftData.id}?api_key=${tftKey}`
         const tftRankResponse = await fetch(tftRankedLink);
         let tftRankData = await tftRankResponse.json();
-        let rank = tftRankData[1].tier; //ranked tft
-        rank = rank.substring(0, 1)+ rank.substring(1).toLowerCase();
-        let hyperRank = tftRankData[0].ratedTier; //hyperrol
-        if (hyperRank.toLowerCase() == 'orange') {
-            hyperRank = 'Hyper';
+        
+        console.log(tftRankData);
+        let rank = 'Unranked';
+        let hyperRank = 'Unranked';
+        if (tftRankData.length > 1) {
+            if (tftRankData[0].queueType == 'RANKED_TFT') {
+                rank = tftRankData[0].tier; //ranked tft
+            } else if (tftRankData[1].queueType == 'RANKED_TFT' ) { 
+            rank = tftRankData[1].tier; //ranked tft	
+            }
+
+            if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
+               hyperRank = tftRankData[0].ratedTier;
+               hyperRank = hyperRank.substring(0, 1) + hyperRank.substring(1).toLowerCase();
+            }
+            if (hyperRank.toLowerCase() == 'orange') {
+                hyperRank = 'Hyper';
+            }
         }
+        rank = rank.substring(0, 1)+ rank.substring(1).toLowerCase();
+        hyperRank = hyperRank+' Tier';
 
         let tftMatchLink = `https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?api_key=${tftKey}`
         const tftMatchResponse = await fetch(tftMatchLink);
         let tftMatchData = await tftMatchResponse.json();
-        console.log(tftRankData[1]);
 
         var exampleEmbed = new MessageEmbed()
             .setColor('blue')
             .setTitle('')
-            .addField(''+tftRankData[1].summonerName, '\u200b', true)
+            .addField(''+tftData.name, '\u200b', true)
             .addField('Rank: '+rank, '\u200b', false)
-            .addField('Hyperrol rank: '+hyperRank+'tier', '\u200b', false)
+            .addField('Hyperrol rank: '+hyperRank, '\u200b', false)
             .setImage('attachment://rankedImg.png')
             .setThumbnail('attachment://icon.png');
 
