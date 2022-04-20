@@ -151,7 +151,7 @@ client.on('messageCreate', async message =>  {
 			files: [{ attachment:'assets/SluipSchutters/moetkunnen.png',
 			name:'sluipschutter.png'}] });
 	}
-	else if (message.content.toLowerCase().includes('blij')) {
+	else if (message.content.toLowerCase().includes('blij ')) {
 		const exampleEmbed = new MessageEmbed()
 		.setColor('#E50000')
 		.setImage('attachment://sluipschutter.png'); //takes attachment from send method below
