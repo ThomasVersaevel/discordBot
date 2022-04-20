@@ -35,10 +35,14 @@ module.exports = {
         patchNr = '12.7.1'; //required for data dragon
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${data.profileIconId}.png`
 
-        let tftlink = `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${tftKey}`
+        let tftlink = `https://europe.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${tftKey}`
         const tftResponse = await fetch(tftlink);
         let tftData = await tftResponse.json();
-        console.log(tftData.name);
+
+        let tftMatchLink = `https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?api_key=${tftKey}`
+        const tftMatchResponse = await fetch(tftMatchLink);
+        let tftMatchData = await tftMatchResponse.json();
+        console.log(tftMatchData);
 
         var exampleEmbed = new MessageEmbed()
             .setColor('blue')
