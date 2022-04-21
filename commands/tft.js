@@ -49,26 +49,70 @@ module.exports = {
             if (tftRankData[0].queueType == 'RANKED_TFT') {
                 rank = tftRankData[0].tier; //ranked tft
             } else if (tftRankData[1].queueType == 'RANKED_TFT' ) { 
-            rank = tftRankData[1].tier; //ranked tft	
+                rank = tftRankData[1].tier; //ranked tft	
             }
-
             if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
                hyperRank = tftRankData[0].ratedTier;
-               hyperRank = hyperRank.substring(0, 1) + hyperRank.substring(1).toLowerCase();
+            } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
+               hyperRank = tftRankData[1].ratedTier;
             }
-            if (hyperRank.toLowerCase() == 'orange') {
-                hyperRank = 'Hyper';
+        } else if (tftRankData.length == 1) {
+            if (tftRankData[0].queueType == 'RANKED_TFT') {
+                rank = tftRankData[0].tier; //ranked tft
             }
+            else if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
+               hyperRank = tftRankData[0].ratedTier;
+            } 
         }
+        if (hyperRank.toLowerCase() == 'orange') {
+            hyperRank = 'Hyper';
+        }
+        hyperRank = hyperRank.substring(0, 1) + hyperRank.substring(1).toLowerCase();
         rank = rank.substring(0, 1)+ rank.substring(1).toLowerCase();
         hyperRank = hyperRank+' Tier';
+        var embedColor = getRankColor(rank);
+
+        function getRankColor(rank) {
+            switch (rank) {
+                case 'Iron':
+                    return '#615959';
+                break;
+                case 'Bronze':
+                    return '#925235';
+                break;
+                case 'Silver':
+                    return '#839da5';
+                break;
+                case 'Gold':
+                    return '#839da5'; //todo
+                break;
+                case 'Platinum':
+                    return '#839da5';
+                break;
+                case 'Diamond':
+                    return '#839da5';
+                break;
+                case 'Master':
+                    return '#839da5';
+                break;
+                case 'Grandmaster':
+                    return '#839da5';
+                break;
+                case 'Challenger':
+                    return '#839da5';
+                break;
+                default:
+                    return '#d1d1d1';
+            }
+                
+        }
 
         let tftMatchLink = `https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?api_key=${tftKey}`
         const tftMatchResponse = await fetch(tftMatchLink);
         let tftMatchData = await tftMatchResponse.json();
 
         var exampleEmbed = new MessageEmbed()
-            .setColor('blue')
+            .setColor(embedColor)
             .setTitle('')
             .addField(''+tftData.name, '\u200b', true)
             .addField('Rank: '+rank, '\u200b', false)
