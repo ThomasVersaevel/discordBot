@@ -84,27 +84,26 @@ module.exports = {
                     return '#839da5';
                 break;
                 case 'Gold':
-                    return '#83aaa5'; //todo
+                    return '#dfa040'; 
                 break;
                 case 'Platinum':
-                    return '#839da5';
+                    return '#539591';
                 break;
                 case 'Diamond':
-                    return '#839da5';
+                    return '#686cdd';
                 break;
                 case 'Master':
-                    return '#839da5';
+                    return '#8154a6';
                 break;
                 case 'Grandmaster':
-                    return '#839da5';
+                    return '#f12227';
                 break;
                 case 'Challenger':
-                    return '#839da5';
+                    return '#fcf4e1';
                 break;
                 default:
                     return '#d1d1d1';
-            }
-                
+            }    
         }
 
         let tftMatchLink = `https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?api_key=${tftKey}`

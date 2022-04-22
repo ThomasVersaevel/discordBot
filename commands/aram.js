@@ -96,7 +96,5 @@ module.exports = {
         await interaction.followUp({ embeds: [exampleEmbed], 
             files: [{ attachment: icon,
             name:'icon.png'}] });
-
-        
     }
 }
