@@ -84,7 +84,7 @@ module.exports = {
                     return '#839da5';
                 break;
                 case 'Gold':
-                    return '#839da5'; //todo
+                    return '#83aaa5'; //todo
                 break;
                 case 'Platinum':
                     return '#839da5';
