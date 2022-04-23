@@ -69,8 +69,14 @@ module.exports = {
         }
         hyperRank = hyperRank.substring(0, 1) + hyperRank.substring(1).toLowerCase();
         rank = rank.substring(0, 1)+ rank.substring(1).toLowerCase();
+        if (hyperRank == 'Unranked') {
+            hyperEmblem = 'assets/ranked-emblems/grey_tier.png';
+        } else {
+            hyperEmblem = 'assets/ranked-emblems/'+hyperRank+'_tier.png';
+        }
         hyperRank = hyperRank+' Tier';
         var embedColor = getRankColor(rank);
+
 
         function getRankColor(rank) {
             switch (rank) {
@@ -114,13 +120,13 @@ module.exports = {
             .setColor(embedColor)
             .setTitle('')
             .addField(''+tftData.name, '\u200b', true)
-            .addField('Rank: '+rank, '\u200b', false)
             .addField('Hyperrol rank: '+hyperRank, '\u200b', false)
+            .addField('Rank: '+rank, '\u200b', false)
             .setImage('attachment://rankedImg.png')
             .setThumbnail('attachment://icon.png');
 
         await interaction.reply({ embeds: [exampleEmbed], 
-			files: [{ attachment: icon, name:'icon.png'},
+			files: [{ attachment: hyperEmblem, name:'icon.png'},
              {attachment:'assets/ranked-emblems/emblem_'+ rank +'.png', name:'rankedImg.png'}]
         });
                       
