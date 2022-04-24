@@ -5,13 +5,6 @@ puuid tft = lWxkOGmvEj-EWIxYtK3lMqdYMOjbBeaBpM1rfzb83a40mtK_AnsWjQcQAZ_RFmXyhqJh
 https://discord.com/api/oauth2/authorize?client_id=945663842044764224&permissions=285632224320&scope=bot%20applications.commands
 
 
-Annie = strikethrough annie
-Malzahar moet verbannen worden
-Sluipschutters memes
-handsome pokemon
-aram tijd
-in de hoek
-
 ---RIOT API STUFF---
 Aram stats lijst
 /lollvl me (alle gebruikers hun accounts via discord id check)
