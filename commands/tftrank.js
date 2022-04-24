@@ -70,7 +70,7 @@ module.exports = {
         hyperRank = hyperRank.substring(0, 1) + hyperRank.substring(1).toLowerCase();
         rank = rank.substring(0, 1)+ rank.substring(1).toLowerCase();
         if (hyperRank == 'Unranked') {
-            hyperEmblem = 'assets/ranked-emblems/grey_tier.png';
+            hyperEmblem = 'assets/ranked-emblems/Grey_tier.png';
         } else {
             hyperEmblem = 'assets/ranked-emblems/'+hyperRank+'_tier.png';
         }
@@ -127,7 +127,7 @@ module.exports = {
 
         await interaction.reply({ embeds: [exampleEmbed], 
 			files: [{ attachment: hyperEmblem, name:'icon.png'},
-             {attachment:'assets/ranked-emblems/emblem_'+ rank +'.png', name:'rankedImg.png'}]
+             {attachment:'assets/ranked-emblems/Emblem_'+ rank +'.png', name:'rankedImg.png'}]
         });
                       
     },
