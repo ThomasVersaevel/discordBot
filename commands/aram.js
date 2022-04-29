@@ -3,6 +3,7 @@ const { MessageAttachment, MessageEmbed } = require('discord.js');
 const { apiKey } = require('../config.json');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
+const {convertLolName} = require('../globals.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,16 +15,8 @@ module.exports = {
 				.setRequired(true)),
     async execute(interaction) {
 
-        let username = interaction.options.getString('lolname');
-        if (username === 'reign') { //kevin simpelmaker
-            username = 'reıgn';
-        } else if (username === 'kokoala') {
-            username = 'kôkoala';
-        }
-        else if (username === 'me') {
-            const id = interaction.member.id;
-            username = shortcuts[id];
-        }
+        let username = convertLolName(interaction.options.getString('lolname'), interaction.member.id); //uses globals
+
         // ## obtain summoner info ##
         const sumLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`
 		const sumResponse = await fetch(sumLink);
@@ -35,13 +28,11 @@ module.exports = {
 		let matchIdData = await matchIdResponse.json();
         //console.log(matchIdData);
 
-
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
         await interaction.reply("Gathering data, please wait.");
        
-
         var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
             .setColor('#ffffff')
             .setTitle(sumData.name)

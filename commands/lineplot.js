@@ -7,6 +7,7 @@ const fetch = require('node-fetch');
 const Canvas = require('canvas');
 const { Chart, LineController } = require('chart.js');
 const {Util} = require('util');
+const { convertLolName } = require('../globals.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,17 +19,7 @@ module.exports = {
 				.setRequired(true)),
     async execute(interaction) {
 
-        let username = interaction.options.getString('lolname');
-        if (username === 'reign') { //kevin simpelmaker
-            username = 'reıgn';
-        } else if (username === 'kokoala') {
-            username = 'kôkoala';
-        }
-        else if (username === 'me') {
-            const id = interaction.member.id;
-            username = shortcuts[id];
-        }
-        username = username[0].toUpperCase() + username.substring(1);
+        let username = convertLolName(interaction.options.getString('lolname'), interaction.member.id); //uses globals
         // ## obtain summoner info ##
         const sumLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`
 		const sumResponse = await fetch(sumLink);

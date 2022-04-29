@@ -3,6 +3,7 @@ const { MessageAttachment, MessageEmbed } = require('discord.js');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const { tftKey } = require('../config.json');
+const {convertLolName} = require('../globals.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,20 +15,7 @@ module.exports = {
 				.setRequired(true)),
     async execute(interaction) {
 
-        // dit moet naar een global method
-        let username = interaction.options.getString('lolname');
-        if (username === 'reign') { //kevin simpelmaker
-            username = 'reıgn';
-        } else if (username === 'kokoala') {
-            username = 'kôkoala';
-        } else if (username === 'me') {
-           const id = interaction.member.id;
-           username = shortcuts[id];
-           //console.log(username);
-        }
-        await interaction.reply("Gathering data, please wait.");
-
-        username = username[0].toUpperCase() + username.substring(1);
+        let username = convertLolName(interaction.options.getString('lolname'), interaction.member.id); //uses globals
 
         var exampleEmbed = new MessageEmbed()
         .setColor('#ffffff')
