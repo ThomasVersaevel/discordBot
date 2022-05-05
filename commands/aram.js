@@ -3,7 +3,7 @@ const { MessageAttachment, MessageEmbed } = require('discord.js');
 const { apiKey } = require('../config.json');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
-const {convertLolName} = require('../globals.js');
+const {convertLolName, fetchApiEndpoint} = require('../globals.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,9 +18,8 @@ module.exports = {
         let username = convertLolName(interaction.options.getString('lolname'), interaction.member.id); //uses globals
 
         // ## obtain summoner info ##
-        const sumLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`
-		const sumResponse = await fetch(sumLink);
-        let sumData = await sumResponse.json();
+        let sumData = await fetchApiEndpoint(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`)
+	
         const puuid = sumData.puuid; // id of user
         // ## obtain 20 match IDs (default) ##
         const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450&start=0&count=21`

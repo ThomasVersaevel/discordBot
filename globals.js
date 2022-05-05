@@ -1,4 +1,5 @@
 const shortcuts  = require('./api-shortcuts.json');
+const fetch = require('node-fetch');
 
 module.exports = {
     convertLolName(username, id) {   
@@ -14,7 +15,7 @@ module.exports = {
     },
 
     fetchApiEndpoint(link) {
-		const sumResponse = await fetch(Link);
-        return await sumResponse.json();
+		const response = fetch(link);
+        return response.json();
     }
 }
