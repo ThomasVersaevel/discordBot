@@ -2,3 +2,5 @@ steven: 397 345
 Yasime:	1534 1507
 edewin: 924 841
 Thomas: 441 389
+Joey:
+Nico

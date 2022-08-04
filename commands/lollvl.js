@@ -21,7 +21,7 @@ module.exports = {
 		const response = await fetch(link);
 		let data = await response.json();
         //console.log(data);
-        patchNr = '12.5.1';
+        patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${data.profileIconId}.png`
 
         var exampleEmbed = new MessageEmbed()

@@ -17,5 +17,9 @@ module.exports = {
     fetchApiEndpoint(link) {
 		const response = fetch(link);
         return response.json();
+    },
+
+    aramStatsUpdate() {
+        console.log("aram stats update");
     }
 }

@@ -22,7 +22,7 @@ module.exports = {
 		let data = await response.json();
         const puuid = data.puuid
         //console.log(data);
-        patchNr = '12.7.1'; //required for data dragon
+        patchNr = shortcuts['patch']; //required for data dragon
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${data.profileIconId}.png`
         let tftlink = `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${tftKey}`
         const tftResponse = await fetch(tftlink);

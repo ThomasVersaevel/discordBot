@@ -7,6 +7,7 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 const { apiKey } = require('./config.json');
+const {aramStatsUpdate} = require('./globals.js');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS] });
@@ -48,15 +49,13 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+client.on('ready', () => {
+	//client.setInterval(aramStatsUpdate(), 1000 * 60 * 60 * 5) // Runs every 5 hours
+	aramStatsUpdate();
+	return new Promise(resolve => setTimeout(resolve, 1000 * 60 * 60 * 5));
+})
 
-// client.messages = new Collection();
 
-// const messagefiles = fs.readdirSync('./messageResponses').filter(file => file.endsWith('.js'));
-// // commands
-// for (const file of messageFiles) {
-// 	const messa = require(`./messageResponses/${file}`);
-// 	client.messages.set(messa.data.name, messa);
-// }
 const tank_meta = ['tank', 'meta', 'eng', 'scary', 'joey', 'angst', 'maokai', 'dimetos',
         'tanky', 'ondoodbaar', 'unkillable', 'sejuani', 'sion', 'orn', 'corn'];
 
@@ -68,7 +67,6 @@ const lamaArray = ['laat maar', 'laatmaar', 'lamaar', 'lamar', 'lama', 'llama'];
 
 client.on('messageCreate', async message =>  {
 	if (message.author.bot) return;
-
 
 	// Tank meta
 	if (tank_meta.some(word => message.content.toLowerCase().includes(word.toLowerCase()))) {
