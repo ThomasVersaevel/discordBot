@@ -52,7 +52,6 @@ for (const file of eventFiles) {
 client.on('ready', () => {
 	//client.setInterval(aramStatsUpdate(), 1000 * 60 * 60 * 5) // Runs every 5 hours
 	aramStatsUpdate();
-	return new Promise(resolve => setTimeout(resolve, 1000 * 60 * 60 * 5));
 })
 
 
