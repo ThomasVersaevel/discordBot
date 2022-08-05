@@ -57,12 +57,12 @@ function loop() {
 
 	console.log("Aram stats update");
 
-	retrieveNewAramGames('Fractaldarkness');
+	// retrieveNewAramGames('Fractaldarkness');
 
-	// for (entry in aramwl) {
-	//     retrieveNewAramGames(entry);
-	// }
-	setTimeout(loop, 60000);
+	for (entry in aramwl) {
+	    retrieveNewAramGames(entry);
+	}
+	setTimeout(loop, 60000 * 60 * 5); //every 5 hours
 }
 
 async function retrieveNewAramGames(entry) {
@@ -74,14 +74,17 @@ async function retrieveNewAramGames(entry) {
 	const matchIdResponse = await fetch(matchLink);
 	let matchIdData = await matchIdResponse.json();
 	let oldMatchList = [];
+
+	console.log(entry);
+
 	for (var i = 0; i < oldlist[entry].length; i++) {
 		//console.log(match);
 		oldMatchList.push(oldlist[entry][i]); //list of matchids by sumname (json)
 	}
-	console.log(entry + ' ' + typeof oldMatchList + ' ' + oldMatchList);
+	console.log(oldMatchList);
 	var win = 0;
 	var lose = 0;
-	let newMatchList = [];
+	let newMatchList = oldMatchList;
 	for (var id = 0; id < matchIdData.length; id++) {
 		if (!oldMatchList.includes(matchIdData[id])) {
 			console.log('New match detected');
@@ -102,9 +105,11 @@ async function retrieveNewAramGames(entry) {
 	}
 
 	// add new matches to oldMatchList
-	oldMatchList.concat(newMatchList);
-	console.log(oldMatchList);
-	oldlist[entry] = oldMatchList;
+	// for (item in newMatchList) {
+	// 	oldMatchList.push(item[0]);
+	// }
+	console.log(newMatchList);
+	oldlist[entry] = newMatchList;
 	fs.writeFile('./oldmatchlist.json', JSON.stringify(oldlist), err => {
 		if (err) console.log("Error writing file:", err);
 	});
