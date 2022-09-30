@@ -1,5 +1,5 @@
 const aramwl = require('../winslosses.json');
-const oldlist = require('../oldmatchlist.json');
+// const oldlist = require('../oldmatchlist.json');
 const fs = require("fs");
 const fetch = require('node-fetch');
 const { apiKey } = require('../config.json');

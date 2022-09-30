@@ -21,4 +21,11 @@ module.exports = {
         return response.json();
     },
 
+    async getUsernameFromPuuid(puuid) {
+        const response = await fetch(`https://euw1.api.riotgames.com//tft/summoner/v1/summoners/by-puuid/${puuid}`)
+        let data = await response.json()
+        //console.log(data)
+        return data.name
+    }
+
 }

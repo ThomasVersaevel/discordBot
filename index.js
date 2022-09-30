@@ -9,7 +9,7 @@ const { MessageAttachment, MessageEmbed } = require('discord.js');
 const { apiKey } = require('./config.json');
 const fetch = require('node-fetch');
 const aramwl = require('./winslosses.json');
-const oldlist = require('./oldmatchlist.json');
+// const oldlist = require('./oldmatchlist.json');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS] });
@@ -51,76 +51,76 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
-loop();
+// loop();
 
-function loop() {
+// function loop() {
 
-	console.log("Aram stats update");
+// 	console.log("Aram stats update");
 
-	// retrieveNewAramGames('Fractaldarkness');
+// 	// retrieveNewAramGames('Fractaldarkness');
 
-	for (entry in aramwl) {
-	    retrieveNewAramGames(entry);
-	}
-	setTimeout(loop, 60000 * 60 * 5); //every 5 hours
-}
+// 	for (entry in aramwl) {
+// 	    retrieveNewAramGames(entry);
+// 	}
+// 	setTimeout(loop, 60000 * 60 * 5); //every 5 hours
+// }
 
-async function retrieveNewAramGames(entry) {
-	const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${entry}?api_key=${apiKey}`
-	const response = await fetch(link);
-	sumData = await response.json();
-	const puuid = sumData.puuid; // id of user
-	const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450&start=0&count=10`
-	const matchIdResponse = await fetch(matchLink);
-	let matchIdData = await matchIdResponse.json();
-	let oldMatchList = [];
+// async function retrieveNewAramGames(entry) {
+// 	const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${entry}?api_key=${apiKey}`
+// 	const response = await fetch(link);
+// 	sumData = await response.json();
+// 	const puuid = sumData.puuid; // id of user
+// 	const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450&start=0&count=10`
+// 	const matchIdResponse = await fetch(matchLink);
+// 	let matchIdData = await matchIdResponse.json();
+// 	let oldMatchList = [];
 
-	console.log(entry);
+// 	console.log(entry);
 
-	for (var i = 0; i < oldlist[entry].length; i++) {
-		//console.log(match);
-		oldMatchList.push(oldlist[entry][i]); //list of matchids by sumname (json)
-	}
-	console.log(oldMatchList);
-	var win = 0;
-	var lose = 0;
-	let newMatchList = oldMatchList;
-	for (var id = 0; id < matchIdData.length; id++) {
-		if (!oldMatchList.includes(matchIdData[id])) {
-			console.log('New match detected');
-			newMatchList.push(matchIdData[id]);
-			let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
-			const matchResponse = await fetch(tempLink);
-			let matchData = await matchResponse.json();
-			// if Match not yet used, check win or lose
-			var partIndex = 0;
-			for (var i = 0; i < 10; i++) {
-				if (matchData.info.participants[i].puuid === puuid) {
-					partIndex = i;
-				}
-			}
-			matchData.info.participants[partIndex].win ? win++ : lose++;
-		}
+// 	for (var i = 0; i < oldlist[entry].length; i++) {
+// 		//console.log(match);
+// 		oldMatchList.push(oldlist[entry][i]); //list of matchids by sumname (json)
+// 	}
+// 	console.log(oldMatchList);
+// 	var win = 0;
+// 	var lose = 0;
+// 	let newMatchList = oldMatchList;
+// 	for (var id = 0; id < matchIdData.length; id++) {
+// 		if (!oldMatchList.includes(matchIdData[id])) {
+// 			console.log('New match detected');
+// 			newMatchList.push(matchIdData[id]);
+// 			let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
+// 			const matchResponse = await fetch(tempLink);
+// 			let matchData = await matchResponse.json();
+// 			// if Match not yet used, check win or lose
+// 			var partIndex = 0;
+// 			for (var i = 0; i < 10; i++) {
+// 				if (matchData.info.participants[i].puuid === puuid) {
+// 					partIndex = i;
+// 				}
+// 			}
+// 			matchData.info.participants[partIndex].win ? win++ : lose++;
+// 		}
 		
-	}
+// 	}
 
-	// add new matches to oldMatchList
-	// for (item in newMatchList) {
-	// 	oldMatchList.push(item[0]);
-	// }
-	console.log(newMatchList);
-	oldlist[entry] = newMatchList;
-	fs.writeFile('./oldmatchlist.json', JSON.stringify(oldlist), err => {
-		if (err) console.log("Error writing file:", err);
-	});
-	// add wins and losses to total
+// 	// add new matches to oldMatchList
+// 	// for (item in newMatchList) {
+// 	// 	oldMatchList.push(item[0]);
+// 	// }
+// 	console.log(newMatchList);
+// 	oldlist[entry] = newMatchList;
+// 	fs.writeFile('./oldmatchlist.json', JSON.stringify(oldlist), err => {
+// 		if (err) console.log("Error writing file:", err);
+// 	});
+// 	// add wins and losses to total
 
-	aramwl[entry].wins += win;
-	aramwl[entry].losses += lose;
-	fs.writeFile('./winslosses.json', JSON.stringify(aramwl), err => {
-		if (err) console.log("Error writing file:", err);
-	});
-}
+// 	aramwl[entry].wins += win;
+// 	aramwl[entry].losses += lose;
+// 	fs.writeFile('./winslosses.json', JSON.stringify(aramwl), err => {
+// 		if (err) console.log("Error writing file:", err);
+// 	});
+// }
 
 
 const tank_meta = ['tank', 'meta', 'eng', 'scary', 'joey', 'angst', 'maokai', 'dimetos',
