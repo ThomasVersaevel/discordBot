@@ -51,6 +51,7 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+
 // loop();
 
 // function loop() {
@@ -60,7 +61,7 @@ for (const file of eventFiles) {
 // 	// retrieveNewAramGames('Fractaldarkness');
 
 // 	for (entry in aramwl) {
-// 	    retrieveNewAramGames(entry);
+// 		retrieveNewAramGames(entry);
 // 	}
 // 	setTimeout(loop, 60000 * 60 * 5); //every 5 hours
 // }
@@ -70,6 +71,7 @@ for (const file of eventFiles) {
 // 	const response = await fetch(link);
 // 	sumData = await response.json();
 // 	const puuid = sumData.puuid; // id of user
+// 	// obtain aram games by queue 450
 // 	const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450&start=0&count=10`
 // 	const matchIdResponse = await fetch(matchLink);
 // 	let matchIdData = await matchIdResponse.json();
@@ -87,13 +89,14 @@ for (const file of eventFiles) {
 // 	let newMatchList = oldMatchList;
 // 	for (var id = 0; id < matchIdData.length; id++) {
 // 		if (!oldMatchList.includes(matchIdData[id])) {
-// 			console.log('New match detected');
+// 			console.log(entry + ' New match detected');
 // 			newMatchList.push(matchIdData[id]);
 // 			let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
 // 			const matchResponse = await fetch(tempLink);
 // 			let matchData = await matchResponse.json();
 // 			// if Match not yet used, check win or lose
 // 			var partIndex = 0;
+// 			console.log(matchData.info.participants[0]);
 // 			for (var i = 0; i < 10; i++) {
 // 				if (matchData.info.participants[i].puuid === puuid) {
 // 					partIndex = i;
@@ -101,7 +104,7 @@ for (const file of eventFiles) {
 // 			}
 // 			matchData.info.participants[partIndex].win ? win++ : lose++;
 // 		}
-		
+
 // 	}
 
 // 	// add new matches to oldMatchList

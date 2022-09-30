@@ -30,7 +30,7 @@ module.exports = {
 		const matchIdResponse = await fetch(matchLink);
 		let matchIdData = await matchIdResponse.json();
         //console.log(matchIdData);
-        await interaction.reply("Time CCing others in last game");
+        await interaction.reply("Time CCing others in seconds from last game");
 
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];

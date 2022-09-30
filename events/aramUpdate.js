@@ -39,6 +39,7 @@ module.exports = {
             var win = 0;
             var lose = 0;
             let newMatchList = [];
+            
             for (var id = 0; id < matchIdData.length; id++) {
                 if (!oldMatchList['' + entry].includes(matchIdData[id])) {
                     newMatchList.push(matchIdData[id]);
