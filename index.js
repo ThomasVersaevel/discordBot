@@ -221,6 +221,12 @@ client.on('messageCreate', async message => {
 			}]
 		});
 	}
+	else if (message.content.toLowerCase().includes('kanker')) {
+		let edit = message.content.replace(/kanker/gi, '\*\*\*\*');
+   		message.delete();
+    	message.channel.send(`${message.author.username}: ${edit}`);
+	}
+	
 	else if (message.content.toLowerCase().includes('ik dacht dat dat kon')) {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#E50000')
@@ -324,7 +330,7 @@ client.on('messageCreate', async message => {
 			message.author.timeout(60 * 1000, 'sssst');
 			message.channel.send('nico is nu even 1 minuut stil');
 		} else {
-			//console.log('cant moderate member: '+message.author.id);
+			console.log('cant moderate member: '+message.author.id);
 		}
 	}
 });

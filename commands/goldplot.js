@@ -12,7 +12,7 @@ const {convertLolName} = require('../globals.js');
 module.exports = {
     data: new SlashCommandBuilder()
 		.setName('goldplot')
-		.setDescription('Shows your aram wins and loses')
+		.setDescription('Gold distribution over last game')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')

@@ -60,8 +60,8 @@ module.exports = {
                     if (MData.info.participants[i].partner_group_id === groupId && MData.info.participants[i].puuid !== puuid) {
                         partnerPartIndex = i;
                         partnerNameFetch = await fetch(`https://euw1.api.riotgames.com//tft/summoner/v1/summoners/by-puuid/${puuid}`)//await getUsernameFromPuuid(MData.info.participants[i].puuid);
-                        partnerName = await partnerNameFetch.json().name
-                        console.log(partnerNameFetch.json());
+                        partnerName = await partnerNameFetch.json()
+                        console.log(partnerName.name);
                     } 
                 }
                 const partData = MData.info.participants[partIndex];
