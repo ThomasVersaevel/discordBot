@@ -9,5 +9,3 @@ https://discord.com/api/oauth2/authorize?client_id=945663842044764224&permission
 Aram stats lijst
 /lollvl me (alle gebruikers hun accounts via discord id check)
 summoner icons via de data dragon riot stuff.
-
-checking mutant right at the first carousell
