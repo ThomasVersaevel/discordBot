@@ -134,6 +134,9 @@ const pokeArray = ['Shroomish', 'Bidoof', 'Chansey', 'Chimecho', 'Lickitounge',
 
 const lamaArray = ['laat maar', 'laatmaar', 'lamaar', 'lamar', 'lama', 'llama'];
 
+const censorArray = ['kanker', 'kkr', 'kenker'];
+
+var wordContainer = "";
 
 client.on('messageCreate', async message => {
 	if (message.author.bot) return;
@@ -221,10 +224,17 @@ client.on('messageCreate', async message => {
 			}]
 		});
 	}
-	else if (message.content.toLowerCase().includes('kanker')) {
-		let edit = message.content.replace(/kanker/gi, '\*\*\*\*');
+	else if (censorArray.some(word => message.content.toLowerCase().includes(word.toLowerCase()))) {
+		var edit = message.content.toLowerCase().split(" ");
+		messageContent = message.content.toLowerCase();
+		for(var i = 0; i < edit.length; i++) {
+			if (censorArray.includes(edit[i])) {
+				wordContainer = edit[i];
+				messageContent = messageContent.replace(wordContainer, '####');	
+			}
+		}
    		message.delete();
-    	message.channel.send(`${message.author.username}: ${edit}`);
+    	message.channel.send(`${message.author.username}: ${messageContent}`);
 	}
 	
 	else if (message.content.toLowerCase().includes('ik dacht dat dat kon')) {
