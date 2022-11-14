@@ -76,7 +76,7 @@ module.exports = {
         exampleEmbed        
             .addField(''+tftData.name, '\u200b', true);
 
-        await interaction.followUp({ embeds: [exampleEmbed], 
+        await interaction.editReply({ embeds: [exampleEmbed], 
 			files: [{ attachment: LLegend, name:'LLegend.png'}]});                 
     },
 };

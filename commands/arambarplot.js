@@ -11,8 +11,8 @@ const {convertLolName} = require('../globals.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-		.setName('barplotaram')
-		.setDescription('Shows your aram wins and loses')
+		.setName('arambarplot')
+		.setDescription('Shows your aram wins and loses in a bar plot')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')
@@ -151,7 +151,6 @@ module.exports = {
 	    context.drawImage(chartImg, 0, 0, canvas.width, canvas.height);  
         const attachment = new MessageAttachment(canvas.toBuffer()); 
 
-        await interaction.followUp({ files: [attachment] });
-        interaction.deleteReply();
+        await interaction.editReply({ files: [attachment] });
     }
 }

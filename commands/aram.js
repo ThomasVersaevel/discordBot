@@ -34,7 +34,7 @@ module.exports = {
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
-        await interaction.reply("Gathering data, please wait.");
+        let initReply = await interaction.reply("Gathering data, please wait.");
        
         var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
             .setColor('#ffffff')
@@ -86,8 +86,8 @@ module.exports = {
                 .addField('\u200b', '\u200b', true)
                 .addField('\u200b', '\u200b', true);
         }
-
-        await interaction.followUp({ embeds: [exampleEmbed], 
+        
+        await interaction.editReply( {content: '\u200b', embeds: [exampleEmbed], 
             files: [{ attachment: icon,
             name:'icon.png'}] });
     }

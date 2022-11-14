@@ -180,7 +180,7 @@ module.exports = {
          context.drawImage(chartImg, 0, 0, canvas.width, canvas.height);  
          const attachment = new MessageAttachment(canvas.toBuffer()); 
  
-         await interaction.followUp({ files: [attachment] });
+         await interaction.editReply({ files: [attachment] });
          //interaction.deleteReply();       
     },
 };

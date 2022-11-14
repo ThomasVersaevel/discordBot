@@ -58,11 +58,11 @@ module.exports = {
         
             exampleEmbed.addField('\u200b' , 'Added '+ data.name + ' to \'me\' list', true);
         } else { // if already present
-            exampleEmbed.addField('\u200b' , shortcuts[userId] + ' is already in \'me\' list for you', true);
+            exampleEmbed.addField('\u200b' , shortcuts[userId] + ' is already in \'me\' list', true);
         }
 
         await interaction.reply({ embeds: [exampleEmbed], 
 			files: [{ attachment: icon,
-			name:'icon.png'}] });           
+			name:'icon.png'}], ephemeral:true });           
     },
 };

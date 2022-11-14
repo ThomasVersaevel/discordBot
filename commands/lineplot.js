@@ -12,7 +12,7 @@ const { convertLolName } = require('../globals.js');
 module.exports = {
     data: new SlashCommandBuilder()
 		.setName('lineplot')
-		.setDescription('Shows your aram wins and loses')
+		.setDescription('[DEPRECATED] Gold plot ')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')
@@ -210,6 +210,6 @@ module.exports = {
 	    context.drawImage(chartImg, 0, 0, canvas.width, canvas.height);  
         const attachment = new MessageAttachment(canvas.toBuffer()); 
   
-        await interaction.followUp({ files: [attachment] });
+        await interaction.editReply({ files: [attachment] });
     }
 }
