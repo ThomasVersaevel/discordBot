@@ -13,7 +13,7 @@ const {convertLolName} = require('../globals.js');
 module.exports = {
     data: new SlashCommandBuilder()
 		.setName('aramwr')
-		.setDescription('Shows your lifetime aram wins and loses')
+		.setDescription('Shows your lifetime aram wins and loses in a bar plot')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')

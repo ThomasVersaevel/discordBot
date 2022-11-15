@@ -12,7 +12,7 @@ const {convertLolName} = require('../globals.js');
 module.exports = {
     data: new SlashCommandBuilder()
 		.setName('arambarplot')
-		.setDescription('Shows your aram wins and loses in a bar plot')
+		.setDescription('Shows your aram wins and loses over the last 20 games in a bar plot')
         .addStringOption(option =>
 			option.setName('lolname')
 				.setDescription('Summoner Name')
@@ -37,7 +37,7 @@ module.exports = {
         // ## From here its the reply ##
         patchNr = shortcuts['patch'];
         let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`
-        await interaction.reply("ARAM wins and losses for "+username);
+        await interaction.reply("ARAM wins and losses over the last 20 games for "+username);
        
 
         // var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
