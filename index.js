@@ -146,7 +146,7 @@ client.on('messageCreate', async message => {
 		message.channel.send('Ban ~~annie~~');
 	}
 	if (message.content.toLowerCase().includes('malzahar')) {
-		message.channel.send('Gadverdakke M*lz*h*r');
+		message.channel.send('Gadverdakke M\*lz\*h\*r');
 	}
 	if (message.content.toLowerCase().includes('handsome')) {
 
@@ -182,7 +182,7 @@ client.on('messageCreate', async message => {
 		});
 	}
 
-	if (message.content.toLowerCase().includes('tft') || message.content.toLowerCase().includes('tft?')) {
+	if (message.content.toLowerCase().includes('tft') && !message.content.toLowerCase().includes('/tft/')) {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#05AA47')
 			.setImage('attachment://aram.png'); //takes attachment from send method below
@@ -226,9 +226,8 @@ client.on('messageCreate', async message => {
 		var edit = message.content.toLowerCase().split(" ");
 		messageContent = message.content.toLowerCase();
 		for(var i = 0; i < edit.length; i++) {
-			if (censorArray.includes(edit[i])) {
-				wordContainer = edit[i];
-				messageContent = messageContent.replace(wordContainer, '####');	
+			if (censorArray.some(word => edit[i].includes(word))) {
+				messageContent = messageContent.replace(edit[i], '####');	
 			}
 		}
    		message.delete();
