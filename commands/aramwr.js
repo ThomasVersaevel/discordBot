@@ -21,6 +21,12 @@ module.exports = {
     async execute(interaction) {
 
        let username = convertLolName(interaction.options.getString('lolname'), interaction.member.id); //uses globals
+        //console.log(aramwl.hasOwnProperty(username) +' \"'+username+'\"')
+       if (!aramwl.hasOwnProperty(username)) {
+        await interaction.reply(username +' does not exist in current aram database');
+        return;
+       }
+
        const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`
        const response = await fetch(link);
        let sumData = await response.json();
