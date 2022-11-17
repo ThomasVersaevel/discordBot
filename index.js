@@ -84,7 +84,9 @@ async function retrieveNewAramGames(entry) {
 	
 	for (var i = 0; i < matchListJson[entry].length; i++) {
 		//console.log(match);
-		oldMatchList.push(matchListJson[entry][i]); //list of matchids by sumname (json)
+		if(matchListJson[entry][i] != 0) { 
+			oldMatchList.push(matchListJson[entry][i]) //list of matchids by sumname (json)
+		}
 	}
 	//console.log(oldMatchList);
 	var win = 0;

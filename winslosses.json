@@ -1,1 +1,30 @@
-{"Fractaldarkness":{"wins":507,"losses":456},"Kôkoala":{"wins":439,"losses":384},"Dimetos":{"wins":15,"losses":15},"Xantrop":{"wins":23,"losses":20},"Bruteshadow":{"wins":19,"losses":13},"Chiliconarne":{"wins":3241,"losses":2681}}
+{
+    "Fractaldarkness": {
+        "wins": 514,
+        "losses": 458
+    },
+    "Kôkoala": {
+        "wins": 479,
+        "losses": 416
+    },
+    "Dimetos": {
+        "wins": 15,
+        "losses": 15
+    },
+    "Xantrop": {
+        "wins": 23,
+        "losses": 20
+    },
+    "Bruteshadow": {
+        "wins": 21,
+        "losses": 16
+    },
+    "Chiliconarne": {
+        "wins": 3241,
+        "losses": 2681
+    },
+    "Stemas": {
+        "wins": 3,
+        "losses": 1
+    }
+}
