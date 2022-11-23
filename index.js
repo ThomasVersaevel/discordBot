@@ -14,8 +14,6 @@ const aramwl = require('./winslosses.json');
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS, Intents.FLAGS.GUILD_MEMBERS] });
 
-
-
 client.commands = new Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -26,6 +24,15 @@ for (const file of commandFiles) {
 	// With the key as the command name and the value as the exported module
 	client.commands.set(command.data.name, command);
 }
+
+// on for button ineractions
+client.on('interactionCreate', async i => {
+	if (!i.isButton()) return;
+	console.log('pressed button');
+
+	//await i.update
+
+});
 
 // on for bot command interaction
 client.on('interactionCreate', async interaction => {
@@ -333,15 +340,15 @@ client.on('messageCreate', async message => {
 			}]
 		});
 	} // kevin 263730771917930518 nico 444814987966283777 Thomas 276755182694563850 ThomasDisco 848986609910939668 
-	if (message.author.id === '444814987966283777' || message.content.toLowerCase().includes('nico stil nu')) { // big joey meme
-		//let nico = member.guild.channels.cache.get('848986609910939668');
-		if (message.author.moderatable) {
-			message.author.timeout(60 * 1000, 'sssst');
-			message.channel.send('nico is nu even 1 minuut stil');
-		} else {
-			console.log('cant moderate member: '+message.author.id);
-		}
-	}
+	// if (message.author.id === '444814987966283777' || message.content.toLowerCase().includes('nico stil nu')) { // big joey meme
+	// 	//let nico = member.guild.channels.cache.get('848986609910939668');
+	// 	if (message.author.moderatable) {
+	// 		message.author.timeout(60 * 1000, 'sssst');
+	// 		message.channel.send('nico is nu even 1 minuut stil');
+	// 	} else {
+	// 		console.log('cant moderate member: '+message.author.id);
+	// 	}
+	// }
 });
 
 // Login to Discord with your client's token
