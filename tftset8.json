@@ -1,3 +1,5 @@
 {
-   "traits": ["Sureshot", "Spellslinger", "Renegade", "Recon", "Prankster"]
+   "origins": ["Underground", "Threat", "Supers", "Star Guardian", "Ox Force"],
+   "traits": ["Sureshot", "Spellslinger", "Renegade", "Recon", "Prankster"],
+   "champions": ["Alistar", "Annie", "Ashe", "Aurelion Sol", "Bel'Veth", "Blitzrank", "Camille", "Cho'Gath", "Draven", "Ekko", "Ezreal", "Fiora", "Galio", "Ganplank", "Jax", "Jinx", "Kai'Sa", "Kayle", "LeBlanc", "Lee Sin", "Lulu", "Lux", "Malphite", "Miss Fortune", "Nasus", "Nilah", "Poppy", "Rammus", "Rell", "Renekton", "Riven", "Samira", "Sejuani", "Senna", "Sett", "Sivir", "Sona", "Soaraka", "Sylas", "Taliyah", "Talon", "Vayne", "Vel'Koz", "Vi", "Viego", "Wukong", "Yasuo", "Yuumi", "Zac", "Zed", "Zoe"]
 }
