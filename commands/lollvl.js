@@ -31,7 +31,7 @@ module.exports = {
 
             .setThumbnail('attachment://icon.png');
         
-            if (data.summonerLevel > 400) {
+            if (data.summonerLevel > 500) {
                 exampleEmbed.setFooter('(nolife lol)');
             }
 

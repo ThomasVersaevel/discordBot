@@ -37,7 +37,6 @@ module.exports = {
             );
         rows.push(row); // prep for multiple buttons
 
-
         // initial roll
         var embed = rollTraits();
 
@@ -92,7 +91,7 @@ module.exports = {
                     { name: 'Player ' + parseInt(i) + ':', value: king, inline: false },
                     { name: 'Trait:', value: trait, inline: true },
                     { name: 'Origin:', value: origin, inline: true },
-                );
+                )
             }
             return embed;
         }
