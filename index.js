@@ -1,15 +1,12 @@
 // Require the necessary discord.js classes
-// ## use " node . " to run the bot and deploy-commands.js to activate commands##
+// ## use " node . " to run the bot and deploy-commands.js to activate commands ##
 
 const fs = require('fs');
-//const fetch = require('node-fetch');
-const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json');
-const { MessageAttachment, MessageEmbed } = require('discord.js');
-const { apiKey } = require('./config.json');
+const { Client, Collection, Intents, MessageAttachment, MessageEmbed } = require('discord.js');
+const { token, apiKey } = require('./config.json');
 const fetch = require('node-fetch');
 const aramwl = require('./winslosses.json');
- const matchListJson = require('./oldmatchlist.json');
+const matchListJson = require('./oldmatchlist.json');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS, Intents.FLAGS.GUILD_MEMBERS] });
@@ -25,14 +22,14 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-// on for button ineractions
-client.on('interactionCreate', async i => {
-	if (!i.isButton()) return;
-	console.log('pressed button');
+// // on for button ineractions
+// client.on('interactionCreate', async i => {
+// 	if (!i.isButton()) return;
+// 	console.log('pressed button');
 
-	//await i.update
+// 	//await i.update
 
-});
+// });
 
 // on for bot command interaction
 client.on('interactionCreate', async interaction => {
@@ -50,13 +47,14 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
-// events
+const eventFiles = fs.readdirSync(`./events/`).filter(file => file.endsWith('.js'));
+// event registration
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
 	} else {
+		//console.log('registering: ' + file);
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
@@ -73,7 +71,7 @@ function loop() {
 	for (entry in aramwl) { // loop over players in aram json file
 		retrieveNewAramGames(entry);
 	}
-	setTimeout(loop,  60000 * 60 * 3); // 60000 * 60 * 3 = every 3 hours
+	setTimeout(loop, 60000 * 60 * 3); // 60000 * 60 * 3 = every 3 hours
 }
 
 async function retrieveNewAramGames(entry) {
@@ -88,10 +86,10 @@ async function retrieveNewAramGames(entry) {
 
 	let oldMatchList = [];
 	//console.log('doing new match logic for: ' + entry);
-	
+
 	for (var i = 0; i < matchListJson[entry].length; i++) {
 		//console.log(match);
-		if(matchListJson[entry][i] != 0) { 
+		if (matchListJson[entry][i] != 0) {
 			oldMatchList.push(matchListJson[entry][i]) //list of matchids by sumname (json)
 		}
 	}
@@ -234,15 +232,15 @@ client.on('messageCreate', async message => {
 	else if (censorArray.some(word => message.content.toLowerCase().includes(word.toLowerCase()))) {
 		var edit = message.content.toLowerCase().split(" ");
 		messageContent = message.content.toLowerCase();
-		for(var i = 0; i < edit.length; i++) {
+		for (var i = 0; i < edit.length; i++) {
 			if (censorArray.some(word => edit[i].includes(word))) {
-				messageContent = messageContent.replace(edit[i], '####');	
+				messageContent = messageContent.replace(edit[i], '####');
 			}
 		}
-   		message.delete();
-    	message.channel.send(`${message.author.username}: ${messageContent}`);
+		message.delete();
+		message.channel.send(`${message.author.username}: ${messageContent}`);
 	}
-	
+
 	else if (message.content.toLowerCase().includes('ik dacht dat dat kon')) {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#E50000')

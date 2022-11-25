@@ -4,14 +4,28 @@
       "Threat",
       "Supers",
       "Star Guardian",
-      "Ox Force"
+      "Ox Force",
+      "Admin",
+      "Gadgeteens",
+      "Anima-Squad",
+      "Lasercorps",
+      "Mecha-Prime",
+      "Civilian"
    ],
    "traits": [
       "Sureshot",
       "Spellslinger",
       "Renegade",
       "Recon",
-      "Prankster"
+      "Prankster",
+      "Brawler",
+      "Hacker",
+      "Heart",
+      "Aegis",
+      "Defender",
+      "Mascot",
+      "Duelist",
+      "Ace"
    ],
    "champions": [
       "Alistar",
@@ -27,7 +41,7 @@
       "Ezreal",
       "Fiora",
       "Galio",
-      "Ganplank",
+      "Gangplank",
       "Jax",
       "Jinx",
       "Kai'Sa",

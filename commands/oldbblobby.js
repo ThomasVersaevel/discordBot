@@ -7,50 +7,60 @@ const { convertLolName } = require('../globals.js');
 const tftJson = require('../tftset8.json');
 const { random } = require('lodash');
 
+// #################### DEPRECATED USE BBLOBBY INSTEAD ################
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('2bblobby')
+        .setName('oldbblobby')
         .setDescription('Creates a Bronze Bravery Lobby')
         .addIntegerOption(option =>
             option.setName('nrp')
-                .setDescription('Number of participants (0 to 5)')
+                .setDescription('Number of participants (0 to 8)')
                 .setRequired(true)),
     async execute(interaction) {
 
         let nrp = interaction.options.get('nrp').value;
 
-        if (nrp <= 0 || nrp > 5) {
+        if (nrp <= 0 || nrp > 8) {
             await interaction.reply({ content: 'Invalid amount of players entered', ephemeral: true });
             return;
         }
 
+        let tftIcon = `assets/tft/pengu.jpg`;
         let rows = [];
-        let kingIcons = [];
-        let row = new MessageActionRow()
+
+        // roll button (singular for now)
+        const row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setCustomId('roll') // 'roll' + i
+                    .setLabel('Roll')
+                    .setStyle('PRIMARY'),
+            );
+        rows.push(row); // prep for multiple buttons
 
         // initial roll
-        var embedList = rollTraits();
+        var embed = rollTraits();
 
-        await interaction.reply({ // multiple embeds all with a picture for the king
-            embeds: embedList,
-            files: kingIcons,
-            components: [row]
+        await interaction.reply({
+            embeds: [embed],
+            files: [{ attachment: tftIcon, name: 'icon.png' }],
+            components: rows
         });
 
-        // button response 
-        for (let j = 1; j <= nrp; j++) {
-            const filter = i => i.customId === j;
-        }
+        // button response
+        const filter = i => i.customId === 'roll';
+
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 1500000 });
-        collector.on('collect', async i => { // i is the interaction
+
+        collector.on('collect', async i => {
             console.log('Roll button on: ' + filter.customId)
-            
-            var newEmbed = reroll(i);
+            var newEmbed = rollTraits();
+
             await i.update({ embeds: [newEmbed] });
         });
 
         collector.on('end', collected => console.log(`Collected ${collected.size} items`));
-        // TODO images of champions and traits Needs embed per player
+        // TODO King part of one of the traits
         // TODO add another player to the lobby by button
         // Super TODO add 'finished' button that gets match result and adds it to embed
 
@@ -60,46 +70,32 @@ module.exports = {
             let traits = []
             let origins = []
             let kings = []
-            let eList = []
 
-            // for each participant in nrPlayers we want to show a roll button, a king and the traits in one embed per player
+            var embed = new MessageEmbed()// empty: '\u200b'
+                .setColor('#BBBBBB')
+                .setTitle('Bronze Bravery Lobby')
+                .setThumbnail('attachment://icon.png');
+            // for each participant in nrPlayers we want to show a roll button two rows for the trait and origin and one field for the king
             for (let i = 1; i <= nrp; i++) {
                 // initial version text only
                 let trait = roll(tftJson.traits, traits);
                 let origin = roll(tftJson.origins, origins);
-                let king = roll(tftJson.champions, kings)
+                let king = roll(tftJson.champions, kings);
 
                 // add choices to overlap list
                 traits.push(trait);
                 origins.push(origin);
                 kings.push(king);
 
-                let kingIcon = `assets/tftset8/` + king + `.jpg`;
-                kingIcons.push({ attachment: kingIcon, name: 'icon' + i + '.jpg' })
-
-
-                    row.addComponents(
-                        new MessageButton()
-                            .setCustomId(''+i) // 'roll' + i
-                            .setLabel('Roll' + i)
-                            .setStyle('PRIMARY'),
-                    );
-                //rows.push(row); // prep for multiple buttons
-
-                var embed = new MessageEmbed()// empty: '\u200b'
-                    .setColor('#BBBBBB')
-                    .setTitle('Player ' + parseInt(i))
-                    .setThumbnail('attachment://icon' + i + '.jpg')
-                    .addFields(
-                        { name: 'Trait:', value: trait, inline: true },
-                        { name: 'Origin:', value: origin, inline: true },
-                        { name: 'King' + ':', value: king, inline: true },
-                    )
-                eList.push(embed);
+                embed.addFields(
+                    { name: '\u200b', value: '\u200b', inline: false },
+                    { name: 'Player ' + parseInt(i) + ':', value: king, inline: false },
+                    { name: 'Trait:', value: trait, inline: true },
+                    { name: 'Origin:', value: origin, inline: true },
+                )
             }
-            return eList;
+            return embed;
         }
-
         function roll(list, overlaplist) {
             while (true) { // don't allow overlap
                 choice = list[random(0, list.length - 1)];
@@ -107,9 +103,6 @@ module.exports = {
                     return choice;
                 }
             }
-        }
-        function reroll(i) {
-            return;
         }
     }
 }

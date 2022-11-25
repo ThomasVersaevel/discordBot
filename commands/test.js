@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { aramupdater } = require('../events/aramUpdate.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
