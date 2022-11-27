@@ -62,7 +62,7 @@ module.exports = {
 
 			const newEmbed = new MessageEmbed()
 				.setColor('#BBBBBB')
-				.setTitle(i + '. ' + interaction.user.username)
+				.setTitle(i + '. ' + interaction.member.nickname)
 				.setThumbnail('attachment://icon' + i + '.jpg')
 				.addFields(
 					{ name: 'Origin:', value: origin, inline: true },
