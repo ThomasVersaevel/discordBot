@@ -27,6 +27,164 @@
       "Duelist",
       "Ace"
    ],
+   "Underground": [
+      "Ezreal",
+      "Kayle",
+      "Samira",
+      "Sona",
+      "Vi"
+   ],
+   "Threat": [
+      "Aurelion Sol",
+      "Bel'Veth",
+      "Cho'Gath",
+      "Rammus",
+      "Vel'Koz",
+      "Zac"
+   ],
+   "Supers": [
+      "Gangplank",
+      "Lee Sin",
+      "Malphite"
+   ],
+   "Star Guardian": [
+      "Ekko",
+      "Kai'Sa",
+      "Lux",
+      "Nilah",
+      "Rell",
+      "Yuumi",
+      "Taliyah"
+   ],
+   "Ox Force": [
+      "Alistar",
+      "Annie",
+      "Fiora",
+      "Talon",
+      "Viego"
+   ],
+   "Admin": [
+      "Blitzcrank",
+      "LeBlanc",
+      "Camille",
+      "Soraka"
+   ],
+   "Gadgeteens": [
+      "Lulu",
+      "Zoe",
+      "Annie",
+      "Poppy"
+   ],
+   "Anima-Squad": [
+      "Sylas",
+      "Nasus",
+      "Jinx",
+      "Miss Fortune",
+      "Vayne",
+      "Riven"
+   ],
+   "Civilian": [
+      "Galio",
+      "Sivir"
+   ],
+   "Lasercorps": [
+      "Renekton",
+      "Ashe",
+      "Sejuani",
+      "Zed",
+      "Senna",
+      "Yasuo"
+   ],
+   "Mecha-Prime": [
+      "Wukong",
+      "Jax",
+      "Draven",
+      "Sett"
+   ],
+   "Sureshot": [
+      "Sivir",
+      "Senna",
+      "Samira"
+   ],
+   "Spellslinger": [
+      "Annie",
+      "LeBlanc",
+      "Lux",
+      "Sona",
+      "Taliyah"
+   ],
+   "Renegade": [
+      "Talon",
+      "Camille",
+      "Sylas",
+      "Viego"
+   ],
+   "Recon": [
+      "Ashe",
+      "Ezreal",
+      "Kai'Sa",
+      "Vayne"
+   ],
+   "Prankster": [
+      "Ekko",
+      "Jinx",
+      "Zoe"
+   ],
+   "Brawler": [
+      "Blitzcrank",
+      "Renekton",
+      "Riven",
+      "Vi",
+      "Sejuani",
+      "Jax",
+      "Lee Sin"
+   ],
+   "Hacker": [
+      "LeBlanc",
+      "Zoe",
+      "Zed"
+   ],
+   "Heart": [
+      "Soraka",
+      "Lulu",
+      "Yuumi",
+      "Lee Sin",
+      "Sona"
+   ],
+   "Aegis": [
+      "Vi",
+      "Alistar",
+      "Ekko"
+   ],
+   "Defender": [
+      "Riven",
+      "Poppy",
+      "Wukong",
+      "Sett",
+      "Rell"
+   ],
+   "Mascot": [
+      "Nasus",
+      "Galio",
+      "Alistar",
+      "Yuumi",
+      "Malphite"
+   ],
+   "Duelist": [
+      "Vayne",
+      "Yasuo",
+      "Zed",
+      "Fiora",
+      "Nilah",
+      "Gangplank",
+      "Kayle"
+   ],
+   "Ace": [
+      "Draven",
+      "Samira",
+      "Miss Fortune"
+   ],
+
    "champions": [
       "Alistar",
       "Annie",

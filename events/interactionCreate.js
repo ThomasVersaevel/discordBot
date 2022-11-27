@@ -22,18 +22,19 @@ module.exports = {
 		embedList = interaction.message.embeds;
 		let kingIcon = ``;
 
-		// TODO recieve embeds take all current choices (for overlap) remake the rerolled embed and resend everything.
+		// TODO Add color to each player and match it with their button
+        // TODO add another player to the lobby by button
+        // Super TODO add 'finished' button that gets match result and adds it to embed
 
 		// take amount of embeds for max i
 		let max = interaction.message.embeds.length;
 		// on button press fetch embed corresponding to ID and update it
 		for (let i = 1; i <= max; i++) {
-
-			traits.push(interaction.message.embeds[i - 1].fields[0].value)
-			origins.push(interaction.message.embeds[i - 1].fields[1].value)
+			traits.push(interaction.message.embeds[i - 1].fields[1].value)
+			origins.push(interaction.message.embeds[i - 1].fields[0].value)
 			kings.push(interaction.message.embeds[i - 1].fields[2].value)
-
 		}
+		console.log(traits + ' Origin: ' + origins);
 		for (let i = 1; i <= max; i++) {
 			if (interaction.customId === 'bb' + i) { // replace with for up to 5 if exists
 
@@ -41,14 +42,16 @@ module.exports = {
 				//console.log(interaction.message.embeds[i - 1]);
 
 				embedList[i - 1] = reroll(i);
-				interaction.update({ embeds: embedList, 
-					files: [{ attachment: kingIcon, name: 'icon' + i + '.jpg' }] });
+				interaction.update({
+					embeds: embedList,
+					files: [{ attachment: kingIcon, name: 'icon' + i + '.jpg' }]
+				});
 			}
 		}
 		function reroll(i) {
 			let trait = roll(tftJson.traits, traits);
 			let origin = roll(tftJson.origins, origins);
-			let king = roll(tftJson.champions, kings);
+			let king = rollKing(trait, origin);
 
 			// add choices to overlap list
 			traits.push(trait);
@@ -59,11 +62,11 @@ module.exports = {
 
 			const newEmbed = new MessageEmbed()
 				.setColor('#BBBBBB')
-				.setTitle('Player ' + parseInt(i))
+				.setTitle(i + '. ' + interaction.user.username)
 				.setThumbnail('attachment://icon' + i + '.jpg')
 				.addFields(
-					{ name: 'Trait:', value: trait, inline: true },
 					{ name: 'Origin:', value: origin, inline: true },
+					{ name: 'Trait:', value: trait, inline: true },
 					{ name: 'King' + ':', value: king, inline: true },
 				)
 			return newEmbed;
@@ -76,6 +79,9 @@ module.exports = {
 				}
 			}
 		}
-
+		function rollKing(t, o) {
+			list = [...new Set([...tftJson[t], ...tftJson[o]])];
+			return list[random(0, list.length - 1)];
+		}
 	},
 };

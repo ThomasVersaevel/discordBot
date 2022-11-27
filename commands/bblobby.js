@@ -7,6 +7,7 @@ const { convertLolName } = require('../globals.js');
 const tftJson = require('../tftset8.json');
 const { random } = require('lodash');
 
+// ##### This command only creates the embeds for each player with the roll buttons the event handles the rolling
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('bblobby')
@@ -25,75 +26,60 @@ module.exports = {
         }
 
         let kingIcons = [];
-        let row = new MessageActionRow()
+        let row = new MessageActionRow();
+        let rows = [];
+        let row2 = new MessageActionRow();
 
-        // initial roll
-        var embedList = rollTraits();
+        // create embeds
+        var embedList = createEmbeds();
+        rows.push(row);
+        if (nrp > 5) { // max buttons per row is 5
+            rows.push(row2);
+        }
 
         await interaction.reply({ // multiple embeds all with a picture for the king
             embeds: embedList,
             files: kingIcons,
-            components: [row]
+            components: rows
         });
 
-        
-        // TODO images of champions and traits Needs embed per player
-        // TODO add another player to the lobby by button
-        // Super TODO add 'finished' button that gets match result and adds it to embed
-
         // creates an embed and rolls traits origins and kings for each player
-        function rollTraits() {
-
-            let traits = []
-            let origins = []
-            let kings = []
+        function createEmbeds() {
             let eList = []
 
-            // for each participant in nrPlayers we want to show a roll button, a king and the traits in one embed per player
+            // for each participant in nrPlayers we want to show a roll button, and fields for traits and king
             for (let i = 1; i <= nrp; i++) {
-                // initial version text only
-                let trait = roll(tftJson.traits, traits);
-                let origin = roll(tftJson.origins, origins);
-                let king = roll(tftJson.champions, kings)
 
-                // add choices to overlap list
-                traits.push(trait);
-                origins.push(origin);
-                kings.push(king);
-
-                let kingIcon = `assets/tftset8/` + king + `.jpg`;
+                let kingIcon = `assets/tft/questionmarkSquare.png`
                 kingIcons.push({ attachment: kingIcon, name: 'icon' + i + '.jpg' })
-
-
+                if (i < 6) {
                     row.addComponents(
                         new MessageButton()
-                            .setCustomId('bb'+i) // 'roll' + i
+                            .setCustomId('bb' + i) // 'roll' + i
                             .setLabel('Roll ' + i)
                             .setStyle('PRIMARY'),
                     );
-                //rows.push(row); // prep for multiple buttons
+                } else {
+                    row2.addComponents(
+                        new MessageButton()
+                            .setCustomId('bb' + i) // 'roll' + i
+                            .setLabel('Roll ' + i)
+                            .setStyle('PRIMARY'),
+                    );
+                }
 
                 var embed = new MessageEmbed()// empty: '\u200b'
                     .setColor('#BBBBBB')
                     .setTitle('Player ' + parseInt(i))
                     .setThumbnail('attachment://icon' + i + '.jpg')
                     .addFields(
-                        { name: 'Trait:', value: trait, inline: true },
-                        { name: 'Origin:', value: origin, inline: true },
-                        { name: 'King' + ':', value: king, inline: true },
+                        { name: 'Origin:', value: '\u200b', inline: true },
+                        { name: 'Trait:', value: '\u200b', inline: true },
+                        { name: 'King' + ':', value: '\u200b', inline: true },
                     )
                 eList.push(embed);
             }
             return eList;
-        }
-
-        function roll(list, overlaplist) {
-            while (true) { // don't allow overlap
-                choice = list[random(0, list.length - 1)];
-                if (!overlaplist.includes(choice)) {
-                    return choice;
-                }
-            }
         }
     }
 }
