@@ -34,11 +34,11 @@ module.exports = {
 			kings.push(interaction.message.embeds[i - 1].fields[2].value)
 			colors.push(interaction.message.embeds[i - 1].color)
 		}
+
 		for (let i = 1; i <= max; i++) {
 			if (interaction.customId === 'bb' + i) { // replace with for up to 5 if exists
 
 				console.log('Button ' + i + ' pressed');
-				//console.log(interaction.message.embeds[i - 1]);
 
 				embedList[i - 1] = reroll(i);
 				interaction.update({
@@ -58,10 +58,10 @@ module.exports = {
 			kings.push(king);
 
 			kingIcon = `assets/tftset8/` + king + `.jpg`;
-
+			const playerName = (interaction.member.nickname) ?  interaction.member.nickname : interaction.user.username
 			const newEmbed = new MessageEmbed()
 				.setColor(colors[(i-1)%4])
-				.setTitle(i + '. ' + interaction.member.nickname)
+				.setTitle(i + '. ' + playerName)
 				.setThumbnail('attachment://icon' + i + '.jpg')
 				.addFields(
 					{ name: 'Origin:', value: origin, inline: true },
