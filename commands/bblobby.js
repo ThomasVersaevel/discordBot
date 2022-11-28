@@ -25,6 +25,8 @@ module.exports = {
             return;
         }
 
+        let colors = ["#5865f2", "#3ba55c", "#ed4245", "#4f545c"]
+        let styles = ["PRIMARY", "SUCCESS", "DANGER", "SECONDARY"]
         let kingIcons = [];
         let row = new MessageActionRow();
         let rows = [];
@@ -33,7 +35,7 @@ module.exports = {
         // create embeds
         var embedList = createEmbeds();
         rows.push(row);
-        if (nrp > 5) { // max buttons per row is 5
+        if (nrp > 4) { // max buttons per row is 5 but for color symmetry we will limit it to 4
             rows.push(row2);
         }
 
@@ -42,7 +44,6 @@ module.exports = {
             files: kingIcons,
             components: rows
         });
-
         // creates an embed and rolls traits origins and kings for each player
         function createEmbeds() {
             let eList = []
@@ -52,24 +53,24 @@ module.exports = {
 
                 let kingIcon = `assets/tft/questionmarkSquare.png`
                 kingIcons.push({ attachment: kingIcon, name: 'icon' + i + '.jpg' })
-                if (i < 6) {
+                if (i < 5) {
                     row.addComponents(
                         new MessageButton()
                             .setCustomId('bb' + i) // 'roll' + i
                             .setLabel('Roll ' + i)
-                            .setStyle('PRIMARY'),
+                            .setStyle(styles[(i-1)%4]),
                     );
                 } else {
                     row2.addComponents(
                         new MessageButton()
                             .setCustomId('bb' + i) // 'roll' + i
                             .setLabel('Roll ' + i)
-                            .setStyle('PRIMARY'),
+                            .setStyle(styles[(i-1)%4]),
                     );
                 }
 
                 var embed = new MessageEmbed()// empty: '\u200b'
-                    .setColor('#BBBBBB')
+                    .setColor(colors[(i-1)%4])
                     .setTitle('Player ' + parseInt(i))
                     .setThumbnail('attachment://icon' + i + '.jpg')
                     .addFields(

@@ -18,11 +18,10 @@ module.exports = {
 		let traits = []
 		let origins = []
 		let kings = []
-		let kingIcons = [];
+		let colors = [];
 		embedList = interaction.message.embeds;
 		let kingIcon = ``;
 
-		// TODO Add color to each player and match it with their button
         // TODO add another player to the lobby by button
         // Super TODO add 'finished' button that gets match result and adds it to embed
 
@@ -33,8 +32,8 @@ module.exports = {
 			traits.push(interaction.message.embeds[i - 1].fields[1].value)
 			origins.push(interaction.message.embeds[i - 1].fields[0].value)
 			kings.push(interaction.message.embeds[i - 1].fields[2].value)
+			colors.push(interaction.message.embeds[i - 1].color)
 		}
-		console.log(traits + ' Origin: ' + origins);
 		for (let i = 1; i <= max; i++) {
 			if (interaction.customId === 'bb' + i) { // replace with for up to 5 if exists
 
@@ -61,7 +60,7 @@ module.exports = {
 			kingIcon = `assets/tftset8/` + king + `.jpg`;
 
 			const newEmbed = new MessageEmbed()
-				.setColor('#BBBBBB')
+				.setColor(colors[(i-1)%4])
 				.setTitle(i + '. ' + interaction.member.nickname)
 				.setThumbnail('attachment://icon' + i + '.jpg')
 				.addFields(
