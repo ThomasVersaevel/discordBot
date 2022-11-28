@@ -77,6 +77,7 @@
     "once": "^1.4.0",
     "optionator": "^0.9.1",
     "parent-module": "^1.0.1",
+    "passport-bnet": "^2.0.0",
     "path-is-absolute": "^1.0.1",
     "path-key": "^3.1.1",
     "prelude-ls": "^1.2.1",

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
-const shortcuts  = require('../api-shortcuts.json');
+const shortcuts = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const { tftKey } = require('../config.json');
 const { convertLolName } = require('../globals.js');
@@ -8,18 +8,18 @@ const { convertLolName } = require('../globals.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('tftrank')
-		.setDescription('Shows your tft rank')
+        .setDescription('Shows your tft rank')
         .addStringOption(option =>
-			option.setName('lolname')
-				.setDescription('Summoner Name')
-				.setRequired(true)),
+            option.setName('lolname')
+                .setDescription('Summoner Name')
+                .setRequired(true)),
     async execute(interaction) {
 
         let username = convertLolName(interaction.options.getString('lolname'), interaction.member.id); //uses globals
-        
+
         const link = `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-name/${username}?api_key=${tftKey}`
-		const response = await fetch(link);
-		let data = await response.json();
+        const response = await fetch(link);
+        let data = await response.json();
         const puuid = data.puuid
         //console.log(data);
         patchNr = shortcuts['patch']; //required for data dragon
@@ -31,40 +31,49 @@ module.exports = {
         let tftRankedLink = `https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/${tftData.id}?api_key=${tftKey}`
         const tftRankResponse = await fetch(tftRankedLink);
         let tftRankData = await tftRankResponse.json();
-        
+
         console.log(tftRankData);
         let rank = 'Unranked';
         let hyperRank = 'Unranked';
+        let doubleRank = 'Unranked';
+        let division = '';
+
         if (tftRankData.length > 1) {
             if (tftRankData[0].queueType == 'RANKED_TFT') {
                 rank = tftRankData[0].tier; //ranked tft
-            } else if (tftRankData[1].queueType == 'RANKED_TFT' ) { 
+                division = tftRankData[0].rank;
+            } else if (tftRankData[1].queueType == 'RANKED_TFT') {
                 rank = tftRankData[1].tier; //ranked tft	
             }
             if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
-               hyperRank = tftRankData[0].ratedTier;
+                hyperRank = tftRankData[0].ratedTier;
             } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
-               hyperRank = tftRankData[1].ratedTier;
+                hyperRank = tftRankData[1].ratedTier;
+            }
+            if (tftRankData[0].queueType == 'DOUBLE_TFT') {
+                doubleRank = tftRankData[0].tier; //ranked tft
+            } else if (tftRankData[1].queueType == 'DOUBLE_TFT') {
+                doubleRank = tftRankData[1].tier; //ranked tft	
             }
         } else if (tftRankData.length == 1) {
             if (tftRankData[0].queueType == 'RANKED_TFT') {
                 rank = tftRankData[0].tier; //ranked tft
             }
             else if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
-               hyperRank = tftRankData[0].ratedTier;
-            } 
+                hyperRank = tftRankData[0].ratedTier;
+            }
         }
         if (hyperRank.toLowerCase() == 'orange') {
             hyperRank = 'Hyper';
         }
         hyperRank = hyperRank.substring(0, 1) + hyperRank.substring(1).toLowerCase();
-        rank = rank.substring(0, 1)+ rank.substring(1).toLowerCase();
+        rank = rank.substring(0, 1) + rank.substring(1).toLowerCase();
         if (hyperRank == 'Unranked') {
             hyperEmblem = 'assets/ranked-emblems/Grey_tier.png';
         } else {
-            hyperEmblem = 'assets/ranked-emblems/'+hyperRank+'_tier.png';
+            hyperEmblem = 'assets/ranked-emblems/' + hyperRank + '_tier.png';
         }
-        hyperRank = hyperRank+' Tier';
+        hyperRank = hyperRank + ' Tier';
         var embedColor = getRankColor(rank);
 
 
@@ -72,34 +81,34 @@ module.exports = {
             switch (rank) {
                 case 'Iron':
                     return '#615959';
-                break;
+                    break;
                 case 'Bronze':
                     return '#925235';
-                break;
+                    break;
                 case 'Silver':
                     return '#839da5';
-                break;
+                    break;
                 case 'Gold':
-                    return '#dfa040'; 
-                break;
+                    return '#dfa040';
+                    break;
                 case 'Platinum':
                     return '#539591';
-                break;
+                    break;
                 case 'Diamond':
                     return '#686cdd';
-                break;
+                    break;
                 case 'Master':
                     return '#8154a6';
-                break;
+                    break;
                 case 'Grandmaster':
                     return '#f12227';
-                break;
+                    break;
                 case 'Challenger':
                     return '#fcf4e1';
-                break;
+                    break;
                 default:
                     return '#d1d1d1';
-            }    
+            }
         }
 
         let tftMatchLink = `https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?api_key=${tftKey}`
@@ -108,17 +117,21 @@ module.exports = {
 
         var exampleEmbed = new MessageEmbed()
             .setColor(embedColor)
-            .setTitle('')
-            .addField(''+tftData.name, '\u200b', true)
-            .addField('Hyperrol rank: '+hyperRank, '\u200b', false)
-            .addField('Rank: '+rank, '\u200b', false)
+            .setTitle('' + tftData.name)
+            //.addField(''+tftData.name, '\u200b', true)
+            .addField('Double up: ' + doubleRank, '\u200b', false)
+            .addField('Rank: ' + rank + ' ' + division, '\u200b', false)
             .setImage('attachment://rankedImg.png')
-            .setThumbnail('attachment://icon.png');
+            .setThumbnail('attachment://double.png')
+            .setFooter({ text: 'Hyperrol rank: ' + hyperRank, iconURL: 'attachment://icon.png' });
 
-        await interaction.reply({ embeds: [exampleEmbed], 
-			files: [{ attachment: hyperEmblem, name:'icon.png'},
-             {attachment:'assets/ranked-emblems/Emblem_'+ rank +'.png', name:'rankedImg.png'}]
+        await interaction.reply({
+            embeds: [exampleEmbed],
+            files: [{ attachment: hyperEmblem, name: 'icon.png' },
+            { attachment: 'assets/ranked-emblems/Emblem_' + rank + '.png', name: 'rankedImg.png' },
+            { attachment: 'assets/ranked-emblems/Emblem_' + doubleRank + '.png', name: 'double.png' }
+            ]
         });
-                      
+
     },
 };
