@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 const shortcuts = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
-const { tftKey } = require('../config.json');
+const { tftKey, apiKey } = require('../config.json');
 const { convertLolName } = require('../globals.js');
 
 module.exports = {
@@ -21,9 +21,12 @@ module.exports = {
         const response = await fetch(link);
         let data = await response.json();
         const puuid = data.puuid
-        //console.log(data);
+        // turns out double up ranks are in league/v4
+        const lolSummonerLink =  `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`
+		const lolSummonerResponse = await fetch(lolSummonerLink);
+		let lolSummonerData = await lolSummonerResponse.json();
+
         patchNr = shortcuts['patch']; //required for data dragon
-        let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${data.profileIconId}.png`
         let tftlink = `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${tftKey}`
         const tftResponse = await fetch(tftlink);
         let tftData = await tftResponse.json();
@@ -31,11 +34,15 @@ module.exports = {
         let tftRankedLink = `https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/${tftData.id}?api_key=${tftKey}`
         const tftRankResponse = await fetch(tftRankedLink);
         let tftRankData = await tftRankResponse.json();
+        
+        let lolRankedLink = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${lolSummonerData.id}?api_key=${apiKey}`
+        const lolRankResponse = await fetch(lolRankedLink);
+        let lolRankData = await lolRankResponse.json();
 
-        console.log(tftRankData);
         let rank = 'Unranked';
         let hyperRank = 'Unranked';
         let doubleRank = 'Unranked';
+        let doubleDivision = '';
         let division = '';
 
         if (tftRankData.length > 1) {
@@ -44,25 +51,36 @@ module.exports = {
                 division = tftRankData[0].rank;
             } else if (tftRankData[1].queueType == 'RANKED_TFT') {
                 rank = tftRankData[1].tier; //ranked tft	
+                division = tftRankData[0].rank;
             }
             if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
                 hyperRank = tftRankData[0].ratedTier;
             } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
                 hyperRank = tftRankData[1].ratedTier;
             }
-            if (tftRankData[0].queueType == 'DOUBLE_TFT') {
-                doubleRank = tftRankData[0].tier; //ranked tft
-            } else if (tftRankData[1].queueType == 'DOUBLE_TFT') {
-                doubleRank = tftRankData[1].tier; //ranked tft	
+            if (lolRankData[0].queueType == 'RANKED_TFT_DOUBLE_UP') {
+                doubleRank = lolRankData[0].tier; //ranked tft
+                doubleDivision = lolRankData[0].rank
+            } else if (lolRankData[1].queueType == 'RANKED_TFT_DOUBLE_UP') {
+                doubleRank = lolRankData[1].tier; //ranked tft
+                doubleDivision = lolRankData[0].rank	
             }
         } else if (tftRankData.length == 1) {
             if (tftRankData[0].queueType == 'RANKED_TFT') {
                 rank = tftRankData[0].tier; //ranked tft
+                division = tftRankData[0].rank;
             }
-            else if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
+            if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
                 hyperRank = tftRankData[0].ratedTier;
             }
-        }
+            if (lolRankData[0].queueType == 'RANKED_TFT_PAIRS') {
+                doubleRank = lolRankData[0].tier; //ranked tft
+                doubleDivision = lolRankData[0].rank	
+            } 
+        } 
+        
+        doubleRank = doubleRank.substring(0, 1) + doubleRank.substring(1).toLowerCase()
+
         if (hyperRank.toLowerCase() == 'orange') {
             hyperRank = 'Hyper';
         }
@@ -111,15 +129,11 @@ module.exports = {
             }
         }
 
-        let tftMatchLink = `https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?api_key=${tftKey}`
-        const tftMatchResponse = await fetch(tftMatchLink);
-        let tftMatchData = await tftMatchResponse.json();
-
         var exampleEmbed = new MessageEmbed()
             .setColor(embedColor)
             .setTitle('' + tftData.name)
             //.addField(''+tftData.name, '\u200b', true)
-            .addField('Double up: ' + doubleRank, '\u200b', false)
+            .addField('Double up: ' + doubleRank + ' ' + doubleDivision, '\u200b', false)
             .addField('Rank: ' + rank + ' ' + division, '\u200b', false)
             .setImage('attachment://rankedImg.png')
             .setThumbnail('attachment://double.png')
@@ -134,4 +148,4 @@ module.exports = {
         });
 
     },
-};
+}
