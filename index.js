@@ -107,7 +107,7 @@ async function retrieveNewAramGames(entry) {
 			let matchData = await matchResponse.json();
 			// if Match not yet used, check win or lose
 			var partIndex = 0;
-			//console.log(matchData.info.participants[0]);
+			console.log('Match: ' + matchIdData[id] + ' Has participants: ' +matchData.info.participants[0])
 			for (var i = 0; i < 10; i++) {
 				if (matchData.info.participants[i].puuid === puuid) {
 					partIndex = i; //find player's index
