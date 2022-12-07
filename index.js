@@ -100,17 +100,19 @@ async function retrieveNewAramGames(entry) {
 
 	for (var id = 0; id < matchIdData.length; id++) {
 		if (!oldMatchList.includes(matchIdData[id])) {
-			console.log(entry + ' New match detected');
+			console.log(entry + ' New match detected: ' + matchIdData[id]);
 			newMatchList.push(matchIdData[id]);
 			let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`
 			const matchResponse = await fetch(tempLink);
 			let matchData = await matchResponse.json();
 			// if Match not yet used, check win or lose
 			var partIndex = 0;
-			console.log('Match: ' + matchIdData[id] + ' Has participants: ' +matchData.info.participants[0])
+			// if (!matchData.info.participants[0].some((item) => item)) return;
 			for (var i = 0; i < 10; i++) {
+				console.log(matchIdData[id] + ' partIndex: '+ i + ' - ' + matchData.info)
 				if (matchData.info.participants[i].puuid === puuid) {
 					partIndex = i; //find player's index
+					break;
 				}
 			}
 			matchData.info.participants[partIndex].win ? win++ : lose++;
@@ -189,7 +191,7 @@ client.on('messageCreate', async message => {
 		});
 	}
 
-	if (message.content.toLowerCase().includes('tft') && !message.content.toLowerCase().includes('/tft/')) {
+	if (message.content.toLowerCase().includes('tft') && message.content.toLowerCase().includes('tijd') || message.content.toLowerCase().includes('time') && !message.content.toLowerCase().includes('/tft/')) {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#05AA47')
 			.setImage('attachment://aram.png'); //takes attachment from send method below
@@ -197,7 +199,7 @@ client.on('messageCreate', async message => {
 		message.channel.send({
 			embeds: [exampleEmbed],
 			files: [{
-				attachment: 'assets/Tftea.png',
+				attachment: 'assets/tftea.png',
 				name: 'aram.png'
 			}]
 		});
