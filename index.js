@@ -107,15 +107,17 @@ async function retrieveNewAramGames(entry) {
 			let matchData = await matchResponse.json();
 			// if Match not yet used, check win or lose
 			var partIndex = 0;
-			// if (!matchData.info.participants[0].some((item) => item)) return;
-			for (var i = 0; i < 10; i++) {
-				console.log(matchIdData[id] + ' partIndex: '+ i + ' - ' + matchData.info)
-				if (matchData.info.participants[i].puuid === puuid) {
-					partIndex = i; //find player's index
-					break;
+			if (!matchData.info) {
+			} else {
+				for (var i = 0; i < 10; i++) {
+					//console.log(matchIdData[id] + ' partIndex: '+ i + ' - ' + matchData.info)
+					if (matchData.info.participants[i].puuid === puuid) {
+						partIndex = i; //find player's index
+						break;
+					}
 				}
+				matchData.info.participants[partIndex].win ? win++ : lose++;
 			}
-			matchData.info.participants[partIndex].win ? win++ : lose++;
 		}
 	}
 
