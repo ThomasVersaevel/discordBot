@@ -11,9 +11,36 @@ module.exports = {
 	name: 'interactionCreate',
 	execute(interaction) {
 		console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
+		
+		if (!interaction.isButton()) return; // add extra if for when more buttons exist
+		if (interaction.customId === 'lockin') { // if lockin pressed disable all roll buttons, if lockin pressed again unlock em
+			if (interaction.message.components[interaction.message.components.length - 1].components[0].label === 'Lock In') {
+				for (let i = 0; i < interaction.message.components.length - 1; i++) { // for all rows in the components array
+					for (let j = 0; j < interaction.message.components[i].components.length; j++) {
+						interaction.message.components[i].components[j].setDisabled(true);
+					}
+				}
+				interaction.message.components[interaction.message.components.length - 1].components[0].setLabel('Unlock')
 
-		if (!interaction.isButton()) return;
+				interaction.update(
+					{ components: interaction.message.components }
+				);
+				return; // return ends the event
+			}
+			else {
+				for (let i = 0; i < interaction.message.components.length - 1; i++) { // for all rows in the components array
+					for (let j = 0; j < interaction.message.components[i].components.length; j++) {
+						interaction.message.components[i].components[j].setDisabled(false);
+					}
+				}
+				interaction.message.components[interaction.message.components.length - 1].components[0].setLabel('Lock In')
 
+				interaction.update(
+					{ components: interaction.message.components }
+				);
+				return; // return ends the event
+			}
+		}
 		//get traits from each embed
 		let traits = []
 		let origins = []
@@ -22,10 +49,10 @@ module.exports = {
 		embedList = interaction.message.embeds;
 		let kingIcon = ``;
 
-        // TODO add another player to the lobby by button
-        // Super TODO add 'finished' button that gets match result and adds it to embed
+		// TODO add another player to the lobby by button
+		// Super TODO add 'finished' button that gets match result and adds it to embed
 
-		// take amount of embeds for max i
+		// take amount of embeds for max  
 		let max = interaction.message.embeds.length;
 		// on button press fetch embed corresponding to ID and update it
 		for (let i = 1; i <= max; i++) {
@@ -58,9 +85,9 @@ module.exports = {
 			kings.push(king);
 
 			kingIcon = `assets/tftset8/` + king + `.jpg`;
-			const playerName = (interaction.member.nickname) ?  interaction.member.nickname : interaction.user.username
+			const playerName = (interaction.member.nickname) ? interaction.member.nickname : interaction.user.username
 			const newEmbed = new MessageEmbed()
-				.setColor(colors[(i-1)%4])
+				.setColor(colors[(i - 1) % 4])
 				.setTitle(i + '. ' + playerName)
 				.setThumbnail('attachment://icon' + i + '.jpg')
 				.addFields(

@@ -29,15 +29,17 @@ module.exports = {
         let styles = ["PRIMARY", "SUCCESS", "DANGER", "SECONDARY"]
         let kingIcons = [];
         let row = new MessageActionRow();
-        let rows = [];
         let row2 = new MessageActionRow();
+        let row3 = new MessageActionRow();
+        let rows = [];
 
         // create embeds
         var embedList = createEmbeds();
         rows.push(row);
         if (nrp > 4) { // max buttons per row is 5 but for color symmetry we will limit it to 4
-            rows.push(row2);
+            rows.push(row2); 
         }
+        rows.push(row3)
 
         await interaction.reply({ // multiple embeds all with a picture for the king
             embeds: embedList,
@@ -47,7 +49,12 @@ module.exports = {
         // creates an embed and rolls traits origins and kings for each player
         function createEmbeds() {
             let eList = []
-
+                row3.addComponents(
+                    new MessageButton()
+                        .setCustomId('lockin') // 'roll' + i
+                        .setLabel('Lock In' )
+                        .setStyle("PRIMARY"),
+                    );
             // for each participant in nrPlayers we want to show a roll button, and fields for traits and king
             for (let i = 1; i <= nrp; i++) {
 

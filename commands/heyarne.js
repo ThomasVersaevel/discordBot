@@ -12,7 +12,7 @@ module.exports = {
         .setDescription('Zou jij haar doen?'),
     async execute(interaction) {
 
-        atString = '@ChiliConArne';
+        atString = `<@ChiliConArne>`;
         used = [];
         i = 0;
         await interaction.reply(atString)
