@@ -2,6 +2,7 @@
 const { MessageEmbed } = require('discord.js');
 const tftJson = require('../tftset8.json');
 const { random } = require('lodash');
+const fs = require("fs");
 
 module.exports = {
 	name: 'interactionCreate',
@@ -84,12 +85,8 @@ module.exports = {
 			kingIcon = `assets/tftset8/` + king + `.jpg`;
 			
 			// check if king exists
-			var iconFile = new File(kingIcon);
-			if (!iconFile.exists()) kingIcon = `assets/tft/questionmarkSquare.png`;
+			if (!fs.existsSync(kingIcon)) kingIcon = `./assets/tft/questionmarkSquare.png`;
 
-			if (kingIcon) {
-
-			}
 			const playerName = (interaction.member.nickname) ? interaction.member.nickname : interaction.user.username
 			const newEmbed = new MessageEmbed()
 				.setColor(colors[(i - 1) % 4])
