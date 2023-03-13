@@ -22,7 +22,7 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-// // on for button ineractions
+//  on for button ineractions
 // client.on('interactionCreate', async i => {
 // 	if (!i.isButton()) return;
 // 	console.log('pressed button');
@@ -135,8 +135,8 @@ async function retrieveNewAramGames(entry) {
 }
 // ####################### end aram updater ##############################
 
-const tank_meta = ['tank', 'meta', 'eng', 'scary', 'joey', 'angst', 'maokai', 'dimetos',
-	'tanky', 'ondoodbaar', 'unkillable', 'sejuani', 'sion', 'orn', 'corn'];
+const tank_meta = ['tank', 'meta', ' eng', 'scary', 'joey', 'angst', 'maokai', 'dimetos',
+	'tanky', 'ondoodbaar', 'unkillable', 'sejuani', 'sion', ' orn', 'corn'];
 
 const pokeArray = ['Shroomish', 'Bidoof', 'Chansey', 'Chimecho', 'Lickitounge',
 	'Ludicolo', 'Metapod', 'Pickachu', 'Psyduck', 'Smoochum', 'Snorelax', 'Wooper'];
@@ -193,7 +193,8 @@ client.on('messageCreate', async message => {
 		});
 	}
 
-	if (message.content.toLowerCase().includes('tft') && message.content.toLowerCase().includes('tijd') || message.content.toLowerCase().includes('time') && !message.content.toLowerCase().includes('/tft/')) {
+	// triggers on any message with tft time/tijd in it except links
+	if (message.content.toLowerCase().includes('tft') && (message.content.toLowerCase().includes('tijd') || message.content.toLowerCase().includes('time')) && !message.content.toLowerCase().includes('/tft/')) {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#05AA47')
 			.setImage('attachment://aram.png'); //takes attachment from send method below

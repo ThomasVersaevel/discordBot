@@ -76,7 +76,7 @@ module.exports = {
 		}
 		function reroll(i) {
 			let trait = roll(tftJson.traits, traits);
-			let origin = roll(tftJson.origins, origins);
+			let origin = roll(tftJson.origins, origins); 
 			let king = rollKing(trait, origin);
 
 			// add choices to overlap list
@@ -84,7 +84,11 @@ module.exports = {
 			origins.push(origin);
 			kings.push(king);
 
+			// check if king exists here
 			kingIcon = `assets/tftset8/` + king + `.jpg`;
+			if (kingIcon) {
+
+			}
 			const playerName = (interaction.member.nickname) ? interaction.member.nickname : interaction.user.username
 			const newEmbed = new MessageEmbed()
 				.setColor(colors[(i - 1) % 4])
