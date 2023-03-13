@@ -1,9 +1,5 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageAttachment, MessageEmbed, MessageActionRow, MessageButton, Events } = require('discord.js');
-const shortcuts = require('../api-shortcuts.json');
-const fetch = require('node-fetch');
-const { apiKey } = require('../config.json');
-const { convertLolName } = require('../globals.js');
+
+const { MessageEmbed } = require('discord.js');
 const tftJson = require('../tftset8.json');
 const { random } = require('lodash');
 
@@ -84,8 +80,13 @@ module.exports = {
 			origins.push(origin);
 			kings.push(king);
 
-			// check if king exists here
+			
 			kingIcon = `assets/tftset8/` + king + `.jpg`;
+			
+			// check if king exists
+			var iconFile = new File(kingIcon);
+			if (!iconFile.exists()) kingIcon = `assets/tft/questionmarkSquare.png`;
+
 			if (kingIcon) {
 
 			}
