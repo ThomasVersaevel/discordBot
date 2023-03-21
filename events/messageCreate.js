@@ -203,6 +203,22 @@ module.exports = {
             });
         } //joeys neus
 
+        if (message.content.toLowerCase().includes("nico")) {
+            const exampleEmbed = new MessageEmbed()
+                .setColor("#E50000")
+                .setImage("attachment://nico.png"); //takes attachment from send method below
+
+            message.channel.send({
+                embeds: [exampleEmbed],
+                files: [
+                    {
+                        attachment: "./assets/nico.gif",
+                        name: "nico.png",
+                    },
+                ],
+            });
+        }
+
         const increasedRandom = {
             //Returns true if chance is met >0.9 and increases every time it fails.
             baseChance: 0.1,
