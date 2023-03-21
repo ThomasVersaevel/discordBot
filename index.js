@@ -113,8 +113,6 @@ client.on("messageCreate", async (message) => {
       message.content.toLowerCase().includes(word.toLowerCase()))) 
   {
     tankMeta.execute(message); // proper way to call an event
-  } else {
-    messageCreate.execute(message); // call event
   }
 });
 

@@ -41,7 +41,7 @@ module.exports = {
                 let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`;
                 const matchResponse = await fetch(tempLink);
                 let matchData = await matchResponse.json();
-                // if Match not yet used, check win or lose
+                // if Match not yet used, check win or lose 
                 var partIndex = 0;
                 if (!matchData.info) {
                 } else {

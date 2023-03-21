@@ -37,7 +37,7 @@ module.exports = {
             const imgString = pokeArray[i];
             console.log("Handsome" + imgString + ".png");
             const pic = new MessageAttachment(
-                "../assets/HandsomePokemon/Handsome" + imgString + ".png"
+                "./assets/HandsomePokemon/Handsome" + imgString + ".png"
             );
             // inside a command, event listener, etc.
             const exampleEmbed = new MessageEmbed()
@@ -49,7 +49,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/HandsomePokemon/Handsome" + imgString + ".png",
+                        attachment: "./assets/HandsomePokemon/Handsome" + imgString + ".png",
                         name: "poke.png",
                     },
                 ],
@@ -68,7 +68,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/AramOetang.png",
+                        attachment: "./assets/AramOetang.png",
                         name: "aram.png",
                     },
                 ],
@@ -90,7 +90,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/tftea.png",
+                        attachment: "./assets/tftea.png",
                         name: "aram.png",
                     },
                 ],
@@ -106,7 +106,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/SluipSchutters/boeie.png",
+                        attachment: "./assets/SluipSchutters/boeie.png",
                         name: "sluipschutter.png",
                     },
                 ],
@@ -120,7 +120,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/SluipSchutters/allebei.png",
+                        attachment: "./assets/SluipSchutters/allebei.png",
                         name: "sluipschutter.png",
                     },
                 ],
@@ -148,7 +148,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/SluipSchutters/ikdachtdatdatkon.png",
+                        attachment: "./assets/SluipSchutters/ikdachtdatdatkon.png",
                         name: "sluipschutter.png",
                     },
                 ],
@@ -162,7 +162,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/SluipSchutters/moetkunnen.png",
+                        attachment: "./assets/SluipSchutters/moetkunnen.png",
                         name: "sluipschutter.png",
                     },
                 ],
@@ -176,7 +176,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/SluipSchutters/groteblij.png",
+                        attachment: "./assets/SluipSchutters/groteblij.png",
                         name: "sluipschutter.png",
                     },
                 ],
@@ -196,7 +196,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/lamazitte.png",
+                        attachment: "./assets/lamazitte.png",
                         name: "lamazitte.png",
                     },
                 ],
@@ -233,7 +233,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/neus/neus1.png",
+                        attachment: "./assets/neus/neus1.png",
                         name: "neus.png",
                     },
                 ],
@@ -242,7 +242,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/neus/neus2.png",
+                        attachment: "./assets/neus/neus2.png",
                         name: "neus.png",
                     },
                 ],
@@ -251,7 +251,7 @@ module.exports = {
                 embeds: [exampleEmbed],
                 files: [
                     {
-                        attachment: "../assets/neus/neus3.png",
+                        attachment: "./assets/neus/neus3.png",
                         name: "neus.png",
                     },
                 ],
