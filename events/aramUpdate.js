@@ -21,7 +21,7 @@ module.exports = {
             let matchIdData = await matchIdResponse.json();
           
             let oldMatchList = [];
-            //console.log('doing new match logic for: ' + entry);
+            console.log('doing aram update for: ' + entry);
           
             for (var i = 0; i < matchListJson[entry].length; i++) {
               //console.log(match);
