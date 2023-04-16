@@ -44,39 +44,38 @@ module.exports = {
         let doubleRank = 'Unranked';
         let doubleDivision = '';
         let division = '';
+        let lp = 0;
+        let wins = 0;
+        let losses = 0;
 
-        if (tftRankData.length > 1) {
+        if (tftRankData) {
+            let rankedIndex = 0;
+            let doubleUpIndex = 0;
             if (tftRankData[0].queueType == 'RANKED_TFT') {
-                rank = tftRankData[0].tier; //ranked tft
-                division = tftRankData[0].rank;
+
             } else if (tftRankData[1].queueType == 'RANKED_TFT') {
-                rank = tftRankData[1].tier; //ranked tft	
-                division = tftRankData[0].rank;
+                rankedIndex = 1;
             }
-            if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
-                hyperRank = tftRankData[0].ratedTier;
-            } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
-                hyperRank = tftRankData[1].ratedTier;
-            }
+            rank = tftRankData[rankedIndex].tier; //ranked tft
+            division = tftRankData[rankedIndex].rank;
+            lp = tftRankData[rankedIndex].leaguePoints;
+            wins = tftRankData[rankedIndex].wins;
+            losses = tftRankData[rankedIndex].losses;
+           
             if (lolRankData[0].queueType == 'RANKED_TFT_DOUBLE_UP') {
-                doubleRank = lolRankData[0].tier; //ranked tft
-                doubleDivision = lolRankData[0].rank
+
             } else if (lolRankData[1].queueType == 'RANKED_TFT_DOUBLE_UP') {
-                doubleRank = lolRankData[1].tier; //ranked tft
-                doubleDivision = lolRankData[0].rank	
+                doubleUpIndex = 1;
             }
-        } else if (tftRankData.length == 1) {
-            if (tftRankData[0].queueType == 'RANKED_TFT') {
-                rank = tftRankData[0].tier; //ranked tft
-                division = tftRankData[0].rank;
-            }
-            if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
-                hyperRank = tftRankData[0].ratedTier;
-            }
-            if (lolRankData[0].queueType == 'RANKED_TFT_PAIRS') {
-                doubleRank = lolRankData[0].tier; //ranked tft
-                doubleDivision = lolRankData[0].rank	
-            } 
+            doubleRank = lolRankData[0].tier; //ranked tft
+            doubleDivision = lolRankData[0].rank
+
+            // Deprecated in API
+            // if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
+            //     hyperRank = tftRankData[0].ratedTier;
+            // } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
+            //     hyperRank = tftRankData[1].ratedTier;
+            // }
         } 
         
         doubleRank = doubleRank.substring(0, 1) + doubleRank.substring(1).toLowerCase()
@@ -99,31 +98,22 @@ module.exports = {
             switch (rank) {
                 case 'Iron':
                     return '#615959';
-                    break;
                 case 'Bronze':
                     return '#925235';
-                    break;
                 case 'Silver':
                     return '#839da5';
-                    break;
                 case 'Gold':
                     return '#dfa040';
-                    break;
                 case 'Platinum':
                     return '#539591';
-                    break;
                 case 'Diamond':
                     return '#686cdd';
-                    break;
                 case 'Master':
                     return '#8154a6';
-                    break;
                 case 'Grandmaster':
                     return '#f12227';
-                    break;
                 case 'Challenger':
                     return '#fcf4e1';
-                    break;
                 default:
                     return '#d1d1d1';
             }
@@ -134,7 +124,7 @@ module.exports = {
             .setTitle('' + tftData.name)
             //.addField(''+tftData.name, '\u200b', true)
             .addField('Double up: ' + doubleRank + ' ' + doubleDivision, '\u200b', false)
-            .addField('Rank: ' + rank + ' ' + division, '\u200b', false)
+            .addField('Rank: ' + rank + ' ' + division + ' ' + lp, wins + ' Wins ' + losses + ' Losses', false)
             .setImage('attachment://rankedImg.png')
             .setThumbnail('attachment://double.png')
             .setFooter({ text: 'Hyperrol rank: ' + hyperRank, iconURL: 'attachment://icon.png' });
