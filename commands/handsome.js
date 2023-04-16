@@ -18,6 +18,7 @@ module.exports = {
 
         if (interaction.options.get('pokemon')) {
             imgString = interaction.options.getString('pokemon');
+            imgString = imgString.slice(0,1).toUpperCase() + imgString.slice(1,imgString.length);
             if (!pokeArray.includes(imgString)) { //array.includes is case sensitive
                  await interaction.reply({content:'Die pokemon is niet handsome', ephemeral: true});
                  return;
