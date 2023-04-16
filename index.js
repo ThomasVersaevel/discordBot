@@ -10,6 +10,7 @@ const { token } = require("./config.json");
 const aramwl = require("./winslosses.json");
 const tankMeta = require(`./events/tankMeta.js`);
 const aramUpdate = require(`./events/aramUpdate.js`);
+const birthdayEvent = require(`./events/birthdayEvent.js`);
 
 // Create a new client instance
 const client = new Client({
@@ -74,9 +75,9 @@ for (const file of eventFiles) {
 }
 
 // ################### start aram updater ######################
-loop();
+aramLoop();
 
-function loop() {
+function aramLoop() {
   //console.log("Aram stats update");
 
   // retrieveNewAramGames('Fractaldarkness');
@@ -85,7 +86,14 @@ function loop() {
     // loop over players in aram json file (in the event)
     aramUpdate.execute(entry);
   }
-  setTimeout(loop, 60000 * 60 * 3); // 60000 * 60 * 3 = every 3 hours
+  setTimeout(aramLoop, 60000 * 60 * 3); // 60000 * 60 * 3 = every 3 hours
+}
+
+birthDayLoop();
+
+function birthDayLoop() {
+  birthdayEvent.execute();
+  setTimeout(birthDayLoop, 60000 * 60 * 24)
 }
 
 const tank_meta = [

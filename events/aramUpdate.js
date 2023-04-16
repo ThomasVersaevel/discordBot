@@ -21,7 +21,7 @@ module.exports = {
             let matchIdData = await matchIdResponse.json();
           
             let oldMatchList = [];
-            console.log('doing aram update for: ' + entry);
+            // console.log('doing aram update for: ' + entry);
           
             for (var i = 0; i < matchListJson[entry].length; i++) {
               //console.log(match);
@@ -36,7 +36,7 @@ module.exports = {
           
             for (var id = 0; id < matchIdData.length; id++) {
               if (!oldMatchList.includes(matchIdData[id])) {
-                console.log(entry + " New match detected: " + matchIdData[id]);
+                // console.log(entry + " New match detected: " + matchIdData[id]);
                 newMatchList.push(matchIdData[id]);
                 let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[id]}?api_key=${apiKey}`;
                 const matchResponse = await fetch(tempLink);
