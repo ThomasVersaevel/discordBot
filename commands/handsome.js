@@ -3,8 +3,8 @@ const { MessageAttachment, MessageEmbed } = require('discord.js');
 
 const pokeArray = ['Shroomish', 'Bidoof', 'Chansey', 'Chimecho', 'Lickitounge', 
     'Ludicolo', 'Metapod', 'Pikachu', 'Psyduck', 'Smoochum', 'Snorelax', 'Wooper',
-    'shroomish', 'bidoof', 'chansey', 'chimecho', 'lickitounge', 
-    'ludicolo', 'metapod', 'pikachu', 'psyduck', 'smoochum', 'snorelax', 'wooper'];
+    'Shroomish', 'Bidoof', 'Chansey', 'Chimecho', 'Lickitounge', 
+    'Ludicolo', 'Metapod', 'Pikachu', 'Psyduck', 'smoochum', 'Snorelax', 'Wooper'];
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,7 +17,7 @@ module.exports = {
 	async execute(interaction) {
 
         if (interaction.options.get('pokemon')) {
-            imgString = interaction.options.getString('pokemon');
+            imgString = interaction.options.getString('pokemon').toLowerCase();
             imgString = imgString.slice(0,1).toUpperCase() + imgString.slice(1,imgString.length);
             if (!pokeArray.includes(imgString)) { //array.includes is case sensitive
                  await interaction.reply({content:'Die pokemon is niet handsome', ephemeral: true});
@@ -26,6 +26,7 @@ module.exports = {
         } else {
             i = Math.floor( Math.random() * pokeArray.length );
             imgString = pokeArray[i];
+            imgString = imgString.slice(0,1).toUpperCase() + imgString.slice(1,imgString.length);
         }
         console.log('Handsome'+imgString+'.png'); // to see which one
         const exampleEmbed = new MessageEmbed()
