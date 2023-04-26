@@ -22,9 +22,9 @@ module.exports = {
         let data = await response.json();
         const puuid = data.puuid
         // turns out double up ranks are in league/v4
-        const lolSummonerLink =  `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`
-		const lolSummonerResponse = await fetch(lolSummonerLink);
-		let lolSummonerData = await lolSummonerResponse.json();
+        const lolSummonerLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`
+        const lolSummonerResponse = await fetch(lolSummonerLink);
+        let lolSummonerData = await lolSummonerResponse.json();
 
         patchNr = shortcuts['patch']; //required for data dragon
         let tftlink = `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${tftKey}`
@@ -34,7 +34,7 @@ module.exports = {
         let tftRankedLink = `https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/${tftData.id}?api_key=${tftKey}`
         const tftRankResponse = await fetch(tftRankedLink);
         let tftRankData = await tftRankResponse.json();
-        
+
         let lolRankedLink = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${lolSummonerData.id}?api_key=${apiKey}`
         const lolRankResponse = await fetch(lolRankedLink);
         let lolRankData = await lolRankResponse.json();
@@ -48,9 +48,11 @@ module.exports = {
         let wins = 0;
         let losses = 0;
 
-        if (tftRankData) {
+        if (tftRankData.length > 0) {
             let rankedIndex = 0;
             let doubleUpIndex = 0;
+            console.log(tftRankData);
+            console.log(lolRankData);
             if (tftRankData[0].queueType == 'RANKED_TFT') {
 
             } else if (tftRankData[1].queueType == 'RANKED_TFT') {
@@ -61,23 +63,24 @@ module.exports = {
             lp = tftRankData[rankedIndex].leaguePoints;
             wins = tftRankData[rankedIndex].wins;
             losses = tftRankData[rankedIndex].losses;
-           
-            if (lolRankData[0].queueType == 'RANKED_TFT_DOUBLE_UP') {
+            if (lolRankData.length > 0) {
+                if (lolRankData[0].queueType == 'RANKED_TFT_DOUBLE_UP') {
 
-            } else if (lolRankData[1].queueType == 'RANKED_TFT_DOUBLE_UP') {
-                doubleUpIndex = 1;
+                } else if (lolRankData[1].queueType == 'RANKED_TFT_DOUBLE_UP') {
+                    doubleUpIndex = 1;
+                }
+                doubleRank = lolRankData[0].tier; //ranked tft
+                doubleDivision = lolRankData[0].rank
+
+                // Deprecated in API
+                // if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
+                //     hyperRank = tftRankData[0].ratedTier;
+                // } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
+                //     hyperRank = tftRankData[1].ratedTier;
+                // }
             }
-            doubleRank = lolRankData[0].tier; //ranked tft
-            doubleDivision = lolRankData[0].rank
+        }
 
-            // Deprecated in API
-            // if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
-            //     hyperRank = tftRankData[0].ratedTier;
-            // } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
-            //     hyperRank = tftRankData[1].ratedTier;
-            // }
-        } 
-        
         doubleRank = doubleRank.substring(0, 1) + doubleRank.substring(1).toLowerCase()
 
         if (hyperRank.toLowerCase() == 'orange') {
