@@ -4,6 +4,8 @@ const shortcuts = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const { tftKey, apiKey } = require('../config.json');
 const { convertLolName } = require('../globals.js');
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -51,8 +53,7 @@ module.exports = {
         if (tftRankData.length > 0) {
             let rankedIndex = 0;
             let doubleUpIndex = 0;
-            console.log(tftRankData);
-            console.log(lolRankData);
+
             if (tftRankData[0].queueType == 'RANKED_TFT') {
 
             } else if (tftRankData[1].queueType == 'RANKED_TFT') {

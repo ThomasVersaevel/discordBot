@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageAttachment, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const winslosses = require('../winslosses.json');
 const oldmatchlist = require('../oldmatchlist.json');
 const shortcuts  = require('../api-shortcuts.json');
@@ -7,7 +7,8 @@ const fetch = require('node-fetch');
 const { apiKey } = require('../config.json');
 const { convertLolName, } = require('../globals.js');
 const fs = require('fs');
-const { short } = require('webidl-conversions');
+var MongoClient = require('mongodb').MongoClient;
+var url = `mongodb://127.0.0.1:27017/`;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -44,15 +45,11 @@ module.exports = {
             .setTitle(data.name)
             .setThumbnail('attachment://icon.png');
 
-        // json reading and writing
-        let userId = interaction.member.id;
-
         fs.readFile('./winslosses.json', "utf8", (err, winslosses) => {
             if (err) {
                 console.log("File read failed:", err);
                 return;
             }
-            console.log("File data:", winslosses);
         });
         fs.readFile('./oldmatchlist.json', "utf8", (err, oldmatchlist) => {
             if (err) {
@@ -61,6 +58,7 @@ module.exports = {
             }
         });
 
+        // check if username already exists
         if (!winslosses.hasOwnProperty(username)) {
             winslosses[username] = {"wins": parseInt(wins), "losses": parseInt(losses)};
             oldmatchlist[username] = [0,0];
@@ -83,6 +81,24 @@ module.exports = {
         } else { // if already present
             exampleEmbed.addField('\u200b', data.name + ' is already in the list', true);
         }
+
+        //Database update
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbo = db.db("LolStats");
+            console.log("hello?");
+            const query = {lolname: lolname};
+            // check if there is already a collection with the username
+            const found = dbo.collection("aramWinrate").find({}, query);
+            console.log(found);
+            if (!found) {
+                dbo.collection("aramWinrate").insertOne({query}, function(err, db) {
+                    if (err) throw err;
+                    console.log("1 document inserted");
+                    db.close();
+                });
+            }
+        });
 
         await interaction.reply({
             embeds: [exampleEmbed],
