@@ -1,9 +1,14 @@
 const shortcuts  = require('./api-shortcuts.json');
-const aramwl  = require('./winslosses.json');
 const fetch = require('node-fetch');
 const { apiKey } = require('./config.json');
+const { MongoClient } = require('mongodb');
+const url = `mongodb://127.0.0.1:27017/`;
+let client;
 
 module.exports = {
+
+
+
     convertLolName(username, id) {   
         if (username === 'reign') { //kevin simpelmaker
             username = 'reıgn';
@@ -26,6 +31,27 @@ module.exports = {
         let data = await response.json()
         //console.log(data)
         return data.name
-    }
+    },
 
+    //Database
+    async startDatabase() {
+        client = new MongoClient(url);
+        try {
+        await client.connect();
+        } catch (e) {
+            console.error(e);
+        } 
+    },
+    
+    async listDatabases(){
+        databasesList = await client.db().admin().listDatabases();
+     
+        console.log("Databases:");
+        return databasesList.databases.forEach(db => console.log(` - ${db.name}`));
+    },
+
+    getDbClient() {
+        return client;
+    }
+    
 }

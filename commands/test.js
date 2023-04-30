@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { tftKey, apiKey } = require('../config.json');
 const fetch = require('node-fetch');
+const {listDatabases} = require('../globals.js');
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,6 +10,8 @@ module.exports = {
 		.setDescription('test'),
 	async execute(interaction) {
 
-		await interaction.reply('test');
-	},
-};
+        const dbs = listDatabases();
+
+		await interaction.reply("test: ", dbs);
+	}, 
+}; 

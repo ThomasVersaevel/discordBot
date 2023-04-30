@@ -5,9 +5,9 @@ const oldmatchlist = require('../oldmatchlist.json');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const { apiKey } = require('../config.json');
-const { convertLolName, } = require('../globals.js');
+const { convertLolName, getDbClient, } = require('../globals.js');
 const fs = require('fs');
-var MongoClient = require('mongodb').MongoClient;
+const {MongoClient} = require('mongodb');
 var url = `mongodb://127.0.0.1:27017/`;
 
 module.exports = {
@@ -80,25 +80,9 @@ module.exports = {
             exampleEmbed.addField('\u200b', 'Added ' + data.name + '\'s aram stats to the list', true);
         } else { // if already present
             exampleEmbed.addField('\u200b', data.name + ' is already in the list', true);
-        }
+        }        
 
-        //Database update
-        MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-            const dbo = db.db("LolStats");
-            console.log("hello?");
-            const query = {lolname: lolname};
-            // check if there is already a collection with the username
-            const found = dbo.collection("aramWinrate").find({}, query);
-            console.log(found);
-            if (!found) {
-                dbo.collection("aramWinrate").insertOne({query}, function(err, db) {
-                    if (err) throw err;
-                    console.log("1 document inserted");
-                    db.close();
-                });
-            }
-        });
+        await addToDb(username);
 
         await interaction.reply({
             embeds: [exampleEmbed],
@@ -107,5 +91,21 @@ module.exports = {
                 name: 'icon.png'
             }], ephemeral: true
         });
+
+        async function addToDb(lolname) {
+            const client = getDbClient();
+            const dbo = client.db("LolStats");
+            const query = {lolname: lolname};
+            // check if there is already a collection with the username
+            const found = await dbo.collection("aramWinrate").find({query});
+            console.log(found);
+            if (found) {
+                await dbo.collection("aramWinrate").insertOne({lolname: lolname, wins: parseInt(wins), losses: parseInt(losses)}, function(err, db) {
+                    if (err) throw err;
+                    console.log("1 document inserted");
+                    db.close();
+                });
+            }
+        }
     },
 };

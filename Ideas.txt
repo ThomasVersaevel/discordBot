@@ -6,6 +6,7 @@ https://discord.com/api/oauth2/authorize?client_id=945663842044764224&permission
 
 
 ---RIOT API STUFF---
-Aram stats lijst
-/lollvl me (alle gebruikers hun accounts via discord id check)
-summoner icons via de data dragon riot stuff.
+Aram stats database
+/updatearam to update database
+/addtodb to add aram stats to database, pre-existing or not.
+
