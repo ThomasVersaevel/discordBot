@@ -9,6 +9,9 @@ const { convertLolName, getDbClient, } = require('../globals.js');
 const fs = require('fs');
 const {MongoClient} = require('mongodb');
 var url = `mongodb://127.0.0.1:27017/`;
+const client = getDbClient();
+const dbo = client.db("LolStats");
+
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -93,11 +96,17 @@ module.exports = {
         });
 
         async function addToDb(lolname) {
-            const client = getDbClient();
-            const dbo = client.db("LolStats");
-            const query = {lolname: lolname};
+            const query = { $and: [ {lolname: {$exists: true}}, 
+                            {lolname: {$eq: lolname}}]};
+            findQuery(query, function(err, foundData))
             // check if there is already a collection with the username
-            const found = await dbo.collection("aramWinrate").find({query});
+            await dbo.collection("aramWinrate").find({query}, function(err, foundData){  
+                if (err) { throw err; } 
+                else if (foundData) {
+                    found = foundData;
+                }
+            });
+            
             console.log(found);
             if (found) {
                 await dbo.collection("aramWinrate").insertOne({lolname: lolname, wins: parseInt(wins), losses: parseInt(losses)}, function(err, db) {
@@ -108,4 +117,15 @@ module.exports = {
             }
         }
     },
+    findQuery(query, callback){
+        dbo.collection("aramWinrate").find(query, function(err, userObj){
+            if(err){
+                return callback(err);
+            } else if (userObj){
+                return callback(null,userObj);
+            } else {
+                return callback();
+            }
+        });
+    }
 };
