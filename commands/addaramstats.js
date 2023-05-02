@@ -9,8 +9,6 @@ const { convertLolName, getDbClient, } = require('../globals.js');
 const fs = require('fs');
 const {MongoClient} = require('mongodb');
 var url = `mongodb://127.0.0.1:27017/`;
-const client = getDbClient();
-const dbo = client.db("LolStats");
 
 
 module.exports = {
@@ -85,7 +83,17 @@ module.exports = {
             exampleEmbed.addField('\u200b', data.name + ' is already in the list', true);
         }        
 
-        await addToDb(username);
+        await findInDb(username, function(err, foundObj){
+           console.log(foundObj);
+        });
+
+
+            // dbo.collection("aramWinrate").insertOne({lolname: lolname, wins: parseInt(wins), losses: parseInt(losses)}, function(err, db) {
+            //     if (err) throw err;
+            //     console.log("1 document inserted");
+            //     db.close();
+            // });
+
 
         await interaction.reply({
             embeds: [exampleEmbed],
@@ -95,37 +103,21 @@ module.exports = {
             }], ephemeral: true
         });
 
-        async function addToDb(lolname) {
+        async function findInDb(lolname, callback) {
+            const client = getDbClient();
+            const dbo = client.db("LolStats");
             const query = { $and: [ {lolname: {$exists: true}}, 
-                            {lolname: {$eq: lolname}}]};
-            findQuery(query, function(err, foundData))
-            // check if there is already a collection with the username
-            await dbo.collection("aramWinrate").find({query}, function(err, foundData){  
-                if (err) { throw err; } 
-                else if (foundData) {
-                    found = foundData;
+                            {lolname: {$eq: lolname}}]
+                        };
+            const found = await dbo.collection("aramWinrate").find(query, function(err, foundObj){
+                if(err){
+                    return callback(err);
+                } else if (foundObj){
+                    return callback(null,userObj);
+                } else {
+                    return callback();
                 }
             });
-            
-            console.log(found);
-            if (found) {
-                await dbo.collection("aramWinrate").insertOne({lolname: lolname, wins: parseInt(wins), losses: parseInt(losses)}, function(err, db) {
-                    if (err) throw err;
-                    console.log("1 document inserted");
-                    db.close();
-                });
-            }
         }
     },
-    findQuery(query, callback){
-        dbo.collection("aramWinrate").find(query, function(err, userObj){
-            if(err){
-                return callback(err);
-            } else if (userObj){
-                return callback(null,userObj);
-            } else {
-                return callback();
-            }
-        });
-    }
 };
