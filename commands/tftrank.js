@@ -52,7 +52,6 @@ module.exports = {
 
         if (tftRankData.length > 0) {
             let rankedIndex = 0;
-            let doubleUpIndex = 0;
 
             if (tftRankData[0].queueType == 'RANKED_TFT') {
 
@@ -128,7 +127,7 @@ module.exports = {
             .setTitle('' + tftData.name)
             //.addField(''+tftData.name, '\u200b', true)
             .addField('Double up: ' + doubleRank + ' ' + doubleDivision, '\u200b', false)
-            .addField('Rank: ' + rank + ' ' + division + ' ' + lp, wins + ' Wins ' + losses + ' Losses', false)
+            .addField('Rank: ' + rank + ' ' + division + ' LP: ' + lp, wins + ' Wins ' + losses + ' Losses ' + 'WR: ' + (wins+losses)/wins*100, false)
             .setImage('attachment://rankedImg.png')
             .setThumbnail('attachment://double.png')
             .setFooter({ text: 'Hyperrol rank: ' + hyperRank, iconURL: 'attachment://icon.png' });
