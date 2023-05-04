@@ -127,7 +127,8 @@ module.exports = {
             .setTitle('' + tftData.name)
             //.addField(''+tftData.name, '\u200b', true)
             .addField('Double up: ' + doubleRank + ' ' + doubleDivision, '\u200b', false)
-            .addField('Rank: ' + rank + ' ' + division + ' LP: ' + lp, wins + ' Wins ' + losses + ' Losses ' + 'WR: ' + (wins+losses)/wins*100, false)
+            .addField('Rank: ' + rank + ' ' + division + ' LP: ' + lp, 
+            wins + ' Wins ' + losses + ' Losses ' + 'WR: ' + Math.round(wins/(wins+losses)*100, 1) + '%', false)
             .setImage('attachment://rankedImg.png')
             .setThumbnail('attachment://double.png')
             .setFooter({ text: 'Hyperrol rank: ' + hyperRank, iconURL: 'attachment://icon.png' });
