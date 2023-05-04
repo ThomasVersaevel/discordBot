@@ -83,17 +83,13 @@ module.exports = {
             exampleEmbed.addField('\u200b', data.name + ' is already in the list', true);
         }        
 
-        await findInDb(username, function(err, foundObj){
+        await findInDb({$and: [ {lolname: {$exists: true}}, 
+            {lolname: {$eq: lolname}}]}, function(err, foundObj){
            console.log(foundObj);
         });
-
-
-            // dbo.collection("aramWinrate").insertOne({lolname: lolname, wins: parseInt(wins), losses: parseInt(losses)}, function(err, db) {
-            //     if (err) throw err;
-            //     console.log("1 document inserted");
-            //     db.close();
-            // });
-
+        await addToDb({lolname: lolname, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
+            console.log(insertedObj);
+        });
 
         await interaction.reply({
             embeds: [exampleEmbed],
@@ -103,21 +99,34 @@ module.exports = {
             }], ephemeral: true
         });
 
-        async function findInDb(lolname, callback) {
+        async function addToDb(addQuery, callback) {
             const client = getDbClient();
             const dbo = client.db("LolStats");
-            const query = { $and: [ {lolname: {$exists: true}}, 
-                            {lolname: {$eq: lolname}}]
-                        };
-            const found = await dbo.collection("aramWinrate").find(query, function(err, foundObj){
+            dbo.collection("aramWinrate").insertOne(addQuery), function(err, obj) {
+                if (err) throw err;
+                console.log("1 document inserted");
+                db.close();
+            }
+            if(err){
+                return callback(err);
+            } else if (obj){
+                return callback(null, obj);
+            } else {
+                return callback();
+            }
+        }
+
+        async function findInDb(findQuery, callback) {
+            const client = getDbClient();
+            const dbo = client.db("LolStats");
+            const found = await dbo.collection("aramWinrate").find(findQuery, function(err, obj){
                 if(err){
                     return callback(err);
-                } else if (foundObj){
-                    return callback(null,userObj);
+                } else if (obj){
+                    return callback(null, obj);
                 } else {
                     return callback();
                 }
             });
-        }
     },
 };
