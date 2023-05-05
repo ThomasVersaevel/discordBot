@@ -84,10 +84,10 @@ module.exports = {
         }        
 
         await findInDb({$and: [ {lolname: {$exists: true}}, 
-            {lolname: {$eq: lolname}}]}, function(err, foundObj){
+            {lolname: {$eq: username}}]}, function(err, foundObj){
            console.log(foundObj);
         });
-        await addToDb({lolname: lolname, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
+        await addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
             console.log(insertedObj);
         });
 
@@ -106,27 +106,24 @@ module.exports = {
                 if (err) throw err;
                 console.log("1 document inserted");
                 db.close();
-            }
-            if(err){
-                return callback(err);
-            } else if (obj){
-                return callback(null, obj);
-            } else {
-                return callback();
+                if (obj) {
+                    return callback(null, obj);
+                }
             }
         }
 
         async function findInDb(findQuery, callback) {
             const client = getDbClient();
             const dbo = client.db("LolStats");
-            const found = await dbo.collection("aramWinrate").find(findQuery, function(err, obj){
+            await dbo.collection("aramWinrate").find(findQuery, function(err, obj){
                 if(err){
                     return callback(err);
-                } else if (obj){
+                } else if (ojb){
                     return callback(null, obj);
                 } else {
                     return callback();
                 }
             });
-    },
-};
+        }
+    }
+}
