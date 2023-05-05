@@ -116,7 +116,7 @@ module.exports = {
         async function findInDb(findQuery, collectionName, callback) {
             const client = getDbClient();
             const dbo = client.db("LolStats");
-            const found = await dbo.collection(collectionName).find(findQuery, function(err, obj){
+            await dbo.collection(collectionName).find(findQuery, function(err, obj){
                 if(err){
                     return callback(err);
                 } else if (ojb){
