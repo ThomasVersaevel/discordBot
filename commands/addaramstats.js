@@ -9,6 +9,7 @@ const { convertLolName, getDbClient, } = require('../globals.js');
 const fs = require('fs');
 const {MongoClient} = require('mongodb');
 const { log } = require('console');
+const { LogarithmicScale } = require('chart.js');
 var url = `mongodb://127.0.0.1:27017/`;
 
 
@@ -84,7 +85,7 @@ module.exports = {
             exampleEmbed.addFields( { name: '\u200b', value: data.name + ' is already in the list', inline: true } );
         }        
 
-        const dataEntry = findInDb({$and: [ {lolname: {$exists: true}}, 
+        const dataEntry = await findInDb({$and: [ {lolname: {$exists: true}}, 
             {lolname: {$eq: username}}]}, "aramWinrate", function(err, foundObj){
                 if (foundObj) {
                     console.log(foundObj);
@@ -96,7 +97,7 @@ module.exports = {
 
         console.log(dataEntry);
         
-        await addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
+        addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
             console.log(insertedObj);
         });
         exampleEmbed.addFields( { name: '\u200b', value: 'Found ' + dataEntry, inline: true } );
@@ -125,16 +126,17 @@ module.exports = {
         async function findInDb(findQuery, collectionName, callback) {
             const client = getDbClient();
             const dbo = client.db("LolStats");
-            const found = dbo.collection(collectionName).find(findQuery, function(err, obj){
+            dbo.collection(collectionName).find(findQuery, function(err, obj){
                 if(err){
                     return callback(err);
                 } else if (obj){
+                    console.log("Found obj");
                     return callback(null, obj);
                 } else {
+                    console.log("Failed to find in db");
                     return callback();
                 }
             });
-            return found;
         }
     },
 };
