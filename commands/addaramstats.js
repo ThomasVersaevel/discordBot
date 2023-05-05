@@ -8,8 +8,8 @@ const { apiKey } = require('../config.json');
 const { convertLolName, getDbClient, } = require('../globals.js');
 const fs = require('fs');
 const {MongoClient} = require('mongodb');
-const { log } = require('console');
-var url = `mongodb://127.0.0.1:27017/`;
+const url = `mongodb://127.0.0.1:27017/`;
+const mongoose = require("mongoose");
 
 
 module.exports = {
@@ -95,7 +95,7 @@ module.exports = {
         });
 
         console.log(dataEntry);
-        
+
         await addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
             console.log(insertedObj);
         });

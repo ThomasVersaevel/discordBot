@@ -2,13 +2,12 @@ const shortcuts  = require('./api-shortcuts.json');
 const fetch = require('node-fetch');
 const { apiKey } = require('./config.json');
 const { MongoClient } = require('mongodb');
-const url = `mongodb://127.0.0.1:27017/`;
-let client;
+const url = `mongodb://127.0.0.1:27017/LolStats`;
+const mongoose = require("mongoose");
+
 
 module.exports = {
-
-
-
+    
     convertLolName(username, id) {   
         if (username === 'reign') { //kevin simpelmaker
             username = 'reıgn';
@@ -35,9 +34,9 @@ module.exports = {
 
     //Database
     async startDatabase() {
-        client = new MongoClient(url);
+        mongoose.set("strictQuery", false);
         try {
-        await client.connect();
+            await mongoose.connect(url);
         } catch (e) {
             console.error(e);
         } 
@@ -51,7 +50,7 @@ module.exports = {
     },
 
     getDbClient() {
-        return client;
+        return mongoose;
     }
     
 }
