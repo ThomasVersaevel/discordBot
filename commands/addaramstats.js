@@ -7,9 +7,6 @@ const fetch = require('node-fetch');
 const { apiKey } = require('../config.json');
 const { convertLolName, getDbClient, } = require('../globals.js');
 const fs = require('fs');
-const {MongoClient} = require('mongodb');
-const url = `mongodb://127.0.0.1:27017/`;
-const mongoose = require("mongoose");
 
 
 module.exports = {
@@ -110,9 +107,8 @@ module.exports = {
         });
 
         function addToDb(addQuery, callback) {
-            const client = getDbClient();
-            const dbo = client.db("LolStats");
-            dbo.collection("aramWinrate").insertOne(addQuery), function(err, obj) {
+            const db = getDbClient();
+            db.collection("aramWinrate").insertOne(addQuery), function(err, obj) {
                 if (err) throw err;
                 console.log("1 document inserted");
                 db.close();
@@ -123,9 +119,8 @@ module.exports = {
         }
 
         async function findInDb(findQuery, collectionName, callback) {
-            const client = getDbClient();
-            const dbo = client.db("LolStats");
-            const found = dbo.collection(collectionName).find(findQuery, function(err, obj){
+            const db = getDbClient();
+            const found = db.collection(collectionName).find(findQuery, function(err, obj){
                 if(err){
                     return callback(err);
                 } else if (obj){
