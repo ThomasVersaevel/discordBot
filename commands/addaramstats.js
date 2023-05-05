@@ -83,10 +83,12 @@ module.exports = {
             exampleEmbed.addFields( { name: '\u200b', value: data.name + ' is already in the list', inline: true } );
         }        
 
+        let dataEntry;
         await findInDb({$and: [ {lolname: {$exists: true}}, 
-            {lolname: {$eq: lolname}}]}, "aramWinrate", function(err, foundObj){
+            {lolname: {$eq: username}}]}, "aramWinrate", function(err, foundObj){
                 if (foundObj) {
-                   console.log(foundObj);
+                    console.log(foundObj);
+                    dataEntry = foundObj;
                 }
                 else {
                     console.log("No entry found");
@@ -95,6 +97,7 @@ module.exports = {
         await addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
             console.log(insertedObj);
         });
+        exampleEmbed.addFields( { name: '\u200b', value: 'Found ' + dataEntry, inline: true } );
 
         await interaction.reply({
             embeds: [exampleEmbed],
