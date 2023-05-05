@@ -85,8 +85,12 @@ module.exports = {
 
         await findInDb({$and: [ {lolname: {$exists: true}}, 
             {lolname: {$eq: lolname}}]}, "aramWinrate", function(err, foundObj){
-                if (foundObj)
-           console.log(foundObj);
+                if (foundObj) {
+                   console.log(foundObj);
+                }
+                else {
+                    console.log("No entry found");
+                }
         });
         await addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
             console.log(insertedObj);
