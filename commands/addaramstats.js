@@ -126,7 +126,7 @@ module.exports = {
             await dbo.collection(collectionName).find(findQuery, function(err, obj){
                 if(err){
                     return callback(err);
-                } else if (ojb){
+                } else if (obj){
                     return callback(null, obj);
                 } else {
                     return callback();
