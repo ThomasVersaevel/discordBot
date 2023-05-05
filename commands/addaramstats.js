@@ -78,13 +78,14 @@ module.exports = {
             });
 
 
-            exampleEmbed.addField('\u200b', 'Added ' + data.name + '\'s aram stats to the list', true);
+            exampleEmbed.addFields( { name: '\u200b', value: 'Added ' + data.name + '\'s aram stats to the list', inline: true } );
         } else { // if already present
-            exampleEmbed.addField('\u200b', data.name + ' is already in the list', true);
+            exampleEmbed.addFields( { name: '\u200b', value: data.name + ' is already in the list', inline: true } );
         }        
 
         await findInDb({$and: [ {lolname: {$exists: true}}, 
-            {lolname: {$eq: username}}]}, function(err, foundObj){
+            {lolname: {$eq: lolname}}]}, "aramWinrate", function(err, foundObj){
+                if (foundObj)
            console.log(foundObj);
         });
         await addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
@@ -112,10 +113,10 @@ module.exports = {
             }
         }
 
-        async function findInDb(findQuery, callback) {
+        async function findInDb(findQuery, collectionName, callback) {
             const client = getDbClient();
             const dbo = client.db("LolStats");
-            await dbo.collection("aramWinrate").find(findQuery, function(err, obj){
+            const found = await dbo.collection(collectionName).find(findQuery, function(err, obj){
                 if(err){
                     return callback(err);
                 } else if (ojb){
@@ -125,5 +126,5 @@ module.exports = {
                 }
             });
         }
-    }
-}
+    },
+};
