@@ -84,7 +84,7 @@ module.exports = {
         }        
 
         let dataEntry;
-        await findInDb({$and: [ {lolname: {$exists: true}}, 
+        findInDb({$and: [ {lolname: {$exists: true}}, 
             {lolname: {$eq: username}}]}, "aramWinrate", function(err, foundObj){
                 if (foundObj) {
                     console.log(foundObj);
@@ -107,7 +107,7 @@ module.exports = {
             }], ephemeral: true
         });
 
-        async function addToDb(addQuery, callback) {
+        function addToDb(addQuery, callback) {
             const client = getDbClient();
             const dbo = client.db("LolStats");
             dbo.collection("aramWinrate").insertOne(addQuery), function(err, obj) {
