@@ -11,7 +11,6 @@ const aramwl = require("./winslosses.json");
 const tankMeta = require(`./events/tankMeta.js`);
 const aramUpdate = require(`./events/aramUpdate.js`);
 const birthdayEvent = require(`./events/birthdayEvent.js`);
-const { startDatabase } = require("./globals");
 
 
 // Create a new client instance
@@ -27,7 +26,7 @@ const client = new Client({
 // Login to Discord with your client's token
 client.login(token);
 // Start database
-startDatabase();
+// startDatabase();
 /**
  * Register commands
  */

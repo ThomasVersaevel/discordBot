@@ -1,11 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageAttachment, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const shortcuts = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const { tftKey, apiKey } = require('../config.json');
 const { convertLolName } = require('../globals.js');
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -80,8 +78,9 @@ module.exports = {
                 // }
             }
         }
-
-        doubleRank = doubleRank.substring(0, 1) + doubleRank.substring(1).toLowerCase()
+        if (doublRank) {
+            doubleRank = doubleRank.substring(0, 1) + doubleRank.substring(1).toLowerCase()
+        }
 
         if (hyperRank.toLowerCase() == 'orange') {
             hyperRank = 'Hyper';
@@ -127,8 +126,8 @@ module.exports = {
             .setTitle('' + tftData.name)
             //.addField(''+tftData.name, '\u200b', true)
             .addField('Double up: ' + doubleRank + ' ' + doubleDivision, '\u200b', false)
-            .addField('Rank: ' + rank + ' ' + division + ' LP: ' + lp, 
-            wins + ' Wins ' + losses + ' Losses ' + 'WR: ' + Math.round(wins/(wins+losses)*100, 1) + '%', false)
+            .addField('Rank: ' + rank + ' ' + division + ' LP: ' + lp,
+                wins + ' Wins ' + losses + ' Losses ' + 'WR: ' + Math.round(wins / (wins + losses) * 100, 1) + '%', false)
             .setImage('attachment://rankedImg.png')
             .setThumbnail('attachment://double.png')
             .setFooter({ text: 'Hyperrol rank: ' + hyperRank, iconURL: 'attachment://icon.png' });

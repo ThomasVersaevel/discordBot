@@ -7,10 +7,6 @@ const fetch = require('node-fetch');
 const { apiKey } = require('../config.json');
 const { convertLolName, getDbClient, } = require('../globals.js');
 const fs = require('fs');
-const {MongoClient} = require('mongodb');
-const { log } = require('console');
-const { LogarithmicScale } = require('chart.js');
-var url = `mongodb://127.0.0.1:27017/`;
 
 
 module.exports = {
@@ -85,22 +81,22 @@ module.exports = {
             exampleEmbed.addFields( { name: '\u200b', value: data.name + ' is already in the list', inline: true } );
         }        
 
-        const dataEntry = await findInDb({$and: [ {lolname: {$exists: true}}, 
-            {lolname: {$eq: username}}]}, "aramWinrate", function(err, foundObj){
-                if (foundObj) {
-                    console.log(foundObj);
-                }
-                else {
-                    console.log("No entry found");
-                }
-        });
+        // const dataEntry = await findInDb({$and: [ {lolname: {$exists: true}}, 
+        //     {lolname: {$eq: username}}]}, "aramWinrate", function(err, foundObj){
+        //         if (foundObj) {
+        //             console.log(foundObj);
+        //         }
+        //         else {
+        //             console.log("No entry found");
+        //         }
+        // });
 
-        console.log(dataEntry);
+        // console.log(dataEntry);
         
-        addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
-            console.log(insertedObj);
-        });
-        exampleEmbed.addFields( { name: '\u200b', value: 'Found ' + dataEntry, inline: true } );
+        // addToDb({lolname: username, wins: parseInt(wins), losses: parseInt(losses)}, function(err, insertedObj) {
+        //     console.log(insertedObj);
+        // });
+        // exampleEmbed.addFields( { name: '\u200b', value: 'Found ' + dataEntry, inline: true } );
 
         await interaction.reply({
             embeds: [exampleEmbed],

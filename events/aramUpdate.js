@@ -2,9 +2,6 @@ const fs = require("fs");
 const { apiKey } = require("../config.json");
 const matchListJson = require("../oldmatchlist.json");
 const aramwl = require("../winslosses.json");
-var MongoClient = require('mongodb').MongoClient;
-var url = `mongodb://127.0.0.1:27017`;
-
 /**
  * On message events
  */
@@ -67,18 +64,6 @@ module.exports = {
             // add wins and losses to total
             aramwl[entry].wins += win;
             aramwl[entry].losses += lose;
-
-
-            //Database update
-            MongoClient.connect(url, function(err, db) {
-              if (err) throw err;
-              const dbo = db.db("LolStats");
-              const query = {lolname: lolname};
-              const found = dbo.collection("aramWinrate").find({}, query);
-              console.log(found);
-              dbo.collection("aramWinrate").updateOne({query}, {$inc: {wins: win, losses: lose}});
-              db.close();
-            });
 
             fs.writeFile("../winslosses.json", JSON.stringify(aramwl), (err) => {
               if (err) console.log("Error writing file:", err);
