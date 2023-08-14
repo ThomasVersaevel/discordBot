@@ -78,7 +78,7 @@ module.exports = {
                 // }
             }
         }
-        if (doublRank) {
+        if (doubleRank) {
             doubleRank = doubleRank.substring(0, 1) + doubleRank.substring(1).toLowerCase()
         }
 
