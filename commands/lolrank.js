@@ -4,6 +4,8 @@ const shortcuts = require("../api-shortcuts.json");
 const fetch = require("node-fetch");
 const { apiKey } = require("../config.json");
 const { convertLolName } = require("../globals.js");
+const { LogarithmicScale } = require("chart.js");
+const { isNotSemicolonToken } = require("eslint-utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,7 +23,6 @@ module.exports = {
       interaction.member.id
     );
 
-
     // get User data from lol api
     const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`;
     const response = await fetch(link);
@@ -35,61 +36,77 @@ module.exports = {
     const rankResponse = await fetch(rankedLink);
     let rankData = await rankResponse.json();
 
-    console.log(rankData);
+    if (!rankData) {
+      return;
+    }
 
-    let rank = "Unranked";
+    let soloRank = "Unranked";
     let arenaRank = "Unranked";
     let flexRank = "Unranked";
     let flexDivision = "";
-    let division = "";
-    let lp = 0;
-    let wins = 0;
-    let losses = 0;
+    let soloDivision = "";
+    let soloLp = 0;
+    let soloWins = 0;
+    let soloLosses = 0;
+    let arenaWins = 0;
 
-    let rankedIndex = 0;
+    let rankedIndex = 100;
+    let flexIndex = 100;
+    let arenaIndex = 100;
 
-    /*
+    console.log(rankData);
 
-    if (tftRankData[0].queueType == "RANKED_TFT") {
-    } else if (tftRankData[1].queueType == "RANKED_TFT") {
-      rankedIndex = 1;
-    }
-    rank = tftRankData[rankedIndex].tier; //ranked tft
-    division = tftRankData[rankedIndex].rank;
-    lp = tftRankData[rankedIndex].leaguePoints;
-    wins = tftRankData[rankedIndex].wins;
-    losses = tftRankData[rankedIndex].losses;
-    if (rankData.length > 0) {
-      if (rankData[0].queueType == "RANKED_TFT_DOUBLE_UP") {
-      } else if (rankData[1].queueType == "RANKED_TFT_DOUBLE_UP") {
-        doubleUpIndex = 1;
+    // map each item in rankData and assign the right index to each queue type.
+    // RANKED_SOLO_5x5 RANKED_FLEX_SR CHERRY(arena)
+    for (let i = 0; i < rankData.length; i++) {
+      if (rankData[i].queueType === "RANKED_FLEX_SR") {
+        flexIndex = i;
+      } else if (rankData[i].queueType === "RANKED_SOLO_5x5") {
+        rankedIndex = i;
+      } else if (rankData[i].queueType === "CHERRY") {
+        // save arena wins/losses
+        arenaIndex = i;
       }
-      flexRank = rankData[0].tier; //ranked tft
-      flexDivision = rankData[0].rank;
-
-      // Deprecated in API
-      // if (tftRankData[0].hasOwnProperty('ratedTier')) { //hyperrol
-      //     hyperRank = tftRankData[0].ratedTier;
-      // } else if (tftRankData[1].hasOwnProperty('ratedTier')) {
-      //     hyperRank = tftRankData[1].ratedTier;
-      // }
     }
 
-    flexRank = flexRank.substring(0, 1) + flexRank.substring(1).toLowerCase();
-
-    if (arenaRank.toLowerCase() == "orange") {
-      arenaRank = "Hyper";
+    if (rankedIndex < 99) {
+      soloRank = rankData[rankedIndex].tier; //ranked solo
+      soloDivision = rankData[rankedIndex].rank;
+      soloLp = rankData[rankedIndex].leaguePoints;
+      soloWins = rankData[rankedIndex].wins;
+      soloLosses = rankData[rankedIndex].losses;
     }
-    arenaRank =
-      arenaRank.substring(0, 1) + arenaRank.substring(1).toLowerCase();
-    rank = rank.substring(0, 1) + rank.substring(1).toLowerCase();
-    if (arenaRank == "Unranked") {
-      hyperEmblem = "assets/ranked-emblems/Grey_tier.png";
+    if (flexIndex < 99) {
+      flexRank = rankData[flexIndex].tier; //ranked flex
+      flexDivision = rankData[flexIndex].rank;
+      flexLp = rankData[flexIndex].leaguePoints;
+      flexWins = rankData[flexIndex].wins;
+      flexLosses = rankData[flexIndex].losses;
+    }
+    if (arenaIndex < 99) {
+      arenaWins = rankData[arenaIndex].wins;
+      arenaLosses = rankData[arenaIndex].losses;
+    }
+
+    if (soloRank) {
+      soloRank = soloRank.substring(0, 1) + soloRank.substring(1).toLowerCase();
     } else {
-      hyperEmblem = "assets/ranked-emblems/" + arenaRank + "_tier.png";
+      soloRank = "Unranked";
     }
-    arenaRank = arenaRank + " Tier";
-    var embedColor = getRankColor(rank);
+
+    if (flexRank) {
+      flexRank = flexRank.substring(0, 1) + flexRank.substring(1).toLowerCase();
+    } else {
+      flexRank = "Unranked";
+    }
+
+    if (arenaRank) {
+      arenaRank =
+        arenaRank.substring(0, 1) + arenaRank.substring(1).toLowerCase();
+    }
+    arenaEmblem = "assets/ranked-emblems/Emblem_Unranked.png";
+
+    var embedColor = getRankColor(flexRank);
 
     function getRankColor(rank) {
       switch (rank) {
@@ -103,6 +120,8 @@ module.exports = {
           return "#dfa040";
         case "Platinum":
           return "#539591";
+        case "Emerald":
+          return "#53bb91";
         case "Diamond":
           return "#686cdd";
         case "Master":
@@ -115,41 +134,40 @@ module.exports = {
           return "#d1d1d1";
       }
     }
- */
+
     var exampleEmbed = new MessageEmbed()
       .setColor(embedColor)
-      .setTitle("" + tftData.name)
-      //.addField(''+tftData.name, '\u200b', true)
-      .addField("Double up: " + flexRank + " " + flexDivision, "\u200b", false)
+      .setTitle("" + rankData.name)
+      .addField("Solo queue: " + soloRank + " " + soloDivision, "\u200b", false)
       .addField(
-        "Rank: " + rank + " " + division + " LP: " + lp,
-        wins +
+        "Rank: " + flexRank + " " + flexDivision + " LP: " + flexLp,
+        flexWins +
           " Wins " +
-          losses +
+          flexLosses +
           " Losses " +
           "WR: " +
-          Math.round((wins / (wins + losses)) * 100, 1) +
+          Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
           "%",
         false
       )
-      .setImage("attachment://rankedImg.png")
-      .setThumbnail("attachment://double.png")
+      .setImage("attachment://flex.png")
+      .setThumbnail("attachment://solo.png")
       .setFooter({
-        text: "Hyperrol rank: " + arenaRank,
-        iconURL: "attachment://icon.png",
+        text: "Arena wins: " + arenaWins + " losses: " + arenaLosses,
+        iconURL: "attachment://arena.png",
       });
 
     await interaction.reply({
       embeds: [exampleEmbed],
       files: [
-        { attachment: hyperEmblem, name: "icon.png" },
-        {
-          attachment: "assets/ranked-emblems/Emblem_" + rank + ".png",
-          name: "rankedImg.png",
-        },
+        { attachment: arenaEmblem, name: "arena.png" },
         {
           attachment: "assets/ranked-emblems/Emblem_" + flexRank + ".png",
-          name: "double.png",
+          name: "flex.png",
+        },
+        {
+          attachment: "assets/ranked-emblems/Emblem_" + soloRank + ".png",
+          name: "solo.png",
         },
       ],
     });
