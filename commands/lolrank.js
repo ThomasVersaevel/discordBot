@@ -104,7 +104,7 @@ module.exports = {
       arenaRank =
         arenaRank.substring(0, 1) + arenaRank.substring(1).toLowerCase();
     }
-    arenaEmblem = "assets/ranked-emblems/Emblem_Unranked.png";
+    arenaEmblem = "assets/ranked-emblems/Emblem_Gladiator.png";
 
     var embedColor = getRankColor(flexRank);
 

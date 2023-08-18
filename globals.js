@@ -7,7 +7,11 @@ module.exports = {
     if (username === "reign" || username === "Reign") {
       //kevin simpelmaker
       username = "reıgn";
-    } else if (username === "kokoala") {
+    } else if (
+      username === "kokoala" ||
+      username === "Kokoala" ||
+      username === "KoKoala"
+    ) {
       username = "kôkoala";
     } else if (username === "me") {
       username = shortcuts[id];
