@@ -123,7 +123,7 @@ module.exports = {
 
         var exampleEmbed = new MessageEmbed()
             .setColor(embedColor)
-            .setTitle('' + tftData.name)
+            .setTitle('' + data.name)
             //.addField(''+tftData.name, '\u200b', true)
             .addField('Double up: ' + doubleRank + ' ' + doubleDivision, '\u200b', false)
             .addField('Rank: ' + rank + ' ' + division + ' LP: ' + lp,

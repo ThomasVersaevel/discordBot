@@ -40,15 +40,21 @@ module.exports = {
       return;
     }
 
-    let soloRank = "Unranked";
-    let arenaRank = "Unranked";
     let flexRank = "Unranked";
     let flexDivision = "";
+    let flexLp = 0;
+    let flexWins = 0;
+    let flexLosses = 0;
+
+    let soloRank = "Unranked";
     let soloDivision = "";
     let soloLp = 0;
     let soloWins = 0;
     let soloLosses = 0;
+
+    let arenaRank = "Unranked";
     let arenaWins = 0;
+    let arenaLosses = 0;
 
     let rankedIndex = 100;
     let flexIndex = 100;
