@@ -137,7 +137,7 @@ module.exports = {
 
     var exampleEmbed = new MessageEmbed()
       .setColor(embedColor)
-      .setTitle("" + rankData.name)
+      .setTitle("" + userData.name)
       .addField("Solo queue: " + soloRank + " " + soloDivision, "\u200b", false)
       .addField(
         "Rank: " + flexRank + " " + flexDivision + " LP: " + flexLp,
