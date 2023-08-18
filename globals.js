@@ -4,7 +4,7 @@ let client;
 
 module.exports = {
   convertLolName(username, id) {
-    if (username === "reign") {
+    if (username === "reign" || username === "Reign") {
       //kevin simpelmaker
       username = "reıgn";
     } else if (username === "kokoala") {
