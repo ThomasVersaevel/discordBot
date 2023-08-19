@@ -63,18 +63,23 @@ module.exports = {
     console.log(tftRankData);
 
     for (let i = 0; i < tftRankData.length; i++) {
-      if (rankData[i].queueType === "RANKED_TFT") {
+      if (tftRankData[i].queueType === "RANKED_TFT") {
         rankedIndex = i;
-      } else if (rankData[i].queueType === "RANKED_TFT_TURBO") {
-        rankedIndex = i;
+      } else if (tftRankData[i].queueType === "RANKED_TFT_TURBO") {
+        hyperIndex = i;
       }
     }
+    if (rankedIndex < 99) {
+      rankedRank = tftRankData[rankedIndex].tier; // ranked tft
+      rankedDivision = tftRankData[rankedIndex].rank;
+      rankedLp = tftRankData[rankedIndex].leaguePoints;
+      rankedWins = tftRankData[rankedIndex].wins;
+      rankedLosses = tftRankData[rankedIndex].losses;
+    }
 
-    rankedRank = tftRankData[rankedIndex].tier; //ranked tft
-    rankedDivision = tftRankData[rankedIndex].rank;
-    rankedLp = tftRankData[rankedIndex].leaguePoints;
-    rankedWins = tftRankData[rankedIndex].wins;
-    rankedLosses = tftRankData[rankedIndex].losses;
+    if (hyperIndex < 99) {
+      hyperRank = tftRankData[hyperIndex].ratedTier; // hyperrol
+    }
 
     for (let i = 0; i < lolRankData.length; i++) {
       if (lolRankData[i].queueType === "RANKED_TFT_DOUBLE_UP") {
@@ -190,14 +195,20 @@ module.exports = {
       };
       lowestRankField = {
         name:
-          "Flex Rank: " + flexRank + " " + flexDivision + " " + flexLp + "LP",
+          "Double Up Rank: " +
+          doubleRank +
+          " " +
+          doubleDivision +
+          " " +
+          doubleLp +
+          "LP",
         value:
-          flexWins !== 0 && flexLosses !== 0
-            ? flexWins +
+          doubleWins !== 0 && doubleLosses !== 0
+            ? doubleWins +
               " Wins " +
-              flexLosses +
+              doubleLosses +
               " Losses " +
-              Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
+              Math.round((doubleWins / (doubleWins + doubleLosses)) * 100, 1) +
               "% WR"
             : "\u200b",
         inline: false,
@@ -205,28 +216,40 @@ module.exports = {
     } else {
       highestRankField = {
         name:
-          "Flex Rank: " + flexRank + " " + flexDivision + " " + flexLp + "LP",
+          "Double Up Rank: " +
+          doubleRank +
+          " " +
+          doubleDivision +
+          " " +
+          doubleLp +
+          "LP",
         value:
-          flexWins !== 0 && flexLosses !== 0
-            ? flexWins +
+          doubleWins !== 0 && doubleLosses !== 0
+            ? doubleWins +
               " Wins " +
-              flexLosses +
+              doubleLosses +
               " Losses " +
-              Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
+              Math.round((doubleWins / (doubleWins + doubleLosses)) * 100, 1) +
               "% WR"
             : "\u200b",
         inline: false,
       };
       lowestRankField = {
         name:
-          "Solo Rank: " + soloRank + " " + soloDivision + " " + soloLp + "LP",
+          "Ranked Rank: " +
+          rankedRank +
+          " " +
+          rankedDivision +
+          " " +
+          rankedLp +
+          "LP",
         value:
-          soloWins !== 0 && soloLosses !== 0
-            ? soloWins +
+          rankedWins !== 0 && rankedLosses !== 0
+            ? rankedWins +
               " Wins " +
-              soloLosses +
+              rankedLosses +
               " Losses " +
-              Math.round((soloWins / (soloWins + soloLosses)) * 100, 1) +
+              Math.round((rankedWins / (rankedWins + rankedLosses)) * 100, 1) +
               "% WR"
             : "\u200b",
         inline: false,
@@ -237,22 +260,7 @@ module.exports = {
       .setColor(embedColor)
       .setTitle("" + data.name)
       //.addField(''+tftData.name, '\u200b', true)
-      .addField(
-        "Double up: " + doubleRank + " " + doubleDivision,
-        "\u200b",
-        false
-      )
-      .addField(
-        "Rank: " + rankedRank + " " + rankedDivision + " LP: " + rankedLp,
-        rankedWins +
-          " Wins " +
-          rankedLosses +
-          " Losses " +
-          "WR: " +
-          Math.round((rankedWins / (rankedWins + rankedLosses)) * 100, 1) +
-          "%",
-        false
-      )
+      .addFields(lowestRankField, highestRankField)
       .setImage("attachment://rankedImg.png")
       .setThumbnail("attachment://double.png")
       .setFooter({
