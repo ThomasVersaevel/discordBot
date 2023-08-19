@@ -4,8 +4,6 @@ const shortcuts = require("../api-shortcuts.json");
 const fetch = require("node-fetch");
 const { apiKey } = require("../config.json");
 const { convertLolName } = require("../globals.js");
-const { LogarithmicScale } = require("chart.js");
-const { isNotSemicolonToken } = require("eslint-utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -36,7 +34,12 @@ module.exports = {
     const rankResponse = await fetch(rankedLink);
     let rankData = await rankResponse.json();
 
-    if (!rankData) {
+    // Not working looks like nullable in an if statement resolves to true
+    if (!rankData || rankData[0]?.queueType === "RANKED_TFT_DOUBLE_UP") {
+      await interaction.reply({
+        content: "That player does not have any ranked stats",
+        ephemeral: true,
+      });
       return;
     }
 
@@ -60,7 +63,7 @@ module.exports = {
     let flexIndex = 100;
     let arenaIndex = 100;
 
-    console.log(rankData);
+    // console.log(rankData);
 
     // map each item in rankData and assign the right index to each queue type.
     // RANKED_SOLO_5x5 RANKED_FLEX_SR CHERRY(arena)
@@ -114,6 +117,35 @@ module.exports = {
 
     var embedColor = getRankColor(flexRank);
 
+    function getRankIndex(rank) {
+      switch (rank) {
+        case "Unranked":
+          return 0;
+        case "Iron":
+          return 1;
+        case "Bronze":
+          return 2;
+        case "Silver":
+          return 3;
+        case "Gold":
+          return 4;
+        case "Platinum":
+          return 5;
+        case "Emerald":
+          return 6;
+        case "Diamond":
+          return 7;
+        case "Master":
+          return 8;
+        case "Grandmaster":
+          return 9;
+        case "Challenger":
+          return 10;
+        default:
+          return 0;
+      }
+    }
+
     function getRankColor(rank) {
       switch (rank) {
         case "Iron":
@@ -141,21 +173,73 @@ module.exports = {
       }
     }
 
+    let highestRankField = {};
+    let lowestRankField = {};
+    // Find highest rank
+    if (getRankIndex(soloRank) >= getRankIndex(flexRank)) {
+      highestRankField = {
+        name:
+          "Solo Rank: " + soloRank + " " + soloDivision + " " + soloLp + "LP",
+        value:
+          soloWins !== 0 && soloLosses !== 0
+            ? soloWins +
+              " Wins " +
+              soloLosses +
+              " Losses " +
+              Math.round((soloWins / (soloWins + soloLosses)) * 100, 1) +
+              "% WR"
+            : "\u200b",
+        inline: false,
+      };
+      lowestRankField = {
+        name:
+          "Flex Rank: " + flexRank + " " + flexDivision + " " + flexLp + "LP",
+        value:
+          flexWins !== 0 && flexLosses !== 0
+            ? flexWins +
+              " Wins " +
+              flexLosses +
+              " Losses " +
+              Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
+              "% WR"
+            : "\u200b",
+        inline: false,
+      };
+    } else {
+      highestRankField = {
+        name:
+          "Flex Rank: " + flexRank + " " + flexDivision + " " + flexLp + "LP",
+        value:
+          flexWins !== 0 && flexLosses !== 0
+            ? flexWins +
+              " Wins " +
+              flexLosses +
+              " Losses " +
+              Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
+              "% WR"
+            : "\u200b",
+        inline: false,
+      };
+      lowestRankField = {
+        name:
+          "Solo Rank: " + soloRank + " " + soloDivision + " " + soloLp + "LP",
+        value:
+          soloWins !== 0 && soloLosses !== 0
+            ? soloWins +
+              " Wins " +
+              soloLosses +
+              " Losses " +
+              Math.round((soloWins / (soloWins + soloLosses)) * 100, 1) +
+              "% WR"
+            : "\u200b",
+        inline: false,
+      };
+    }
+
     var exampleEmbed = new MessageEmbed()
       .setColor(embedColor)
       .setTitle("" + userData.name)
-      .addField("Solo queue: " + soloRank + " " + soloDivision, "\u200b", false)
-      .addField(
-        "Rank: " + flexRank + " " + flexDivision + " LP: " + flexLp,
-        flexWins +
-          " Wins " +
-          flexLosses +
-          " Losses " +
-          "WR: " +
-          Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
-          "%",
-        false
-      )
+      .addFields(lowestRankField, highestRankField)
       .setImage("attachment://flex.png")
       .setThumbnail("attachment://solo.png")
       .setFooter({
