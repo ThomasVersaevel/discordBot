@@ -252,11 +252,21 @@ module.exports = {
       files: [
         { attachment: arenaEmblem, name: "arena.png" },
         {
-          attachment: "assets/ranked-emblems/Emblem_" + flexRank + ".png",
+          attachment:
+            "assets/ranked-emblems/Emblem_" +
+            (getRankIndex(flexRank) >= getRankIndex(soloRank)
+              ? flexRank
+              : soloRank) +
+            ".png",
           name: "flex.png",
         },
         {
-          attachment: "assets/ranked-emblems/Emblem_" + soloRank + ".png",
+          attachment:
+            "assets/ranked-emblems/Emblem_" +
+            (getRankIndex(soloRank) > getRankIndex(flexRank)
+              ? flexRank
+              : soloRank) +
+            ".png",
           name: "solo.png",
         },
       ],

@@ -259,7 +259,6 @@ module.exports = {
     var exampleEmbed = new MessageEmbed()
       .setColor(embedColor)
       .setTitle("" + data.name)
-      //.addField(''+tftData.name, '\u200b', true)
       .addFields(lowestRankField, highestRankField)
       .setImage("attachment://rankedImg.png")
       .setThumbnail("attachment://double.png")
@@ -273,11 +272,21 @@ module.exports = {
       files: [
         { attachment: hyperEmblem, name: "icon.png" },
         {
-          attachment: "assets/ranked-emblems/Emblem_" + rankedRank + ".png",
+          attachment:
+            "assets/ranked-emblems/Emblem_" +
+            (getRankIndex(rankedRank) >= getRankIndex(doubleRank)
+              ? rankedRank
+              : doubleRank) +
+            ".png",
           name: "rankedImg.png",
         },
         {
-          attachment: "assets/ranked-emblems/Emblem_" + doubleRank + ".png",
+          attachment:
+            "assets/ranked-emblems/Emblem_" +
+            (getRankIndex(doubleRank) > getRankIndex(rankedRank)
+              ? rankedRank
+              : doubleRank) +
+            ".png",
           name: "double.png",
         },
       ],
