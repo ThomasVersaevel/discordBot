@@ -1,3 +1,7 @@
+This project needs node 16
+To start run `node .`
+to deploy new commands run `node deploy-commands`
+
 
 puuid = v42dIyJ2QHXZQL5-qIhsfZx43qMKXKVLTDHGvd_7gst-wdzjnyNUKmRrYtIhGmN6j4wLq9KK5jC2Ng
 puuid tft = lWxkOGmvEj-EWIxYtK3lMqdYMOjbBeaBpM1rfzb83a40mtK_AnsWjQcQAZ_RFmXyhqJhCKSrP6c2Qw
