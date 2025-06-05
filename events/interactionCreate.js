@@ -104,7 +104,7 @@ module.exports = {
         .addFields(
           { name: "Origin:", value: origin, inline: true },
           { name: "Trait:", value: trait, inline: true },
-          { name: "King:", value: king, inline: true }
+          { name: "King", value: "👑 " + king, inline: true }
         );
       return newEmbed;
     }
