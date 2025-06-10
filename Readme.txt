@@ -1,4 +1,4 @@
-This project needs node 16
+This project needs node 18.18.2
 To start run `node .`
 to deploy new commands run `node deploy-commands`
 

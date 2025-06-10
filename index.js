@@ -1,17 +1,14 @@
 // ## use " node . " to run the bot and deploy-commands.js to activate commands ##
 
 const fs = require("fs");
-const {
-  Client,
-  Collection,
-  Intents,
-} = require("discord.js");
+const { Client, Collection, Intents } = require("discord.js");
 const { token } = require("./config.json");
+const shortcuts = require("./api-shortcuts.json");
 const aramwl = require("./winslosses.json");
 const tankMeta = require(`./events/tankMeta.js`);
 const aramUpdate = require(`./events/aramUpdate.js`);
 const birthdayEvent = require(`./events/birthdayEvent.js`);
-
+const { short } = require("webidl-conversions");
 
 // Create a new client instance
 const client = new Client({
@@ -30,6 +27,15 @@ client.login(token);
 /**
  * Register commands
  */
+
+let patchNr = fetch("https://ddragon.leagueoflegends.com/api/versions.json")
+  .then((response) => response.json())
+  .then((data) => {
+    const currentPatch = data[0];
+    console.log("Current patch:", currentPatch);
+    shortcuts["patch"] = currentPatch; // update shortcuts with current patch
+  });
+
 client.commands = new Collection();
 const commandFiles = fs
   .readdirSync("./commands")
@@ -63,7 +69,7 @@ client.on("interactionCreate", async (interaction) => {
 
 /**
  *  event registration
-*/
+ */
 const eventFiles = fs
   .readdirSync(`./events/`)
   .filter((file) => file.endsWith(".js"));
@@ -97,7 +103,7 @@ birthDayLoop();
 
 function birthDayLoop() {
   birthdayEvent.execute();
-  setTimeout(birthDayLoop, 60000 * 60 * 24)
+  setTimeout(birthDayLoop, 60000 * 60 * 24);
 }
 
 const tank_meta = [
@@ -121,11 +127,11 @@ const tank_meta = [
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
   // Tank meta
-  if (tank_meta.some((word) =>
-      message.content.toLowerCase().includes(word.toLowerCase()))) 
-  {
+  if (
+    tank_meta.some((word) =>
+      message.content.toLowerCase().includes(word.toLowerCase())
+    )
+  ) {
     tankMeta.execute(message); // proper way to call an event
   }
 });
-
-

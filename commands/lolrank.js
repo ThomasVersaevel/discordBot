@@ -22,10 +22,11 @@ module.exports = {
     );
 
     // get User data from lol api
-    const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`;
+    const link = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${username}/euw?api_key=${apiKey}`;
     const response = await fetch(link);
     let userData = await response.json();
-    const puuid = userData.puuid;
+
+    console.log(`User data for ${username}:`, userData);
 
     patchNr = shortcuts["patch"]; //required for data dragon
 
@@ -35,7 +36,15 @@ module.exports = {
     let rankData = await rankResponse.json();
 
     // Not working looks like nullable in an if statement resolves to true
-    if (!rankData || rankData[0]?.queueType === "RANKED_TFT_DOUBLE_UP") {
+    if (
+      !Array.isArray(rankData) ||
+      !rankData.some(
+        (entry) =>
+          entry.queueType === "RANKED_SOLO_5x5" ||
+          entry.queueType === "RANKED_FLEX_SR" ||
+          entry.queueType === "CHERRY"
+      )
+    ) {
       await interaction.reply({
         content: "That player does not have any ranked stats",
         ephemeral: true,
@@ -63,7 +72,7 @@ module.exports = {
     let flexIndex = 100;
     let arenaIndex = 100;
 
-    // console.log(rankData);
+    console.log(rankData);
 
     // map each item in rankData and assign the right index to each queue type.
     // RANKED_SOLO_5x5 RANKED_FLEX_SR CHERRY(arena)
