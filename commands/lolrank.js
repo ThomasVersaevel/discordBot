@@ -1,9 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const shortcuts = require("../api-shortcuts.json");
-const fetch = require("node-fetch");
-const { apiKey } = require("../config.json");
-const { convertLolName } = require("../globals.js");
+const { convertLolName, getUserInfo, getRankedData } = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,26 +13,18 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    let username = convertLolName(
+    let { username, tag } = convertLolName(
       interaction.options.getString("lolname"),
       interaction.member.id
     );
 
-    // get User data from lol api
-    const link = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${username}/euw?api_key=${apiKey}`;
-    const response = await fetch(link);
-    let userData = await response.json();
-
-    console.log(`User data for ${username}:`, userData);
-
-    patchNr = shortcuts["patch"]; //required for data dragon
+    let userData = await getUserInfo(username, tag);
 
     // get Ranked data from lol api
-    let rankedLink = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${userData.id}?api_key=${apiKey}`;
-    const rankResponse = await fetch(rankedLink);
-    let rankData = await rankResponse.json();
+    let rankData = await getRankedData(userData.puuid);
 
-    // Not working looks like nullable in an if statement resolves to true
+    console.log("rankdata: ", rankData);
+
     if (
       !Array.isArray(rankData) ||
       !rankData.some(

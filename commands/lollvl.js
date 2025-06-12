@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageAttachment, MessageEmbed } = require("discord.js");
 const shortcuts = require("../api-shortcuts.json");
-const { convertLolName, getUserInfo } = require("../globals.js");
+const { convertLolName, getUserInfo, getUserIcon } = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,10 +20,8 @@ module.exports = {
     ); //uses globals
 
     let data = await getUserInfo(username, tag);
-    console.log(data);
 
-    patchNr = shortcuts["patch"];
-    let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${data.profileIconId}.png`;
+    let icon = await getUserIcon(data);
 
     var exampleEmbed = new MessageEmbed()
       .setColor("blue")
@@ -32,8 +30,8 @@ module.exports = {
 
       .setThumbnail("attachment://icon.png");
 
-    if (data.summonerLevel > 500) {
-      exampleEmbed.setFooter("(nolife lol)");
+    if (data.summonerLevel > 1000) {
+      exampleEmbed.setFooter({ text: "(nolife lol)" });
     }
 
     await interaction.reply({

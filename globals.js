@@ -1,6 +1,7 @@
 const shortcuts = require("./api-shortcuts.json");
 const fetch = require("node-fetch");
 const { apiKey } = require("./config.json");
+const { get } = require("request-promise");
 
 module.exports = {
   convertLolName(fullname, id) {
@@ -37,5 +38,16 @@ module.exports = {
     const link = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${username}/${tagline}?api_key=${apiKey}`;
     const response = await fetch(link);
     return await response.json(); // returns {gameName, tagLine, puuid} needs /lol/summoner/v4/summoners/by-puuid/{encryptedPUUID} for sumlvl
+  },
+
+  async getUserIcon(userdata) {
+    patchNr = shortcuts["patch"];
+    return `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${userdata.profileIconId}.png`;
+  },
+
+  async getRankedData(puuid) {
+    const link = `https://europe.api.riotgames.com/lol/league/v4/entries/by-summoner/${puuid}?api_key=${apiKey}`;
+    const response = await fetch(link);
+    return await response.json();
   },
 };
