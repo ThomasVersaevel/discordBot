@@ -53,30 +53,22 @@ module.exports = {
     let soloWins = 0;
     let soloLosses = 0;
 
-    let arenaRank = "Unranked";
-    let arenaWins = 0;
-    let arenaLosses = 0;
-
-    let rankedIndex = 100;
-    let flexIndex = 100;
-    let arenaIndex = 100;
+    let rankedIndex;
+    let flexIndex;
 
     console.log(rankData);
 
     // map each item in rankData and assign the right index to each queue type.
-    // RANKED_SOLO_5x5 RANKED_FLEX_SR CHERRY(arena)
+    // RANKED_SOLO_5x5 RANKED_FLEX_SR
     for (let i = 0; i < rankData.length; i++) {
       if (rankData[i].queueType === "RANKED_FLEX_SR") {
         flexIndex = i;
       } else if (rankData[i].queueType === "RANKED_SOLO_5x5") {
         rankedIndex = i;
-      } else if (rankData[i].queueType === "CHERRY") {
-        // save arena wins/losses
-        arenaIndex = i;
       }
     }
 
-    if (rankedIndex < 99) {
+    if (defined(rankedIndex)) {
       soloRank = rankData[rankedIndex].tier; //ranked solo
       soloDivision = rankData[rankedIndex].rank;
       soloLp = rankData[rankedIndex].leaguePoints;
@@ -90,10 +82,6 @@ module.exports = {
       flexWins = rankData[flexIndex].wins;
       flexLosses = rankData[flexIndex].losses;
     }
-    if (arenaIndex < 99) {
-      arenaWins = rankData[arenaIndex].wins;
-      arenaLosses = rankData[arenaIndex].losses;
-    }
 
     if (soloRank) {
       soloRank = soloRank.substring(0, 1) + soloRank.substring(1).toLowerCase();
@@ -106,12 +94,6 @@ module.exports = {
     } else {
       flexRank = "Unranked";
     }
-
-    if (arenaRank) {
-      arenaRank =
-        arenaRank.substring(0, 1) + arenaRank.substring(1).toLowerCase();
-    }
-    arenaEmblem = "assets/ranked-emblems/Emblem_Gladiator.png";
 
     var embedColor = getRankColor(flexRank);
 

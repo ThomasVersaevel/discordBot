@@ -46,7 +46,7 @@ module.exports = {
   },
 
   async getRankedData(puuid) {
-    const link = `https://europe.api.riotgames.com/lol/league/v4/entries/by-summoner/${puuid}?api_key=${apiKey}`;
+    const link = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}?api_key=${apiKey}`;
     const response = await fetch(link);
     return await response.json();
   },
