@@ -1,9 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageAttachment, MessageEmbed } = require('discord.js');
-const shortcuts = require('../api-shortcuts.json');
-const fetch = require('node-fetch');
-const { apiKey } = require('../config.json');
-const { convertLolName } = require('../globals.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()

@@ -3,7 +3,7 @@ const { MessageAttachment, MessageEmbed } = require('discord.js');
 const shortcuts  = require('../api-shortcuts.json');
 const fetch = require('node-fetch');
 const { tftKey } = require('../config.json');
-const {convertLolName, getUsernameFromPuuid} = require('../globals.js');
+const {convertLolName} = require('../globals.js');
 
 module.exports = {
     data: new SlashCommandBuilder()

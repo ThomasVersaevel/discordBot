@@ -22,7 +22,9 @@ const gragasJokes = [
   "Gragas is so fat, when Sett ulted him he shattered the rift.",
   "Gragas is so fat, when Akshan killed him he resurrected a whole buffet.",
   "Gragas is so fat, when Lulu ulted him it crashed EUW.",
-  "Gragas is so fat, maar jij nog dikker."
+  "Gragas is so fat, when pyke ulted him he got a pentakill.",
+  "Gragas is so fat, when he uses his ultimate he creates a new lane.",
+  "Gragas is so fat, maar jij nog dikker.",
 ];
 
 module.exports = {
@@ -32,7 +34,7 @@ module.exports = {
     .addIntegerOption(option =>
       option
         .setName("nr")
-        .setDescription("Choose the joke by number 0 to 20.")
+        .setDescription(`Choose the joke by number 0 to ${gragasJokes.length}.`)
         .setRequired(false)
     ),
 
@@ -43,10 +45,10 @@ module.exports = {
     if (option && Number.isInteger(option.value) && option.value >= 0 && option.value < gragasJokes.length - 1) {
       i = option.value;
     } else {
-      i = Math.floor(Math.random() * 21);
+      i = Math.floor(Math.random() * gragasJokes.length);
     }
 
-    const joke = gragasJokes[i] ?? gragasJokes[21]; // fallback joke
+    const joke = gragasJokes[i] ?? gragasJokes[gragasJokes.length]; // fallback joke
     await interaction.reply(joke);
   }
 };

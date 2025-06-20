@@ -1,7 +1,20 @@
 const shortcuts = require("./api-shortcuts.json");
 const fetch = require("node-fetch");
-const { apiKey } = require("./config.json");
-const { get } = require("request-promise");
+const { apiKey, tftKey } = require("./config.json");
+
+const RANKS = {
+  Unranked: { index: 0, color: "#d1d1d1" },
+  Iron: { index: 1, color: "#615959" },
+  Bronze: { index: 2, color: "#925235" },
+  Silver: { index: 3, color: "#839da5" },
+  Gold: { index: 4, color: "#dfa040" },
+  Platinum: { index: 5, color: "#539591" },
+  Emerald: { index: 6, color: "#50c878" }, // custom color for Emerald
+  Diamond: { index: 7, color: "#686cdd" },
+  Master: { index: 8, color: "#8154a6" },
+  Grandmaster: { index: 9, color: "#f12227" },
+  Challenger: { index: 10, color: "#fcf4e1" },
+};
 
 module.exports = {
   convertLolName(fullname, id) {
@@ -20,18 +33,15 @@ module.exports = {
     return { username: username[0].toUpperCase() + username.substring(1), tag };
   },
 
-  async fetchApiEndpoint(link) {
-    const response = fetch(link);
-    return response.json();
+  getRankColor(rank) {
+    return RANKS[rank]?.color || "#d1d1d1";
   },
 
-  async getUsernameFromPuuid(puuid) {
-    const response = await fetch(
-      `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}`
-    );
-    let data = await response.json();
-    return data.name;
+  getRankIndex(rank) {
+    return RANKS[rank]?.index || "0";
   },
+
+  // Endpoints
 
   async getUserInfo(username, tagline) {
     const link = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${username}/${tagline}?api_key=${apiKey}`;
@@ -45,14 +55,29 @@ module.exports = {
   },
 
   async getRankedData(puuid) {
-    const link = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}?api_key=${apiKey}`;
-    const response = await fetch(link);
+    const response = await fetch(
+      `https://euw1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}?api_key=${apiKey}`
+    );
     return await response.json();
   },
 
   async getTftData(puuid) {
-    let tftRankedLink = `https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/${puuid}?api_key=${tftKey}`;
-    const tftRankResponse = await fetch(tftRankedLink);
+    // const accountID = await fetch(
+    //   `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${apiKey}`
+    // );
+    // const accountData = await accountID.json();
+    // console.log(accountData);
+
+    const tftResponse = await fetch(
+      `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}?api_key=${tftKey}`
+    );
+    return await tftResponse.json(); // returns {id, accountId, puuid, profileIconId, summonerLevel}
+  },
+
+  async getTftRankedData(puuid) {
+    const tftRankResponse = await fetch(
+      `https://euw1.api.riotgames.com/tft/league/v1/by-puuid/${puuid}?api_key=${tftKey}`
+    );
     return await tftRankResponse.json();
   },
 };
