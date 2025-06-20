@@ -5,7 +5,7 @@ const shortcuts = require("../api-shortcuts.json");
 const fetch = require("node-fetch");
 const Canvas = require("canvas");
 const { Chart, LineController } = require("chart.js");
-const { convertLolName } = require("../globals.js");
+const { convertLolName, getUserInfo } = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -24,7 +24,7 @@ module.exports = {
         interaction.member.id
       ); //uses globals
     // ## obtain summoner info ##
-    let sumData = getUserInfo(username, tag);
+    let sumData = await getUserInfo(username, tag);
     const puuid = sumData.puuid; // id of user
     // ## obtain 20 match IDs (default) ##
     const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&start=0&count=1`;

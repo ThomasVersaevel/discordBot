@@ -24,7 +24,7 @@ module.exports = {
     // ## obtain summoner info ##
     //let userData = await fetchApiEndpoint(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`)
 
-    const userData = getUserInfo(username, tag);
+    const userData = await getUserInfo(username, tag);
 
     const puuid = userData.puuid; // id of user
     // ## obtain 20 match IDs (default) ##

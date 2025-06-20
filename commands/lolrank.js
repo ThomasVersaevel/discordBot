@@ -153,72 +153,67 @@ module.exports = {
       }
     }
 
-    let highestRankField = {};
-    let lowestRankField = {};
-    // Find highest rank
-    if (getRankIndex(soloRank) >= getRankIndex(flexRank)) {
-      highestRankField = {
-        name:
-          "Solo Rank: " + soloRank + " " + soloDivision + " " + soloLp + "LP",
-        value:
-          soloWins !== 0 && soloLosses !== 0
-            ? soloWins +
-              " Wins " +
-              soloLosses +
-              " Losses " +
-              Math.round((soloWins / (soloWins + soloLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
-        inline: false,
-      };
-      lowestRankField = {
-        name:
-          "Flex Rank: " + flexRank + " " + flexDivision + " " + flexLp + "LP",
-        value:
-          flexWins !== 0 && flexLosses !== 0
-            ? flexWins +
-              " Wins " +
-              flexLosses +
-              " Losses " +
-              Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
-        inline: false,
-      };
-    } else {
-      highestRankField = {
-        name:
-          "Flex Rank: " + flexRank + " " + flexDivision + " " + flexLp + "LP",
-        value:
-          flexWins !== 0 && flexLosses !== 0
-            ? flexWins +
-              " Wins " +
-              flexLosses +
-              " Losses " +
-              Math.round((flexWins / (flexWins + flexLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
-        inline: false,
-      };
-      lowestRankField = {
-        name:
-          "Solo Rank: " + soloRank + " " + soloDivision + " " + soloLp + "LP",
-        value:
-          soloWins !== 0 && soloLosses !== 0
-            ? soloWins +
-              " Wins " +
-              soloLosses +
-              " Losses " +
-              Math.round((soloWins / (soloWins + soloLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
+    const highestIsSolo = getRankIndex(soloRank) >= getRankIndex(flexRank);
+
+    // Helper to build field object
+    function buildRankField(queue, rank, division, lp, wins, losses) {
+      const winRate =
+        wins !== 0 && losses !== 0
+          ? `${wins} Wins ${losses} Losses ${Math.round(
+              (wins / (wins + losses)) * 100
+            )}% WR`
+          : "\u200b";
+
+      return {
+        name: `${queue} Rank: ${rank} ${division} ${lp}LP`,
+        value: winRate,
         inline: false,
       };
     }
 
-    var exampleEmbed = new MessageEmbed()
+    const highestRankField = highestIsSolo
+      ? buildRankField(
+          "Solo",
+          soloRank,
+          soloDivision,
+          soloLp,
+          soloWins,
+          soloLosses
+        )
+      : buildRankField(
+          "Flex",
+          flexRank,
+          flexDivision,
+          flexLp,
+          flexWins,
+          flexLosses
+        );
+
+    const lowestRankField = highestIsSolo
+      ? buildRankField(
+          "Flex",
+          flexRank,
+          flexDivision,
+          flexLp,
+          flexWins,
+          flexLosses
+        )
+      : buildRankField(
+          "Solo",
+          soloRank,
+          soloDivision,
+          soloLp,
+          soloWins,
+          soloLosses
+        );
+
+    // Determine correct emblem attachments
+    const higherRank = highestIsSolo ? soloRank : flexRank;
+    const lowerRank = highestIsSolo ? flexRank : soloRank;
+
+    const exampleEmbed = new MessageEmbed()
       .setColor(embedColor)
-      .setTitle("" + userData.gameName)
+      .setTitle(`${userData.gameName}`)
       .addFields(lowestRankField, highestRankField)
       .setImage("attachment://flex.png")
       .setThumbnail("attachment://solo.png");
@@ -227,21 +222,11 @@ module.exports = {
       embeds: [exampleEmbed],
       files: [
         {
-          attachment:
-            "assets/ranked-emblems/Emblem_" +
-            (getRankIndex(flexRank) >= getRankIndex(soloRank)
-              ? flexRank
-              : soloRank) +
-            ".png",
+          attachment: `assets/ranked-emblems/Emblem_${higherRank}.png`,
           name: "flex.png",
         },
         {
-          attachment:
-            "assets/ranked-emblems/Emblem_" +
-            (getRankIndex(soloRank) > getRankIndex(flexRank)
-              ? flexRank
-              : soloRank) +
-            ".png",
+          attachment: `assets/ranked-emblems/Emblem_${lowerRank}.png`,
           name: "solo.png",
         },
       ],
