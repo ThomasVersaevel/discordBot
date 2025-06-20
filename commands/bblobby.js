@@ -1,17 +1,9 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const {
-  MessageAttachment,
   MessageEmbed,
   MessageActionRow,
   MessageButton,
-  Events,
 } = require("discord.js");
-const shortcuts = require("../api-shortcuts.json");
-const fetch = require("node-fetch");
-const { apiKey } = require("../config.json");
-const { convertLolName } = require("../globals.js");
-const tftJson = require("../tftset8.json");
-const { random } = require("lodash");
 
 // ##### This command only creates the embeds for each player with the roll buttons the event handles the rolling
 module.exports = {

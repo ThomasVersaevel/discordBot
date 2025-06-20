@@ -44,8 +44,9 @@ module.exports = {
   // Endpoints
 
   async getUserInfo(username, tagline) {
-    const link = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${username}/${tagline}?api_key=${apiKey}`;
-    const response = await fetch(link);
+    const response = await fetch(
+      `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${username}/${tagline}?api_key=${apiKey}`
+    );
     return await response.json(); // returns {gameName, tagLine, puuid} needs /lol/summoner/v4/summoners/by-puuid/{encryptedPUUID} for sumlvl
   },
 
@@ -59,6 +60,27 @@ module.exports = {
       `https://euw1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}?api_key=${apiKey}`
     );
     return await response.json();
+  },
+
+  async getSummonerData(puuid) {
+    const summonerResponse = await fetch(
+      `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${apiKey}`
+    );
+    return await summonerResponse.json();
+  },
+
+  async getMatchData(puuid, start, count) {
+    const matchIdResponse = await fetch(
+      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&start=${start}&count=${count}`
+    );
+    return await matchIdResponse.json(); // returns an array of match IDs
+  },
+
+  async getMatchDetails(matchIdData) {
+    const matchResponse = await fetch(
+      `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}/timeline?api_key=${apiKey}`
+    );
+    return await matchResponse.json(); // returns match details
   },
 
   async getTftData(puuid) {

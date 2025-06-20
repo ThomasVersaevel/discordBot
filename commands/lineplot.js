@@ -1,11 +1,13 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageAttachment } = require("discord.js");
-const { apiKey } = require("../config.json");
-const shortcuts = require("../api-shortcuts.json");
-const fetch = require("node-fetch");
 const Canvas = require("canvas");
 const { Chart, LineController } = require("chart.js");
-const { convertLolName, getUserInfo } = require("../globals.js");
+const {
+  convertLolName,
+  getUserInfo,
+  getMatchData,
+  getMatchDetails,
+} = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,43 +20,21 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    let username,
-      tag = convertLolName(
-        interaction.options.getString("lolname"),
-        interaction.member.id
-      ); //uses globals
+    const { username, tag } = convertLolName(
+      interaction.options.getString("lolname"),
+      interaction.member.id
+    );
     // ## obtain summoner info ##
     let sumData = await getUserInfo(username, tag);
     const puuid = sumData.puuid; // id of user
     // ## obtain 20 match IDs (default) ##
-    const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&start=0&count=1`;
-    const matchIdResponse = await fetch(matchLink);
-    let matchIdData = await matchIdResponse.json();
-    //console.log(matchIdData);
+    let matchIdData = await getMatchData(puuid, 0, 1);
 
     // ## From here its the reply ##
-    patchNr = shortcuts["patch"];
-    let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`;
     await interaction.reply("Gold over time for " + username + "'s last game");
-    //interaction.deferReply();
-
-    // var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
-    //     .setColor('#4e79a7')
-    //     .setTitle(sumData.name)
-    //     .addField('Aram wins and losses', '\u200b', false)
-    //     .setThumbnail('attachment://icon.png')
-    //     .setImage('attachment://canvas.png');
-
-    var idNr = 1;
-    var startIndex = 0;
-
-    var wins = 0;
-    var losses = 0;
 
     // ## obtain match info ##
-    let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}/timeline?api_key=${apiKey}`;
-    const matchResponse = await fetch(tempLink);
-    let matchData = await matchResponse.json();
+    let matchData = await getMatchDetails(matchIdData);
     //console.log(matchData.info.frames[0].participantFrames['1'].totalGold); // here you get frames wich is an array by timestamps
 
     var blueTeamGold = [];
@@ -67,7 +47,6 @@ module.exports = {
       var goldThisFrame = 0;
       for (var j = 1; j < 11; j++) {
         // loop through all players
-
         if (j < 6) {
           goldThisFrame +=
             matchData.info.frames[i].participantFrames[j.toString()].totalGold;
@@ -77,12 +56,6 @@ module.exports = {
         }
       }
       bGold = goldThisFrame;
-
-      // if (goldThisFrame >= 0) {
-      //     bGold = goldThisFrame;
-      // } else {
-      //     rGold = goldThisFrame;
-      // }
       blueTeamGold.push(bGold);
       redTeamGold.push(rGold);
       time.push(Math.round(matchData.info.frames[i].timestamp / 60000));

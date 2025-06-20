@@ -1,9 +1,12 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const { apiKey } = require("../config.json");
-const shortcuts = require("../api-shortcuts.json");
-const fetch = require("node-fetch");
-const { convertLolName, getUserInfo, getUserIcon } = require("../globals.js");
+const {
+  convertLolName,
+  getUserInfo,
+  getUserIcon,
+  getMatchData,
+  getMatchDetails,
+} = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,19 +28,15 @@ module.exports = {
     const userData = await getUserInfo(username, tag);
     const puuid = userData.puuid; // id of user
     // ## obtain 20 match IDs (default) ##
-    const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&start=0&count=1`;
-    const matchIdResponse = await fetch(matchLink);
-    let matchIdData = await matchIdResponse.json();
+    let matchIdData = await getMatchData(puuid, 0, 1);
 
     // ## From here its the reply ##
     let icon = await getUserIcon(userData);
-    // await interaction.reply("Gathering data, please wait.");
 
-    let tempLink = `https://europe.api.riotgames.com/lol/match/v5/matches/${matchIdData[0]}?api_key=${apiKey}`;
-    const matchResponse = await fetch(tempLink);
-    let matchData = await matchResponse.json();
+    let matchData = await getMatchDetails(matchIdData);
 
     const partData = matchData.info.participants.find((p) => p.puuid === puuid);
+    console.log(partData.challenges);
 
     var exampleEmbed = new MessageEmbed()
       .setColor("#3FFFFF")

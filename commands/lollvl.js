@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageAttachment, MessageEmbed } = require("discord.js");
-const shortcuts = require("../api-shortcuts.json");
-const { convertLolName, getUserInfo, getUserIcon } = require("../globals.js");
+const { MessageEmbed } = require("discord.js");
+const {
+  convertLolName,
+  getUserInfo,
+  getUserIcon,
+  getSummonerData,
+} = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,17 +21,22 @@ module.exports = {
     let { username, tag } = convertLolName(
       interaction.options.getString("lolname"),
       interaction.member.id
-    ); //uses globals
+    );
 
     let data = await getUserInfo(username, tag);
-
     let icon = await getUserIcon(data);
+    let sumData = await getSummonerData(data.puuid);
 
     var exampleEmbed = new MessageEmbed()
       .setColor("blue")
       .setTitle(data.gameName)
-      .addField("Level:", "" + data.summonerLevel, true)
-
+      .addFields([
+        {
+          name: "Level:",
+          value: sumData.summonerLevel.toString(),
+          inline: true,
+        },
+      ])
       .setThumbnail("attachment://icon.png");
 
     if (data.summonerLevel > 1000) {
