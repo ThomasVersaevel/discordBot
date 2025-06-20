@@ -60,7 +60,7 @@ module.exports = {
         rankedIndex = i;
       }
     }
-
+    // WORK IN PROGRESS I GUESS
     var chart = new Chart(context, {
       type: "bar",
       data: {

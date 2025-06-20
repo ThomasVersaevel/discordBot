@@ -30,7 +30,6 @@ module.exports = {
       `https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/${puuid}`
     );
     let data = await response.json();
-    console.log(data);
     return data.name;
   },
 
@@ -41,7 +40,7 @@ module.exports = {
   },
 
   async getUserIcon(userdata) {
-    patchNr = shortcuts["patch"];
+    let patchNr = shortcuts["patch"];
     return `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${userdata.profileIconId}.png`;
   },
 
@@ -54,6 +53,6 @@ module.exports = {
   async getTftData(puuid) {
     let tftRankedLink = `https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/${puuid}?api_key=${tftKey}`;
     const tftRankResponse = await fetch(tftRankedLink);
-    let tftRankData = await tftRankResponse.json();
+    return await tftRankResponse.json();
   },
 };

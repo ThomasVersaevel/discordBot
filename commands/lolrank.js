@@ -218,7 +218,7 @@ module.exports = {
 
     var exampleEmbed = new MessageEmbed()
       .setColor(embedColor)
-      .setTitle("" + userData.name)
+      .setTitle("" + userData.gameName)
       .addFields(lowestRankField, highestRankField)
       .setImage("attachment://flex.png")
       .setThumbnail("attachment://solo.png");

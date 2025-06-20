@@ -40,28 +40,28 @@ module.exports = {
 
     let hyperRank = "Unranked";
 
-    let rankedIndex = 100;
-    let hyperIndex = 100;
+    let rankedIndex;
+    let hyperIndex;
 
-    console.log(tftRankData);
+    console.log(tftData);
 
-    for (let i = 0; i < tftRankData.length; i++) {
-      if (tftRankData[i].queueType === "RANKED_TFT") {
+    for (let i = 0; i < tftData.length; i++) {
+      if (tftData[i].queueType === "RANKED_TFT") {
         rankedIndex = i;
-      } else if (tftRankData[i].queueType === "RANKED_TFT_TURBO") {
+      } else if (tftData[i].queueType === "RANKED_TFT_TURBO") {
         hyperIndex = i;
       }
     }
-    if (rankedIndex < 99) {
-      rankedRank = tftRankData[rankedIndex].tier; // ranked tft
-      rankedDivision = tftRankData[rankedIndex].rank;
-      rankedLp = tftRankData[rankedIndex].leaguePoints;
-      rankedWins = tftRankData[rankedIndex].wins;
-      rankedLosses = tftRankData[rankedIndex].losses;
+    if (typeof rankedIndex !== "undefined") {
+      rankedRank = tftData[rankedIndex].tier; // ranked tft
+      rankedDivision = tftData[rankedIndex].rank;
+      rankedLp = tftData[rankedIndex].leaguePoints;
+      rankedWins = tftData[rankedIndex].wins;
+      rankedLosses = tftData[rankedIndex].losses;
     }
 
-    if (hyperIndex < 99) {
-      hyperRank = tftRankData[hyperIndex].ratedTier; // hyperrol
+    if (typeof hyperIndex !== "undefined") {
+      hyperRank = tftData[hyperIndex].ratedTier; // hyperrol
     }
 
     for (let i = 0; i < lolRankData.length; i++) {
@@ -86,16 +86,6 @@ module.exports = {
 
     rankedRank =
       rankedRank.substring(0, 1) + rankedRank.substring(1).toLowerCase();
-
-    if (hyperRank.toLowerCase() == "orange") {
-      hyperRank = "Hyper";
-    }
-    if (hyperRank == "Unranked") {
-      hyperEmblem = "assets/ranked-emblems/Grey_tier.png";
-    } else {
-      hyperEmblem = "assets/ranked-emblems/" + hyperRank + "_tier.png";
-    }
-    hyperRank = hyperRank + " Tier";
     var embedColor = getRankColor(rankedRank);
 
     function getRankColor(rank) {
