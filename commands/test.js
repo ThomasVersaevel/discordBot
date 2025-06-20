@@ -1,6 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { tftKey, apiKey } = require('../config.json');
-const fetch = require('node-fetch');
 const {listDatabases} = require('../globals.js');
 
 

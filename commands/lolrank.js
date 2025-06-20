@@ -13,7 +13,7 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    let { username, tag } = convertLolName(
+    const { username, tag } = convertLolName(
       interaction.options.getString("lolname"),
       interaction.member.id
     );
@@ -68,14 +68,14 @@ module.exports = {
       }
     }
 
-    if (defined(rankedIndex)) {
+    if (typeof rankedIndex !== "undefined") {
       soloRank = rankData[rankedIndex].tier; //ranked solo
       soloDivision = rankData[rankedIndex].rank;
       soloLp = rankData[rankedIndex].leaguePoints;
       soloWins = rankData[rankedIndex].wins;
       soloLosses = rankData[rankedIndex].losses;
     }
-    if (flexIndex < 99) {
+    if (typeof flexIndex !== "undefined") {
       flexRank = rankData[flexIndex].tier; //ranked flex
       flexDivision = rankData[flexIndex].rank;
       flexLp = rankData[flexIndex].leaguePoints;
@@ -221,16 +221,11 @@ module.exports = {
       .setTitle("" + userData.name)
       .addFields(lowestRankField, highestRankField)
       .setImage("attachment://flex.png")
-      .setThumbnail("attachment://solo.png")
-      .setFooter({
-        text: "Arena wins: " + arenaWins + " losses: " + arenaLosses,
-        iconURL: "attachment://arena.png",
-      });
+      .setThumbnail("attachment://solo.png");
 
     await interaction.reply({
       embeds: [exampleEmbed],
       files: [
-        { attachment: arenaEmblem, name: "arena.png" },
         {
           attachment:
             "assets/ranked-emblems/Emblem_" +

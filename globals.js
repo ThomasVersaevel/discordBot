@@ -50,4 +50,10 @@ module.exports = {
     const response = await fetch(link);
     return await response.json();
   },
+
+  async getTftData(puuid) {
+    let tftRankedLink = `https://euw1.api.riotgames.com/tft/league/v1/entries/by-summoner/${puuid}?api_key=${tftKey}`;
+    const tftRankResponse = await fetch(tftRankedLink);
+    let tftRankData = await tftRankResponse.json();
+  },
 };

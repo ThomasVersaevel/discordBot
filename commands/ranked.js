@@ -1,9 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const shortcuts = require("../api-shortcuts.json");
-const fetch = require("node-fetch");
-const { apiKey } = require("../config.json");
-const { convertLolName } = require("../globals.js");
+const { convertLolName, getUserInfo, getRankedData } = require("../globals.js");
+const { Chart } = "chart.js";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,23 +14,16 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    let username = convertLolName(
+    const { username, tag } = convertLolName(
       interaction.options.getString("lolname"),
       interaction.member.id
     );
 
     // get User data from lol api
-    const link = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${apiKey}`;
-    const response = await fetch(link);
-    let userData = await response.json();
-    const puuid = userData.puuid;
-
-    patchNr = shortcuts["patch"]; //required for data dragon
+    let userData = await getUserInfo(username, tag);
 
     // get Ranked data from lol api
-    let rankedLink = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${userData.id}?api_key=${apiKey}`;
-    const rankResponse = await fetch(rankedLink);
-    let rankData = await rankResponse.json();
+    let rankData = await getRankedData(userData.puuid);
 
     // Not working looks like nullable in an if statement resolves to true
     if (!rankData || rankData[0]?.queueType === "RANKED_TFT_DOUBLE_UP") {
@@ -278,16 +269,11 @@ module.exports = {
       .setTitle("" + userData.name)
       .addFields(lowestRankField, highestRankField)
       .setImage("attachment://flex.png")
-      .setThumbnail("attachment://solo.png")
-      .setFooter({
-        text: "Arena wins: " + arenaWins + " losses: " + arenaLosses,
-        iconURL: "attachment://arena.png",
-      });
+      .setThumbnail("attachment://solo.png");
 
     await interaction.reply({
       embeds: [exampleEmbed],
       files: [
-        { attachment: arenaEmblem, name: "arena.png" },
         {
           attachment:
             "assets/ranked-emblems/Emblem_" +
