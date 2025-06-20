@@ -1,13 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageAttachment, MessageEmbed } = require("discord.js");
-const fs = require("fs");
+const { MessageAttachment } = require("discord.js");
 const { apiKey } = require("../config.json");
 const shortcuts = require("../api-shortcuts.json");
 const fetch = require("node-fetch");
 const Canvas = require("canvas");
 const { Chart } = require("chart.js");
-const { Util } = require("util");
-const { convertLolName } = require("../globals.js");
+const { convertLolName, getUserInfo } = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,39 +20,26 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    let username = convertLolName(
+    const { username, tag } = convertLolName(
       interaction.options.getString("lolname"),
       interaction.member.id
-    ); //uses globals
+    );
 
     // ## obtain summoner info ##
-    const sumLink = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?type=normal&api_key=${apiKey}`;
-    const sumResponse = await fetch(sumLink);
-    let sumData = await sumResponse.json();
-    const puuid = sumData.puuid; // id of user
-    //console.log(puuid);
+    const userData = await getUserInfo(username, tag);
+    const puuid = userData.puuid; // id of user
+
     // ## obtain 20 match IDs (default) for only aram queue 450##
     const matchLink = `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${apiKey}&queue=450`;
     const matchIdResponse = await fetch(matchLink);
     let matchIdData = await matchIdResponse.json();
-    //console.log(matchIdData);
 
     // ## From here its the reply ##
-    patchNr = shortcuts["patch"];
-    let icon = `http://ddragon.leagueoflegends.com/cdn/${patchNr}/img/profileicon/${sumData.profileIconId}.png`;
     await interaction.reply(
       "ARAM wins and losses over the last 20 games for " + username
     );
 
-    // var exampleEmbed = new MessageEmbed() // empty field .addField('\u200b', '\u200b')
-    //     .setColor('#4e79a7')
-    //     .setTitle(sumData.name)
-    //     .addField('Aram wins and losses', '\u200b', false)
-    //     .setThumbnail('attachment://icon.png')
-    //     .setImage('attachment://canvas.png');
-
     var idNr = 1;
-    var startIndex = 0;
 
     var wins = 0;
     var losses = 0;
