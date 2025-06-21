@@ -1,6 +1,12 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const { convertLolName, getTftData, getUserInfo, getRankColor, getRankIndex } = require("../globals.js");
+const {
+  convertLolName,
+  getTftData,
+  getUserInfo,
+  getRankColor,
+  getRankIndex,
+} = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,167 +27,131 @@ module.exports = {
     let userData = await getUserInfo(username, tag);
     const puuid = userData.puuid;
 
+    console.log(puuid);
+
     let tftData = await getTftData(puuid);
 
     console.log("tftData: ", tftData);
 
-    let doubleRank = "Unranked";
-    let doubleDivision = "";
-    let doubleLp = 0;
-    let doubleWins = 0;
-    let doubleLosses = 0;
+    // Helper to capitalize rank
+    function capitalizeRank(rank) {
+      if (!rank) return "Unranked";
+      return rank.charAt(0).toUpperCase() + rank.slice(1).toLowerCase();
+    }
 
-    let rankedRank = "Unranked";
-    let rankedDivision = "";
-    let rankedLp = 0;
-    let rankedWins = 0;
-    let rankedLosses = 0;
+    // Calculate winrate
+    function calculateWR(wins, losses) {
+      if (!wins && !losses) return "";
+      return `${wins} Wins ${losses} Losses ${(
+        (wins / (wins + losses)) *
+        100
+      ).toFixed(1)}% WR`;
+    }
 
-    let rankedIndex;
-    let doubleIndex;
+    // Get image file path for a rank
+    function getRankImage(rank) {
+      const validRanks = [
+        "Iron",
+        "Bronze",
+        "Silver",
+        "Gold",
+        "Platinum",
+        "Emerald",
+        "Diamond",
+        "Master",
+        "Grandmaster",
+        "Challenger",
+      ];
+      rank = capitalizeRank(rank);
+      return `assets/ranked-emblems/Emblem_${
+        validRanks.includes(rank) ? rank : "Unranked"
+      }.png`;
+    }
 
-    console.log(tftData);
+    // Get rank index for comparing
+    function getRankIndex(rank) {
+      const order = [
+        "unranked",
+        "iron",
+        "bronze",
+        "silver",
+        "gold",
+        "platinum",
+        "emerald",
+        "diamond",
+        "master",
+        "grandmaster",
+        "challenger",
+      ];
+      return order.indexOf(rank.toLowerCase());
+    }
 
-    for (let i = 0; i < tftData.length; i++) {
-      if (tftData[i].queueType === "RANKED_TFT") {
-        rankedIndex = i;
+    // Main function
+    async function sendTFTEmbed(interaction, tftData, userData) {
+      let ranked =
+        tftData.find((entry) => entry.queueType === "RANKED_TFT") || {};
+      let doubleUp =
+        tftData.find((entry) => entry.queueType === "RANKED_TFT_DOUBLE_UP") ||
+        {};
+
+      const rankedRank = capitalizeRank(ranked.tier || "Unranked");
+      const rankedDivision = ranked.rank || "";
+      const rankedLp = ranked.leaguePoints || 0;
+      const rankedWins = ranked.wins || 0;
+      const rankedLosses = ranked.losses || 0;
+
+      const doubleRank = capitalizeRank(doubleUp.tier || "Unranked");
+      const doubleDivision = doubleUp.rank || "";
+      const doubleLp = doubleUp.leaguePoints || 0;
+      const doubleWins = doubleUp.wins || 0;
+      const doubleLosses = doubleUp.losses || 0;
+
+      const embedColor = getRankColor(rankedRank); // Assume this function exists
+
+      let highestRankField, lowestRankField;
+      if (getRankIndex(rankedRank) >= getRankIndex(doubleRank)) {
+        highestRankField = {
+          name: `Ranked TFT: ${rankedRank} ${rankedDivision} ${rankedLp} LP`,
+          value: calculateWR(rankedWins, rankedLosses) || "\u200b",
+          inline: false,
+        };
+        lowestRankField = {
+          name: `Double Up: ${doubleRank} ${doubleDivision} ${doubleLp} LP`,
+          value: calculateWR(doubleWins, doubleLosses) || "\u200b",
+          inline: false,
+        };
+      } else {
+        highestRankField = {
+          name: `Double Up: ${doubleRank} ${doubleDivision} ${doubleLp} LP`,
+          value: calculateWR(doubleWins, doubleLosses) || "\u200b",
+          inline: false,
+        };
+        lowestRankField = {
+          name: `Ranked TFT: ${rankedRank} ${rankedDivision} ${rankedLp} LP`,
+          value: calculateWR(rankedWins, rankedLosses) || "\u200b",
+          inline: false,
+        };
       }
+
+      const rankedImage = getRankImage(rankedRank);
+      const doubleImage = getRankImage(doubleRank);
+
+      // Build embed
+      const exampleEmbed = new MessageEmbed()
+        .setColor(embedColor)
+        .setTitle(userData.name)
+        .addFields(lowestRankField, highestRankField)
+        .setImage("attachment://rankedImg.png")
+        .setThumbnail("attachment://double.png");
+
+      // Respond
+      await interaction.reply({
+        embeds: [exampleEmbed],
+        files: [
+          { attachment: rankedImage, name: "rankedImg.png" },
+          { attachment: doubleImage, name: "double.png" },
+        ],
+      });
     }
-    if (typeof rankedIndex !== "undefined") {
-      rankedRank = tftData[rankedIndex].tier; // ranked tft
-      rankedDivision = tftData[rankedIndex].rank;
-      rankedLp = tftData[rankedIndex].leaguePoints;
-      rankedWins = tftData[rankedIndex].wins;
-      rankedLosses = tftData[rankedIndex].losses;
-    }
-
-    if (doubleRank) {
-      doubleRank =
-        doubleRank.substring(0, 1) + doubleRank.substring(1).toLowerCase();
-    } else {
-      doubleRank = "Unranked";
-    }
-
-    rankedRank =
-      rankedRank.substring(0, 1) + rankedRank.substring(1).toLowerCase();
-    var embedColor = getRankColor(rankedRank);
-
-    let highestRankField = {};
-    let lowestRankField = {};
-
-    if (getRankIndex(rankedRank) >= getRankIndex(doubleRank)) {
-      highestRankField = {
-        name:
-          "Ranked Rank: " +
-          rankedRank +
-          " " +
-          rankedDivision +
-          " " +
-          rankedLp +
-          "LP",
-        value:
-          rankedWins !== 0 && rankedLosses !== 0
-            ? rankedWins +
-              " Wins " +
-              rankedLosses +
-              " Losses " +
-              Math.round((rankedWins / (rankedWins + rankedLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
-        inline: false,
-      };
-      lowestRankField = {
-        name:
-          "Double Up Rank: " +
-          doubleRank +
-          " " +
-          doubleDivision +
-          " " +
-          doubleLp +
-          "LP",
-        value:
-          doubleWins !== 0 && doubleLosses !== 0
-            ? doubleWins +
-              " Wins " +
-              doubleLosses +
-              " Losses " +
-              Math.round((doubleWins / (doubleWins + doubleLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
-        inline: false,
-      };
-    } else {
-      highestRankField = {
-        name:
-          "Double Up Rank: " +
-          doubleRank +
-          " " +
-          doubleDivision +
-          " " +
-          doubleLp +
-          "LP",
-        value:
-          doubleWins !== 0 && doubleLosses !== 0
-            ? doubleWins +
-              " Wins " +
-              doubleLosses +
-              " Losses " +
-              Math.round((doubleWins / (doubleWins + doubleLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
-        inline: false,
-      };
-      lowestRankField = {
-        name:
-          "Ranked Rank: " +
-          rankedRank +
-          " " +
-          rankedDivision +
-          " " +
-          rankedLp +
-          "LP",
-        value:
-          rankedWins !== 0 && rankedLosses !== 0
-            ? rankedWins +
-              " Wins " +
-              rankedLosses +
-              " Losses " +
-              Math.round((rankedWins / (rankedWins + rankedLosses)) * 100, 1) +
-              "% WR"
-            : "\u200b",
-        inline: false,
-      };
-    }
-
-    var exampleEmbed = new MessageEmbed()
-      .setColor(embedColor)
-      .setTitle("" + userData.name)
-      .addFields(lowestRankField, highestRankField)
-      .setImage("attachment://rankedImg.png")
-      .setThumbnail("attachment://double.png");
-
-    await interaction.reply({
-      embeds: [exampleEmbed],
-      files: [
-        {
-          attachment:
-            "assets/ranked-emblems/Emblem_" +
-            (getRankIndex(rankedRank) >= getRankIndex(doubleRank)
-              ? rankedRank
-              : doubleRank) +
-            ".png",
-          name: "rankedImg.png",
-        },
-        {
-          attachment:
-            "assets/ranked-emblems/Emblem_" +
-            (getRankIndex(doubleRank) > getRankIndex(rankedRank)
-              ? rankedRank
-              : doubleRank) +
-            ".png",
-          name: "double.png",
-        },
-      ],
-    });
   },
 };
