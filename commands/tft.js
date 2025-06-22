@@ -27,8 +27,6 @@ module.exports = {
     let userData = await getUserInfo(username, tag);
     const puuid = userData.puuid;
 
-    console.log(puuid);
-
     let tftData = await getTftData(puuid);
 
     console.log("tftData: ", tftData);
@@ -87,71 +85,68 @@ module.exports = {
     }
 
     // Main function
-    async function sendTFTEmbed(interaction, tftData, userData) {
-      let ranked =
-        tftData.find((entry) => entry.queueType === "RANKED_TFT") || {};
-      let doubleUp =
-        tftData.find((entry) => entry.queueType === "RANKED_TFT_DOUBLE_UP") ||
-        {};
+    let ranked =
+      tftData.find((entry) => entry.queueType === "RANKED_TFT") || {};
+    let doubleUp =
+      tftData.find((entry) => entry.queueType === "RANKED_TFT_DOUBLE_UP") || {};
 
-      const rankedRank = capitalizeRank(ranked.tier || "Unranked");
-      const rankedDivision = ranked.rank || "";
-      const rankedLp = ranked.leaguePoints || 0;
-      const rankedWins = ranked.wins || 0;
-      const rankedLosses = ranked.losses || 0;
+    const rankedRank = capitalizeRank(ranked.tier || "Unranked");
+    const rankedDivision = ranked.rank || "";
+    const rankedLp = ranked.leaguePoints || 0;
+    const rankedWins = ranked.wins || 0;
+    const rankedLosses = ranked.losses || 0;
 
-      const doubleRank = capitalizeRank(doubleUp.tier || "Unranked");
-      const doubleDivision = doubleUp.rank || "";
-      const doubleLp = doubleUp.leaguePoints || 0;
-      const doubleWins = doubleUp.wins || 0;
-      const doubleLosses = doubleUp.losses || 0;
+    const doubleRank = capitalizeRank(doubleUp.tier || "Unranked");
+    const doubleDivision = doubleUp.rank || "";
+    const doubleLp = doubleUp.leaguePoints || 0;
+    const doubleWins = doubleUp.wins || 0;
+    const doubleLosses = doubleUp.losses || 0;
 
-      const embedColor = getRankColor(rankedRank); // Assume this function exists
+    const embedColor = getRankColor(rankedRank); // Assume this function exists
 
-      let highestRankField, lowestRankField;
-      if (getRankIndex(rankedRank) >= getRankIndex(doubleRank)) {
-        highestRankField = {
-          name: `Ranked TFT: ${rankedRank} ${rankedDivision} ${rankedLp} LP`,
-          value: calculateWR(rankedWins, rankedLosses) || "\u200b",
-          inline: false,
-        };
-        lowestRankField = {
-          name: `Double Up: ${doubleRank} ${doubleDivision} ${doubleLp} LP`,
-          value: calculateWR(doubleWins, doubleLosses) || "\u200b",
-          inline: false,
-        };
-      } else {
-        highestRankField = {
-          name: `Double Up: ${doubleRank} ${doubleDivision} ${doubleLp} LP`,
-          value: calculateWR(doubleWins, doubleLosses) || "\u200b",
-          inline: false,
-        };
-        lowestRankField = {
-          name: `Ranked TFT: ${rankedRank} ${rankedDivision} ${rankedLp} LP`,
-          value: calculateWR(rankedWins, rankedLosses) || "\u200b",
-          inline: false,
-        };
-      }
-
-      const rankedImage = getRankImage(rankedRank);
-      const doubleImage = getRankImage(doubleRank);
-
-      // Build embed
-      const exampleEmbed = new MessageEmbed()
-        .setColor(embedColor)
-        .setTitle(userData.name)
-        .addFields(lowestRankField, highestRankField)
-        .setImage("attachment://rankedImg.png")
-        .setThumbnail("attachment://double.png");
-
-      // Respond
-      await interaction.reply({
-        embeds: [exampleEmbed],
-        files: [
-          { attachment: rankedImage, name: "rankedImg.png" },
-          { attachment: doubleImage, name: "double.png" },
-        ],
-      });
+    let highestRankField, lowestRankField;
+    if (getRankIndex(rankedRank) >= getRankIndex(doubleRank)) {
+      highestRankField = {
+        name: `Ranked TFT: ${rankedRank} ${rankedDivision} ${rankedLp} LP`,
+        value: calculateWR(rankedWins, rankedLosses) || "\u200b",
+        inline: false,
+      };
+      lowestRankField = {
+        name: `Double Up: ${doubleRank} ${doubleDivision} ${doubleLp} LP`,
+        value: calculateWR(doubleWins, doubleLosses) || "\u200b",
+        inline: false,
+      };
+    } else {
+      highestRankField = {
+        name: `Double Up: ${doubleRank} ${doubleDivision} ${doubleLp} LP`,
+        value: calculateWR(doubleWins, doubleLosses) || "\u200b",
+        inline: false,
+      };
+      lowestRankField = {
+        name: `Ranked TFT: ${rankedRank} ${rankedDivision} ${rankedLp} LP`,
+        value: calculateWR(rankedWins, rankedLosses) || "\u200b",
+        inline: false,
+      };
     }
+
+    const rankedImage = getRankImage(rankedRank);
+    const doubleImage = getRankImage(doubleRank);
+
+    // Build embed
+    const exampleEmbed = new MessageEmbed()
+      .setColor(embedColor)
+      .setTitle(userData.name)
+      .addFields(lowestRankField, highestRankField)
+      .setImage("attachment://rankedImg.png")
+      .setThumbnail("attachment://double.png");
+
+    // Respond
+    await interaction.reply({
+      embeds: [exampleEmbed],
+      files: [
+        { attachment: rankedImage, name: "rankedImg.png" },
+        { attachment: doubleImage, name: "double.png" },
+      ],
+    });
   },
 };

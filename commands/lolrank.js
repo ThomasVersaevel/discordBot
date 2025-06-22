@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const { convertLolName, getUserInfo, getRankedData } = require("../globals.js");
+const { convertLolName, getUserInfo, getRankedData, getRankColor, getRankIndex } = require("../globals.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -96,62 +96,6 @@ module.exports = {
     }
 
     var embedColor = getRankColor(flexRank);
-
-    function getRankIndex(rank) {
-      switch (rank) {
-        case "Unranked":
-          return 0;
-        case "Iron":
-          return 1;
-        case "Bronze":
-          return 2;
-        case "Silver":
-          return 3;
-        case "Gold":
-          return 4;
-        case "Platinum":
-          return 5;
-        case "Emerald":
-          return 6;
-        case "Diamond":
-          return 7;
-        case "Master":
-          return 8;
-        case "Grandmaster":
-          return 9;
-        case "Challenger":
-          return 10;
-        default:
-          return 0;
-      }
-    }
-
-    function getRankColor(rank) {
-      switch (rank) {
-        case "Iron":
-          return "#615959";
-        case "Bronze":
-          return "#925235";
-        case "Silver":
-          return "#839da5";
-        case "Gold":
-          return "#dfa040";
-        case "Platinum":
-          return "#539591";
-        case "Emerald":
-          return "#53bb91";
-        case "Diamond":
-          return "#686cdd";
-        case "Master":
-          return "#8154a6";
-        case "Grandmaster":
-          return "#f12227";
-        case "Challenger":
-          return "#fcf4e1";
-        default:
-          return "#d1d1d1";
-      }
-    }
 
     const highestIsSolo = getRankIndex(soloRank) >= getRankIndex(flexRank);
 
